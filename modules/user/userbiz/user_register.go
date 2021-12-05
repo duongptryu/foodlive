@@ -68,7 +68,7 @@ func (biz *registerUserBiz) RegisterUserBiz(ctx context.Context, data *usermodel
 	}
 
 	//set OTP in memory
-	err = biz.myCache.Set(usermodel.EntityOTP+OTP, data.Phone)
+	err = biz.myCache.SetWithExpire(usermodel.EntityOTP+OTP, data.Phone, usermodel.TimeExpireOTPActivate)
 	if err != nil {
 		log.Error("Cannot set OTP to cache - ", err)
 	}
