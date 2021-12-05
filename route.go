@@ -16,5 +16,6 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 	v1 := r.Group("/api/v1")
 	{
 		v1.POST("/register", ginuser.UserReigster(appCtx))
+		v1.POST("/activate", ginuser.UserActiveAccount(appCtx))
 	}
 }

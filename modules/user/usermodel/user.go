@@ -5,15 +5,17 @@ import (
 	"fooddelivery/common"
 	"math/rand"
 	"regexp"
+	"time"
 )
 
 //var re = regexp.MustCompile(`^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$`)
 var re = regexp.MustCompile(`[84|]+(3|5|7|8|9|1[2|6|8|9])+([0-9]{8})`)
 
 const (
-	EntityName = "User"
-	EntityOTP  = "OTP"
-	numberStr  = "0123456789"
+	EntityName            = "User"
+	EntityOTP             = "OTP"
+	numberStr             = "0123456789"
+	TimeExpireOTPActivate = time.Second * 60
 )
 
 type User struct {
@@ -63,8 +65,14 @@ func GenerateOTP(n int) string {
 	return string(b)
 }
 
+type UserActive struct {
+	Phone string `json:"phone" binding:"required,min=9,max=20"`
+	OTP   string `json:"otp" binding:"required,min=4,max=4"`
+}
+
 var (
 	ErrPhoneInvalid            = common.NewCustomError(nil, "Phone number invalid", "ErrPhoneInvalid")
 	ErrPhoneNumberAlreadyExist = common.NewFullErrorResponse(409, errors.New("Phone number already exist"), "Phone number already exist", "Phone number already exist", "ErrPhoneNumberAlreadyExist")
 	ErrPhoneNumberNotActivated = common.NewFullErrorResponse(409, errors.New("Phone number was not activated"), "Phone number was not activated", "Phone number was not activated", "ErrPhoneNumberNotActivated")
+	ErrOTPInvalidOrExpire      = common.NewCustomError(nil, "OTP invalid or expire", "ErrOTPInvalidOrExpire")
 )
