@@ -5,6 +5,7 @@ import (
 	"fooddelivery/component"
 	"fooddelivery/component/gosms"
 	"fooddelivery/component/mycache"
+	"fooddelivery/component/tokenprovider/jwt"
 	"fooddelivery/config"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
@@ -28,7 +29,12 @@ func setupAppContext(appConfig *config.AppConfig) component.AppContext {
 	//init cache
 	myCache := mycache.NewMyCache()
 	mySms := gosms.NewGoSms(appConfig.Sms.AccountSid, appConfig.Sms.AuthToken, appConfig.Sms.MyPhoneNumber)
-	appCtx := component.NewAppContext(appConfig, FDDatabase, myCache, mySms)
+
+	//init token provider
+	tokenProvider := jwt.NewJwtProvider(appConfig.Token)
+
+	//init app context
+	appCtx := component.NewAppContext(appConfig, FDDatabase, myCache, mySms, tokenProvider)
 	return appCtx
 }
 
