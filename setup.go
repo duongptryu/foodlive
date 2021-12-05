@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"fooddelivery/component"
+	"fooddelivery/component/gosms"
+	"fooddelivery/component/mycache"
 	"fooddelivery/config"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
@@ -15,6 +17,7 @@ func createDsnDb(username, password, host, port, dbName string) string {
 }
 
 func setupAppContext(appConfig *config.AppConfig) component.AppContext {
+	//init database
 	databaseDsn := createDsnDb(appConfig.Database.Username, appConfig.Database.Password, appConfig.Database.Host, appConfig.Database.Port, appConfig.Database.DatabaseName)
 	FDDatabase, err := gorm.Open(mysql.Open(databaseDsn), &gorm.Config{})
 	if err != nil {
@@ -22,10 +25,12 @@ func setupAppContext(appConfig *config.AppConfig) component.AppContext {
 	}
 	FDDatabase = FDDatabase.Debug()
 
-	appCtx := component.NewAppContext(appConfig, FDDatabase)
+	//init cache
+	myCache := mycache.NewMyCache()
+	mySms := gosms.NewGoSms(appConfig.Sms.AccountSid, appConfig.Sms.AuthToken, appConfig.Sms.MyPhoneNumber)
+	appCtx := component.NewAppContext(appConfig, FDDatabase, myCache, mySms)
 	return appCtx
 }
-
 
 func setupLog(appConfig *config.AppConfig) *os.File {
 	f, err := os.OpenFile("food-hub.log", os.O_APPEND|os.O_CREATE|os.O_RDWR, 0666)

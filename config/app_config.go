@@ -11,6 +11,7 @@ import (
 type AppConfig struct {
 	Server   Server   `yaml:"server"`
 	Database Database `yaml:"database"`
+	Sms      Sms      `yaml:"sms"`
 }
 
 type Database struct {
@@ -22,10 +23,16 @@ type Database struct {
 }
 
 type Server struct {
-	Host string `yaml:"host"`
-	Port string `yaml:"port"`
+	Host     string `yaml:"host"`
+	Port     string `yaml:"port"`
 	ModeRun  string `yaml:"mode_run"`  // prod or debug
 	LevelLog int    `yaml:"level_log"` // level log from 0 -> 6
+}
+
+type Sms struct {
+	AccountSid    string `yaml:"account_sid"`
+	AuthToken     string `yaml:"auth_token"`
+	MyPhoneNumber string `yaml:"my_phone_number"`
 }
 
 func NewAppConfig(configPath string) (*AppConfig, error) {
