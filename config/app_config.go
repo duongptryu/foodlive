@@ -12,6 +12,7 @@ type AppConfig struct {
 	Server   Server   `yaml:"server"`
 	Database Database `yaml:"database"`
 	Sms      Sms      `yaml:"sms"`
+	Token    string   `yaml:"token"`
 }
 
 type Database struct {
