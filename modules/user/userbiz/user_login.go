@@ -44,6 +44,10 @@ func (biz *loginBusiness) Login(ctx context.Context, data *usermodel.UserLogin) 
 		return nil, usermodel.ErUsernameOrPasswordInvalid
 	}
 
+	if userDB.Status == false {
+		return nil, usermodel.ErrPhoneNumberNotActivated
+	}
+
 	err = bcrypt.CompareHashAndPassword([]byte(userDB.Password), []byte(data.Password))
 	if err != nil {
 		return nil, usermodel.ErUsernameOrPasswordInvalid

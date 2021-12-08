@@ -3,6 +3,7 @@ package main
 import (
 	"fooddelivery/component"
 	"fooddelivery/middleware"
+	"fooddelivery/modules/authsso/googlesso/googlessotransport/gingooglesso"
 	"fooddelivery/modules/user/usertransport/ginuser"
 	"github.com/gin-gonic/gin"
 )
@@ -18,5 +19,9 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 		v1.POST("/register", ginuser.UserReigster(appCtx))
 		v1.POST("/activate", ginuser.UserActiveAccount(appCtx))
 		v1.POST("/login", ginuser.UserLogin(appCtx))
+
+		sso := v1.Group("/sso")
+		sso.POST("/register-google", gingooglesso.UserGoogleLogin(appCtx))
+		sso.POST("/login-google", gingooglesso.UserGoogleLogin(appCtx))
 	}
 }
