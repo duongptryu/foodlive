@@ -44,7 +44,7 @@ func (biz *registerGoogleBiz) RegisterGoogleBiz(ctx context.Context, data *googl
 	}
 
 	if err := biz.userStore.CreateUser(ctx, &userCreate); err != nil {
-		return "", common.ErrCannotCreateEntity(googlessomodel.UserGoogle, err)
+		return "", common.ErrCannotCreateEntity(googlessomodel.EntityName, err)
 	}
 
 	return "", nil
