@@ -6,7 +6,7 @@ import (
 	"fooddelivery/modules/user/usermodel"
 )
 
-func (s *SQLStore) FindUser (ctx context.Context, conditions map[string]interface{}, moreKey ...string) (*usermodel.User, error) {
+func (s *sqlStore) FindUser(ctx context.Context, conditions map[string]interface{}, moreKey ...string) (*usermodel.User, error) {
 	db := s.db
 	var result usermodel.User
 

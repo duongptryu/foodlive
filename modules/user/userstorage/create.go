@@ -6,7 +6,7 @@ import (
 	"fooddelivery/modules/user/usermodel"
 )
 
-func (s *SQLStore) CreateUser (ctx context.Context, data *usermodel.UserCreate) error {
+func (s *sqlStore) CreateUser(ctx context.Context, data *usermodel.UserCreate) error {
 	db := s.db
 
 	if err := db.Create(data).Error; err != nil {
