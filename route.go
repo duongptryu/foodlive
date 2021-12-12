@@ -21,6 +21,8 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 		v1.POST("/register", ginuser.UserReigster(appCtx))
 		v1.POST("/activate", ginuser.UserActiveAccount(appCtx))
 		v1.POST("/resend-otp-active", ginuser.ResendOTPActive(appCtx))
+		v1.POST("/forgot-password", ginuser.UserForgotPassword(appCtx))
+		v1.POST("/reset-password", ginuser.UserResetPassword(appCtx))
 		v1.POST("/login", ginuser.UserLogin(appCtx))
 
 		sso := v1.Group("/sso")
