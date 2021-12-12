@@ -101,6 +101,21 @@ func (u *ResendOTP) Validate() error {
 	return nil
 }
 
+type UserResetPassword struct {
+	Phone    string `json:"phone" gorm:"column:phone" binding:"required"`
+	OTP      string `json:"otp" gorm:"-"`
+	Password string `json:"password" gorm:"password" binding:"required"`
+}
+
+func (u *UserResetPassword) Validate() error {
+	phone := common.RePhone.Find([]byte(u.Phone))
+	if phone == nil {
+		return ErrPhoneInvalid
+	}
+	u.Phone = string(phone)
+	return nil
+}
+
 type Account struct {
 	AccessToken  *tokenprovider.Token `json:"access_token"`
 	RefreshToken *tokenprovider.Token `json:"refresh_token"`
