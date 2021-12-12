@@ -25,17 +25,17 @@ func NewActiveUserBiz(store ActivateUserStore, myCache mycache.Cache) *activateU
 }
 
 func (biz *activateUserBiz) UserActiveBiz(ctx context.Context, data *usermodel.UserActive) error {
-	phoneNumber, err := biz.myCache.Get(usermodel.EntityOTP + data.OTP)
+	otp, err := biz.myCache.Get(common.EntityOTP + data.Phone)
 	if err != nil {
 		return usermodel.ErrOTPInvalidOrExpire
 	}
 
-	if phoneNumber.(string) != data.Phone {
+	if otp.(string) != data.OTP {
 		return usermodel.ErrOTPInvalidOrExpire
 	}
 
 	//remove cache
-	if err := biz.myCache.Remove(usermodel.EntityOTP + data.OTP); err != nil {
+	if err := biz.myCache.Remove(common.EntityOTP + data.Phone); err != nil {
 		log.Error("Cannot remove OTP in cache - ", err)
 	}
 

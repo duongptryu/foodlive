@@ -59,7 +59,7 @@ func (biz *registerUserBiz) RegisterUserBiz(ctx context.Context, data *usermodel
 	}
 
 	//Generate OTP
-	OTP := usermodel.GenerateOTP(4)
+	OTP := common.GenerateOTP(4)
 
 	//send OTP for user
 	err = biz.mySms.SendOTP(ctx, data.Phone, OTP)
@@ -68,7 +68,7 @@ func (biz *registerUserBiz) RegisterUserBiz(ctx context.Context, data *usermodel
 	}
 
 	//set OTP in memory
-	err = biz.myCache.SetWithExpire(usermodel.EntityOTP+OTP, data.Phone, usermodel.TimeExpireOTPActivate)
+	err = biz.myCache.SetWithExpire(common.EntityOTP+data.Phone, OTP, usermodel.TimeExpireOTPActivate)
 	if err != nil {
 		log.Error("Cannot set OTP to cache - ", err)
 	}
