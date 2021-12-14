@@ -3,8 +3,10 @@ package restaurantownerbiz
 import (
 	"context"
 	"fooddelivery/common"
+	"fooddelivery/component/mycache"
 	"fooddelivery/component/tokenprovider"
 	"fooddelivery/modules/restaurantowner/restaurantownermodel"
+	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -18,13 +20,15 @@ type LoginHashProvider interface {
 
 type ownerRestaurantLoginBiz struct {
 	storeUser     OwnerRestaurantLoginStore
+	myCache       mycache.Cache
 	tokenProvider tokenprovider.TokenProvider
 	expire        int
 }
 
-func NewOwnerRestaurantLoginBiz(storeUser OwnerRestaurantLoginStore, tokenProvider tokenprovider.TokenProvider, expiry int) *ownerRestaurantLoginBiz {
+func NewOwnerRestaurantLoginBiz(storeUser OwnerRestaurantLoginStore, myCache mycache.Cache, tokenProvider tokenprovider.TokenProvider, expiry int) *ownerRestaurantLoginBiz {
 	return &ownerRestaurantLoginBiz{
 		storeUser:     storeUser,
+		myCache:       myCache,
 		tokenProvider: tokenProvider,
 		expire:        expiry,
 	}
@@ -71,5 +75,9 @@ func (biz *ownerRestaurantLoginBiz) OwnerRestaurantLoginBiz(ctx context.Context,
 
 	account := restaurantownermodel.NewAccount(accessToken, nil)
 
+	err = biz.myCache.SetWithExpire(common.KeyTokenCache+accessToken.Token, userDB.Id, common.TimeExpireTokenCache)
+	if err != nil {
+		log.Error(err)
+	}
 	return account, nil
 }

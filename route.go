@@ -5,6 +5,7 @@ import (
 	"fooddelivery/middleware"
 	"fooddelivery/modules/authsso/fbsso/fbssotransport/ginfbsso"
 	"fooddelivery/modules/authsso/googlesso/googlessotransport/gingooglesso"
+	"fooddelivery/modules/restaurant/restauranttransport/ginrestaurant"
 	"fooddelivery/modules/restaurantowner/restaurantownertransport/ginrestaurantowner"
 	"fooddelivery/modules/user/usertransport/ginuser"
 	"github.com/gin-gonic/gin"
@@ -34,15 +35,22 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			sso.POST("/login-facebook", ginfbsso.UserFacebookRegister(appCtx))
 		}
 
-		admin := v1.Group("/admin", middleware.RequireAuthAdmin(appCtx))
+		admin := v1.Group("/admin")
 		{
-			admin.POST("/owner-restaurant", ginrestaurantowner.OwnerRestaurantRegister(appCtx))
+			admin.POST("/owner-restaurant/register", ginrestaurantowner.OwnerRestaurantRegister(appCtx))
 		}
 
 		ownerRestaurant := v1.Group("/owner-restaurant")
 		{
 			ownerRestaurant.POST("/login", ginrestaurantowner.OwnerRestaurantLogin(appCtx))
 			ownerRestaurant.POST("/active", ginrestaurantowner.OwnerRestaurantActive(appCtx))
+			ownerRestaurant.POST("/send-otp", ginrestaurantowner.SendOTPActiveOwnerRestaurant(appCtx))
+
+			restaurant := ownerRestaurant.Group("/restaurant", middleware.RequireAuthOwnerRestaurant(appCtx))
+			{
+				restaurant.POST("", ginrestaurant.CreateRestaurant(appCtx))
+			}
 		}
+
 	}
 }
