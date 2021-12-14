@@ -9,9 +9,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func OwnerRestaurantLogin(appCtx component.AppContext) func(ctx *gin.Context) {
+func SendOTPActiveOwnerRestaurant(appCtx component.AppContext) func(ctx *gin.Context) {
 	return func(c *gin.Context) {
-		var data restaurantownermodel.UserLogin
+		var data restaurantownermodel.SendOTP
 
 		if err := c.ShouldBindJSON(&data); err != nil {
 			panic(common.ErrParseJson(err))
@@ -19,12 +19,12 @@ func OwnerRestaurantLogin(appCtx component.AppContext) func(ctx *gin.Context) {
 
 		store := restaurantownerstore.NewSqlStore(appCtx.GetDatabase())
 
-		biz := restaurantownerbiz.NewOwnerRestaurantLoginBiz(store, appCtx.GetMyCache(), appCtx.GetTokenProvider(), 60*60*24*30)
-		account, err := biz.OwnerRestaurantLoginBiz(c.Request.Context(), &data)
+		biz := restaurantownerbiz.NewSendOTPActiveBiz(store, appCtx.GetMyCache(), appCtx.GetMySms())
+		err := biz.SendOTPActiveBiz(c.Request.Context(), &data)
 		if err != nil {
 			panic(err)
 		}
 
-		c.JSON(200, common.NewSimpleSuccessResponse(account))
+		c.JSON(200, common.NewSimpleSuccessResponse(true))
 	}
 }

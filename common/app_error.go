@@ -98,3 +98,7 @@ func ErrCannotDeleteEntity(entity string, err error) *AppError {
 		fmt.Sprintf("ErrCannotDelete%s", entity),
 	)
 }
+
+var (
+	ErrUnAuthorization = NewFullErrorResponse(401, nil, "UnAuthorization", "UnAuthorization", "ErrUnAuthorization")
+)

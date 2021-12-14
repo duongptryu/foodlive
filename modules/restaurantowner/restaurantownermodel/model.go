@@ -86,6 +86,19 @@ func (u *UserLogin) Validate() error {
 	return nil
 }
 
+type SendOTP struct {
+	Phone string `json:"phone" gorm:"column:phone" binding:"required"`
+}
+
+func (u *SendOTP) Validate() error {
+	phone := common.RePhone.Find([]byte(u.Phone))
+	if phone == nil {
+		return ErrPhoneInvalid
+	}
+	u.Phone = string(phone)
+	return nil
+}
+
 type Account struct {
 	AccessToken  *tokenprovider.Token `json:"access_token"`
 	RefreshToken *tokenprovider.Token `json:"refresh_token"`

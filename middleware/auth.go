@@ -57,7 +57,7 @@ func RequireAuth(appCtx component.AppContext) func(c *gin.Context) {
 
 func RequireAuthAdmin(appCtx component.AppContext) func(c *gin.Context) {
 	tokenProvider := appCtx.GetTokenProvider()
-	myCache := appCtx.GetMyCache()
+	//myCache := appCtx.GetMyCache()
 	return func(c *gin.Context) {
 		token, err := extracTokenFromHeaderString(c.GetHeader("Authorization"))
 		if err != nil {
@@ -72,15 +72,47 @@ func RequireAuthAdmin(appCtx component.AppContext) func(c *gin.Context) {
 		if payload.Role != "admin" {
 			panic(ErrInvalidToken)
 		}
+		//
+		//userId, err := myCache.Get(common.KeyTokenCache + token)
+		//if err != nil {
+		//	panic(ErrNotFound)
+		//}
+		//
+		//if payload.UserId != userId.(int) {
+		//	panic(ErrInvalidToken)
+		//}
 
-		userId, err := myCache.Get(common.KeyTokenCache + token)
+		c.Set(common.KeyUserHeader, payload.UserId)
+		c.Next()
+	}
+}
+
+func RequireAuthOwnerRestaurant(appCtx component.AppContext) func(c *gin.Context) {
+	tokenProvider := appCtx.GetTokenProvider()
+	//myCache := appCtx.GetMyCache()
+	return func(c *gin.Context) {
+		token, err := extracTokenFromHeaderString(c.GetHeader("Authorization"))
 		if err != nil {
-			panic(ErrNotFound)
+			panic(err)
 		}
 
-		if payload.UserId != userId.(int) {
+		payload, err := tokenProvider.Validate(token)
+		if err != nil {
+			panic(err)
+		}
+
+		if payload.Role != "owner_restaurant" {
 			panic(ErrInvalidToken)
 		}
+
+		//userId, err := myCache.Get(common.KeyTokenCache + token)
+		//if err != nil {
+		//	panic(ErrNotFound)
+		//}
+
+		//if payload.UserId != userId.(int) {
+		//	panic(ErrInvalidToken)
+		//}
 
 		c.Set(common.KeyUserHeader, payload.UserId)
 		c.Next()
