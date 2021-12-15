@@ -7,6 +7,7 @@ import (
 	"fooddelivery/modules/authsso/googlesso/googlessotransport/gingooglesso"
 	"fooddelivery/modules/restaurant/restauranttransport/ginrestaurant"
 	"fooddelivery/modules/restaurantowner/restaurantownertransport/ginrestaurantowner"
+	"fooddelivery/modules/upload/uploadtransport/ginupload"
 	"fooddelivery/modules/user/usertransport/ginuser"
 	"github.com/gin-gonic/gin"
 )
@@ -25,6 +26,8 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 		v1.POST("/forgot-password", ginuser.UserForgotPassword(appCtx))
 		v1.POST("/reset-password", ginuser.UserResetPassword(appCtx))
 		v1.POST("/login", ginuser.UserLogin(appCtx))
+
+		v1.POST("/upload", ginupload.Upload(appCtx))
 
 		sso := v1.Group("/sso")
 		{

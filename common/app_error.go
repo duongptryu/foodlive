@@ -99,6 +99,10 @@ func ErrCannotDeleteEntity(entity string, err error) *AppError {
 	)
 }
 
+func ErrInvalidRequest(err error) *AppError {
+	return NewErrorResponse(err, "invalid request", err.Error(), "ErrInvalidRequest")
+}
+
 var (
 	ErrUnAuthorization = NewFullErrorResponse(401, nil, "UnAuthorization", "UnAuthorization", "ErrUnAuthorization")
 )
