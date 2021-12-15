@@ -13,6 +13,7 @@ type AppConfig struct {
 	Database Database `yaml:"database"`
 	Sms      Sms      `yaml:"sms"`
 	Token    string   `yaml:"token"`
+	S3AWS    S3AWS    `yaml:"s3_aws"`
 }
 
 type Database struct {
@@ -34,6 +35,14 @@ type Sms struct {
 	AccountSid    string `yaml:"account_sid"`
 	AuthToken     string `yaml:"auth_token"`
 	MyPhoneNumber string `yaml:"my_phone_number"`
+}
+
+type S3AWS struct {
+	BucketName string `yaml:"bucket_name"`
+	Region     string `yaml:"region"`
+	ApiKey     string `yaml:"api_key"`
+	Secret     string `yaml:"secret"`
+	Domain     string `yaml:"domain"`
 }
 
 func NewAppConfig(configPath string) (*AppConfig, error) {
