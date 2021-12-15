@@ -6,6 +6,7 @@ import (
 	"fooddelivery/component/gosms"
 	"fooddelivery/component/mycache"
 	"fooddelivery/component/tokenprovider/jwt"
+	"fooddelivery/component/uploadprovider"
 	"fooddelivery/config"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
@@ -33,8 +34,11 @@ func setupAppContext(appConfig *config.AppConfig) component.AppContext {
 	//init token provider
 	tokenProvider := jwt.NewJwtProvider(appConfig.Token)
 
+	//init upload provider
+	s3Provider := uploadprovider.NewS3Provider(appConfig.S3AWS.BucketName, appConfig.S3AWS.Region, appConfig.S3AWS.ApiKey, appConfig.S3AWS.Secret, appConfig.S3AWS.Domain)
+
 	//init app context
-	appCtx := component.NewAppContext(appConfig, FDDatabase, myCache, mySms, tokenProvider)
+	appCtx := component.NewAppContext(appConfig, FDDatabase, myCache, mySms, tokenProvider, s3Provider)
 	return appCtx
 }
 
