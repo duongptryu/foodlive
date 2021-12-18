@@ -37,7 +37,6 @@ type RestaurantUpdate struct {
 	Lng              float64        `json:"lng" gorm:"lng"`
 	CityId           int            `json:"city_id" gorm:"city_id"`
 	ShippingFeePerKm float64        `json:"shipping_fee_per_km" gorm:"shipping_fee_per_km"`
-	Status           bool           `json:"status" gorm:"status"`
 }
 
 func (RestaurantUpdate) TableName() string {
@@ -54,7 +53,7 @@ type RestaurantCreate struct {
 	Lat              float64        `json:"lat" gorm:"lat" binding:"required"`
 	Lng              float64        `json:"lng" gorm:"lng" binding:"required"`
 	CityId           int            `json:"city_id" gorm:"city_id" binding:"required"`
-	ShippingFeePerKm float64        `json:"-" gorm:"shipping_fee_per_km"`
+	ShippingFeePerKm float64        `json:"shipping_fee_per_km" gorm:"shipping_fee_per_km" binding:"required"`
 	Status           bool           `json:"-" gorm:"status"`
 }
 

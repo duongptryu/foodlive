@@ -55,5 +55,10 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			}
 		}
 
+		restaurant := v1.Group("/restaurant", middleware.RequireAuth(appCtx))
+		{
+			restaurant.GET("", ginrestaurant.ListRestaurant(appCtx))
+			restaurant.GET("/:id", ginrestaurant.FindRestaurant(appCtx))
+		}
 	}
 }
