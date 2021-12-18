@@ -7,7 +7,9 @@ import (
 
 type UpdateRestaurantStore interface {
 	FindRestaurant(ctx context.Context, condition map[string]interface{}, moreKeys ...string) (*restaurantmodel.Restaurant, error)
+	FindRestaurantWithoutStatus(ctx context.Context, condition map[string]interface{}, moreKeys ...string) (*restaurantmodel.Restaurant, error)
 	UpdateRestaurant(ctx context.Context, id int, data *restaurantmodel.RestaurantUpdate) error
+	UpdateRestaurantStatus(ctx context.Context, id int, data *restaurantmodel.RestaurantUpdateStatus) error
 }
 
 type updateRestaurantBiz struct {
@@ -32,6 +34,29 @@ func (biz *updateRestaurantBiz) UpdateRestaurantBiz(ctx context.Context, id int,
 	}
 
 	if err := biz.Store.UpdateRestaurant(ctx, id, data); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (biz *updateRestaurantBiz) UpdateRestaurantStatusBiz(ctx context.Context, id int, data *restaurantmodel.RestaurantUpdateStatus) error {
+	if err := data.Validate(); err != nil {
+		return err
+	}
+
+	oldData, err := biz.Store.FindRestaurantWithoutStatus(ctx, map[string]interface{}{"id": id})
+	if err != nil {
+		return err
+	}
+	if oldData.Id == 0 {
+		return restaurantmodel.ErrRestaurantNotFound
+	}
+
+	if oldData.Status == *data.Status {
+		return restaurantmodel.ErrStatusAlreadySet
+	}
+
+	if err := biz.Store.UpdateRestaurantStatus(ctx, id, data); err != nil {
 		return err
 	}
 	return nil

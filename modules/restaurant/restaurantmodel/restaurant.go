@@ -55,6 +55,21 @@ func (res *RestaurantUpdate) Validate() error {
 	return nil
 }
 
+type RestaurantUpdateStatus struct {
+	Status *bool `json:"status" gorm:"column:status"`
+}
+
+func (RestaurantUpdateStatus) TableName() string {
+	return Restaurant{}.TableName()
+}
+
+func (res *RestaurantUpdateStatus) Validate() error {
+	if res.Status == nil {
+		return ErrStatusCannotBeNil
+	}
+	return nil
+}
+
 type RestaurantCreate struct {
 	common.SQLModel  `json:",inlines"`
 	Name             string         `json:"name" gorm:"column:name;" binding:"required"`
@@ -88,5 +103,7 @@ func (res *RestaurantCreate) Validate() error {
 var (
 	ErrNameCannotBeEmpty  = common.NewCustomError(nil, "restaurant name can't be blank", "ErrNameCannotBeEmpty")
 	ErrLogoCannotBeEmpty  = common.NewCustomError(nil, "Logo restaurant can't be empty", "ErrLogoCannotBeEmpty")
+	ErrStatusCannotBeNil  = common.NewCustomError(nil, "Status restaurant can't be nil", "ErrStatusCannotBeNil")
+	ErrStatusAlreadySet   = common.NewCustomError(nil, "Status restaurant already set", "ErrStatusAlreadySet")
 	ErrRestaurantNotFound = common.NewFullErrorResponse(404, nil, "Restaurant not found", "Restaurant not found", "ErrRestaurantNotFound")
 )

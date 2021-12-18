@@ -45,6 +45,7 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			restaurant := admin.Group("/restaurant")
 			{
 				restaurant.DELETE("/:id", ginrestaurant.DeleteRestaurant(appCtx))
+				restaurant.PUT("/:id/status", ginrestaurant.UpdateRestaurantStatus(appCtx))
 			}
 		}
 
