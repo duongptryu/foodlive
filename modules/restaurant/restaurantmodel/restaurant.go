@@ -43,6 +43,18 @@ func (RestaurantUpdate) TableName() string {
 	return Restaurant{}.TableName()
 }
 
+func (res *RestaurantUpdate) Validate() error {
+	res.Name = strings.TrimSpace(res.Name)
+	if len(res.Name) == 0 {
+		return ErrNameCannotBeEmpty
+	}
+
+	if res.Logo.Url == "" {
+		return ErrLogoCannotBeEmpty
+	}
+	return nil
+}
+
 type RestaurantCreate struct {
 	common.SQLModel  `json:",inlines"`
 	Name             string         `json:"name" gorm:"column:name;" binding:"required"`
@@ -67,9 +79,13 @@ func (res *RestaurantCreate) Validate() error {
 		return ErrNameCannotBeEmpty
 	}
 
+	if res.Logo.Url == "" {
+		return ErrLogoCannotBeEmpty
+	}
 	return nil
 }
 
 var (
 	ErrNameCannotBeEmpty = common.NewCustomError(nil, "restaurant name can't be blank", "ErrNameCannotBeEmpty")
+	ErrLogoCannotBeEmpty = common.NewCustomError(nil, "Logo restaurant can't be empty", "ErrLogoCannotBeEmpty")
 )

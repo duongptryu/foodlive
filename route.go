@@ -52,6 +52,7 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			restaurant := ownerRestaurant.Group("/restaurant", middleware.RequireAuthOwnerRestaurant(appCtx))
 			{
 				restaurant.POST("", ginrestaurant.CreateRestaurant(appCtx))
+				restaurant.PUT("/:id", ginrestaurant.UpdateRestaurant(appCtx))
 			}
 		}
 
