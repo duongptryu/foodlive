@@ -40,7 +40,12 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 
 		admin := v1.Group("/admin")
 		{
-			admin.POST("/owner-restaurant/register", ginrestaurantowner.OwnerRestaurantRegister(appCtx))
+			admin.POST("/register-owner-restaurant", ginrestaurantowner.OwnerRestaurantRegister(appCtx))
+
+			restaurant := admin.Group("/restaurant")
+			{
+				restaurant.DELETE("/:id", ginrestaurant.DeleteRestaurant(appCtx))
+			}
 		}
 
 		ownerRestaurant := v1.Group("/owner-restaurant")

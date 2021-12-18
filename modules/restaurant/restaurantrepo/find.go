@@ -33,6 +33,10 @@ func (repo *findRestaurantRepo) FindRestaurantByIdRepo(ctx context.Context, id i
 		return nil, common.ErrCannotListEntity(restaurantmodel.EntityName, err)
 	}
 
+	if result.Id == 0 {
+		return nil, restaurantmodel.ErrRestaurantNotFound
+	}
+
 	//ids := make([]int, len(result))
 
 	//for i := range result {

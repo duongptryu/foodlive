@@ -2,7 +2,6 @@ package restaurantbiz
 
 import (
 	"context"
-	"fooddelivery/common"
 	"fooddelivery/modules/restaurant/restaurantmodel"
 )
 
@@ -29,7 +28,7 @@ func (biz *updateRestaurantBiz) UpdateRestaurantBiz(ctx context.Context, id int,
 		return err
 	}
 	if oldData.Id == 0 || oldData.Status == false {
-		return common.RecordNotFound
+		return restaurantmodel.ErrRestaurantNotFound
 	}
 
 	if err := biz.Store.UpdateRestaurant(ctx, id, data); err != nil {
