@@ -2,7 +2,6 @@ package restaurantbiz
 
 import (
 	"context"
-	"fooddelivery/common"
 	"fooddelivery/modules/restaurant/restaurantmodel"
 )
 
@@ -19,10 +18,10 @@ func NewFindRestaurantBiz(repo FindRestaurantRepo) *findRestaurantBiz {
 }
 
 func (biz *findRestaurantBiz) FindRestaurantById(ctx context.Context, id int) (*restaurantmodel.Restaurant, error) {
-
 	result, err := biz.repo.FindRestaurantByIdRepo(ctx, id)
 	if err != nil {
-		return nil, common.ErrCannotListEntity(restaurantmodel.EntityName, err)
+		return nil, err
 	}
+
 	return result, nil
 }

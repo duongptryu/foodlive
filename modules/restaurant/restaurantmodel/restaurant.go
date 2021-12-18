@@ -86,6 +86,7 @@ func (res *RestaurantCreate) Validate() error {
 }
 
 var (
-	ErrNameCannotBeEmpty = common.NewCustomError(nil, "restaurant name can't be blank", "ErrNameCannotBeEmpty")
-	ErrLogoCannotBeEmpty = common.NewCustomError(nil, "Logo restaurant can't be empty", "ErrLogoCannotBeEmpty")
+	ErrNameCannotBeEmpty  = common.NewCustomError(nil, "restaurant name can't be blank", "ErrNameCannotBeEmpty")
+	ErrLogoCannotBeEmpty  = common.NewCustomError(nil, "Logo restaurant can't be empty", "ErrLogoCannotBeEmpty")
+	ErrRestaurantNotFound = common.NewFullErrorResponse(404, nil, "Restaurant not found", "Restaurant not found", "ErrRestaurantNotFound")
 )

@@ -23,7 +23,7 @@ func (biz *listRestaurantBiz) ListRestaurant(ctx context.Context, filter *restau
 
 	result, err := biz.repo.ListRestaurantRepo(ctx, filter, paging)
 	if err != nil {
-		return nil, common.ErrCannotListEntity(restaurantmodel.EntityName, err)
+		return nil, err
 	}
 	return result, nil
 }
