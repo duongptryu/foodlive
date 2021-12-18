@@ -29,7 +29,7 @@ func extracTokenFromHeaderString(s string) (string, error) {
 
 func RequireAuth(appCtx component.AppContext) func(c *gin.Context) {
 	tokenProvider := appCtx.GetTokenProvider()
-	myCache := appCtx.GetMyCache()
+	//myCache := appCtx.GetMyCache()
 	return func(c *gin.Context) {
 		token, err := extracTokenFromHeaderString(c.GetHeader("Authorization"))
 		if err != nil {
@@ -40,15 +40,15 @@ func RequireAuth(appCtx component.AppContext) func(c *gin.Context) {
 		if err != nil {
 			panic(err)
 		}
-
-		userId, err := myCache.Get(common.KeyTokenCache + token)
-		if err != nil {
-			panic(ErrNotFound)
-		}
-
-		if payload.UserId != userId.(int) {
-			panic(ErrInvalidToken)
-		}
+		//
+		//userId, err := myCache.Get(common.KeyTokenCache + token)
+		//if err != nil {
+		//	panic(ErrNotFound)
+		//}
+		//
+		//if payload.UserId != userId.(int) {
+		//	panic(ErrInvalidToken)
+		//}
 
 		c.Set(common.KeyUserHeader, payload.UserId)
 		c.Next()

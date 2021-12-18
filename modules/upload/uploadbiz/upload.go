@@ -9,6 +9,8 @@ import (
 	"fooddelivery/modules/upload/uploadmodel"
 	log "github.com/sirupsen/logrus"
 	"image"
+	_ "image/png"
+	_ "image/jpeg"
 	"io"
 	"path/filepath"
 	"strings"
