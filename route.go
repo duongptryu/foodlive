@@ -5,6 +5,7 @@ import (
 	"fooddelivery/middleware"
 	"fooddelivery/modules/authsso/fbsso/fbssotransport/ginfbsso"
 	"fooddelivery/modules/authsso/googlesso/googlessotransport/gingooglesso"
+	"fooddelivery/modules/food/foodtransport/ginfood"
 	"fooddelivery/modules/restaurant/restauranttransport/ginrestaurant"
 	"fooddelivery/modules/restaurantowner/restaurantownertransport/ginrestaurantowner"
 	"fooddelivery/modules/upload/uploadtransport/ginupload"
@@ -59,6 +60,11 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			{
 				restaurant.POST("", ginrestaurant.CreateRestaurant(appCtx))
 				restaurant.PUT("/:id", ginrestaurant.UpdateRestaurant(appCtx))
+
+				food := restaurant.Group("/:id/food")
+				{
+					food.POST("", ginfood.CreateFood(appCtx))
+				}
 			}
 		}
 
@@ -67,5 +73,6 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			restaurant.GET("", ginrestaurant.ListRestaurant(appCtx))
 			restaurant.GET("/:id", ginrestaurant.FindRestaurant(appCtx))
 		}
+
 	}
 }

@@ -19,7 +19,7 @@ func NewDeleteRestaurantBiz(store DeleteRestaurantStore) *deleteRestaurant {
 }
 
 func (biz *deleteRestaurant) DeleteRestaurantBiz(ctx context.Context, id int) error {
-	oldData, err := biz.Store.FindRestaurant(ctx, map[string]interface{}{"id": id})
+	oldData, err := biz.Store.FindRestaurant(ctx, map[string]interface{}{"id": id, "status": true})
 	if err != nil {
 		return err
 	}
