@@ -23,7 +23,7 @@ func (Food) TableName() string {
 
 type FoodCreate struct {
 	common.SQLModelCreate `json:",inline"`
-	RestaurantId          int            `json:"-" gorm:"column:restaurant_id"`
+	RestaurantId          int            `json:"restaurant_id" gorm:"column:restaurant_id"`
 	CategoryId            int            `json:"category_id" gorm:"column:category_id" binding:"required"`
 	Name                  string         `json:"name" gorm:"column:name" binding:"required"`
 	Description           string         `json:"description" gorm:"column:description" binding:"required"`
@@ -55,9 +55,13 @@ type FoodUpdate struct {
 	Description           string         `json:"description" gorm:"column:description"`
 	Price                 float64        `json:"price" gorm:"column:price"`
 	Images                *common.Images `json:"images" gorm:"images"`
-	Status                bool           `json:"-" gorm:"status"`
+	Status                bool           `json:"status" gorm:"status"`
 }
 
 func (FoodUpdate) TableName() string {
 	return Food{}.TableName()
+}
+
+func (data *FoodUpdate) Validate() error {
+	return nil
 }

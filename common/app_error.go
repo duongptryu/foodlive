@@ -104,5 +104,6 @@ func ErrInvalidRequest(err error) *AppError {
 }
 
 var (
-	ErrUnAuthorization = NewFullErrorResponse(401, nil, "UnAuthorization", "UnAuthorization", "ErrUnAuthorization")
+	ErrUnAuthorization  = NewFullErrorResponse(401, nil, "UnAuthorization", "UnAuthorization", "ErrUnAuthorization")
+	ErrPermissionDenied = NewFullErrorResponse(403, nil, "You don't have permission to do this action", "You don't have permission to do this action", "ErrPermissionDenied")
 )
