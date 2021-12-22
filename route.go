@@ -61,10 +61,14 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 				restaurant.POST("", ginrestaurant.CreateRestaurant(appCtx))
 				restaurant.PUT("/:id", ginrestaurant.UpdateRestaurant(appCtx))
 
-				food := restaurant.Group("/:id/food")
-				{
-					food.POST("", ginfood.CreateFood(appCtx))
-				}
+			}
+
+			food := ownerRestaurant.Group("/food")
+			{
+				food.POST("", ginfood.CreateFood(appCtx))
+				food.PUT("/:id", ginfood.UpdateRestaurant(appCtx))
+				food.DELETE("/:id", ginfood.DeleteRestaurant(appCtx))
+				food.GET("", ginfood.ListFoodOfRestaurant(appCtx))
 			}
 		}
 
@@ -72,6 +76,9 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 		{
 			restaurant.GET("", ginrestaurant.ListRestaurant(appCtx))
 			restaurant.GET("/:id", ginrestaurant.FindRestaurant(appCtx))
+
+			//get food if restaurant
+			restaurant.GET("/:id/food", ginfood.ListFoodOfRestaurant(appCtx))
 		}
 
 	}
