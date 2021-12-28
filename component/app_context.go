@@ -6,6 +6,7 @@ import (
 	"fooddelivery/component/tokenprovider"
 	"fooddelivery/component/uploadprovider"
 	"fooddelivery/config"
+	"fooddelivery/pubsub"
 	"gorm.io/gorm"
 )
 
@@ -16,6 +17,7 @@ type AppContext interface {
 	GetMySms() gosms.GoSMS
 	GetTokenProvider() tokenprovider.TokenProvider
 	GetUploadProvider() uploadprovider.UploadProvider
+	GetPubSubProvider() pubsub.PubSub
 }
 
 type appCtx struct {
@@ -25,9 +27,10 @@ type appCtx struct {
 	mySms          gosms.GoSMS
 	tokenProvider  tokenprovider.TokenProvider
 	uploadProvider uploadprovider.UploadProvider
+	pubSubProvider pubsub.PubSub
 }
 
-func NewAppContext(appConfig *config.AppConfig, database *gorm.DB, myCache mycache.Cache, mySms gosms.GoSMS, tokenProvider tokenprovider.TokenProvider, uploadProvider uploadprovider.UploadProvider) *appCtx {
+func NewAppContext(appConfig *config.AppConfig, database *gorm.DB, myCache mycache.Cache, mySms gosms.GoSMS, tokenProvider tokenprovider.TokenProvider, uploadProvider uploadprovider.UploadProvider, pubSubProvider pubsub.PubSub) *appCtx {
 	return &appCtx{
 		appConfig:      appConfig,
 		database:       database,
@@ -35,6 +38,7 @@ func NewAppContext(appConfig *config.AppConfig, database *gorm.DB, myCache mycac
 		mySms:          mySms,
 		tokenProvider:  tokenProvider,
 		uploadProvider: uploadProvider,
+		pubSubProvider: pubSubProvider,
 	}
 }
 
@@ -60,4 +64,8 @@ func (ctx *appCtx) GetTokenProvider() tokenprovider.TokenProvider {
 
 func (ctx *appCtx) GetUploadProvider() uploadprovider.UploadProvider {
 	return ctx.uploadProvider
+}
+
+func (ctx *appCtx) GetPubSubProvider() pubsub.PubSub {
+	return ctx.pubSubProvider
 }

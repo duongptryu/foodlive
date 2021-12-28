@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-func main () {
+func main() {
 	runService()
 }
 
@@ -26,7 +26,6 @@ func runService() {
 	defer f.Close()
 
 	appCtx := setupAppContext(appConfig)
-
 
 	r := gin.Default()
 
