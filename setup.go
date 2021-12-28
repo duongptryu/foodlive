@@ -8,6 +8,8 @@ import (
 	"fooddelivery/component/tokenprovider/jwt"
 	"fooddelivery/component/uploadprovider"
 	"fooddelivery/config"
+	"fooddelivery/pubsub/pubsublocal"
+	"fooddelivery/subscribe"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -37,8 +39,15 @@ func setupAppContext(appConfig *config.AppConfig) component.AppContext {
 	//init upload provider
 	s3Provider := uploadprovider.NewS3Provider(appConfig.S3AWS.BucketName, appConfig.S3AWS.Region, appConfig.S3AWS.ApiKey, appConfig.S3AWS.Secret, appConfig.S3AWS.Domain)
 
+	//init pubsub local
+	psLocal := pubsublocal.NewPubSubLocal()
+
 	//init app context
-	appCtx := component.NewAppContext(appConfig, FDDatabase, myCache, mySms, tokenProvider, s3Provider)
+	appCtx := component.NewAppContext(appConfig, FDDatabase, myCache, mySms, tokenProvider, s3Provider, psLocal)
+
+	//setup subscriber
+	subscribe.SetupSubscriber(appCtx)
+
 	return appCtx
 }
 

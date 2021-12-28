@@ -13,6 +13,11 @@ import (
 
 func ListFoodOfRestaurant(appCtx component.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
+		rId, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			panic(common.ErrParseJson(err))
+		}
+
 		var filter foodmodel.Filter
 		if err := c.ShouldBindJSON(&filter); err != nil {
 			panic(common.ErrParseJson(err))
@@ -26,9 +31,9 @@ func ListFoodOfRestaurant(appCtx component.AppContext) func(c *gin.Context) {
 
 		foodStore := foodstore.NewSqlStore(appCtx.GetDatabase())
 		restaurantStore := restaurantstore.NewSqlStore(appCtx.GetDatabase())
-		lsitFoodBiz := foodbiz.NewListFoodOfRestaurantBiz(foodStore, restaurantStore)
+		listFoodBiz := foodbiz.NewListFoodOfRestaurantBiz(foodStore, restaurantStore)
 
-		result, err := lsitFoodBiz.ListFoodOfRestaurantBiz(c.Request.Context(), rId, &paging, &filter)
+		result, err := listFoodBiz.ListFoodOfRestaurantBiz(c.Request.Context(), rId, &paging, &filter)
 		if err != nil {
 			panic(err)
 		}
