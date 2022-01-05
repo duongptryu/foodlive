@@ -7,6 +7,7 @@ import (
 	"fooddelivery/modules/authsso/googlesso/googlessotransport/gingooglesso"
 	"fooddelivery/modules/food/foodtransport/ginfood"
 	"fooddelivery/modules/restaurant/restauranttransport/ginrestaurant"
+	"fooddelivery/modules/restaurantlike/restaurantliketransport/ginrestaurantlike"
 	"fooddelivery/modules/restaurantowner/restaurantownertransport/ginrestaurantowner"
 	"fooddelivery/modules/upload/uploadtransport/ginupload"
 	"fooddelivery/modules/user/usertransport/ginuser"
@@ -79,6 +80,13 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 
 			//get food if restaurant
 			restaurant.GET("/:id/food", ginfood.ListFoodOfRestaurant(appCtx))
+
+			//Like restaurant
+			restaurant.POST(":id/like", ginrestaurantlike.UserLikeRestaurant(appCtx))
+			restaurant.DELETE(":id/unlike", ginrestaurantlike.UserUnLikeRestaurant(appCtx))
+
+			//List user like restaurant
+			restaurant.GET(":id/like", ginrestaurantlike.ListUserLikeRestaurant(appCtx))
 		}
 
 	}
