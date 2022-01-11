@@ -16,12 +16,12 @@ func (s *sqlStore) ListRestaurant(ctx context.Context,
 
 	db := s.db
 
-	db = db.Table(restaurantmodel.Restaurant{}.TableName()).Where(condition).Where("status = ?", true)
+	db = db.Table(restaurantmodel.Restaurant{}.TableName()).Where(condition)
 
 	if v := filter; v != nil {
-		if v.CityId > 0 {
-			db = db.Where("city_id = ?", v.CityId)
-		}
+		//if v.CityId > 0 {
+		//	db = db.Where("city_id = ?", v.CityId)
+		//}
 	}
 
 	if err := db.Count(&paging.Total).Error; err != nil {

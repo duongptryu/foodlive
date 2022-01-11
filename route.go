@@ -61,6 +61,7 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			{
 				restaurant.POST("", ginrestaurant.CreateRestaurant(appCtx))
 				restaurant.PUT("/:id", ginrestaurant.UpdateRestaurant(appCtx))
+				restaurant.GET("", ginrestaurant.ListRestaurantOwner(appCtx))
 
 			}
 
