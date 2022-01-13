@@ -35,7 +35,7 @@ func (j *Image) Scan(value interface{}) error {
 }
 
 func (j *Image) Value() (driver.Value, error) {
-	if j == nil || j.Url == "" {
+	if j == nil {
 		return nil, nil
 	}
 	return json.Marshal(j)
@@ -58,7 +58,7 @@ func (j *Images) Scan(value interface{}) error {
 }
 
 func (j *Images) Value() (driver.Value, error) {
-	if j == nil || len(*j) < 1 {
+	if j == nil {
 		return nil, nil
 	}
 	return json.Marshal(j)
