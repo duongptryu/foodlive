@@ -103,6 +103,22 @@ func ErrInvalidRequest(err error) *AppError {
 	return NewErrorResponse(err, "invalid request", err.Error(), "ErrInvalidRequest")
 }
 
+func ErrDataNotFound(entity string) *AppError {
+	return NewCustomError(
+		nil,
+		fmt.Sprintf("%s Not Found", strings.ToLower(entity)),
+		fmt.Sprintf("ErrDataNotFound%s", entity),
+	)
+}
+
+func ErrDataAlreadyExist(entity string, field string) *AppError {
+	return NewCustomError(
+		nil,
+		fmt.Sprintf("%s %s already exist", strings.ToLower(field), strings.ToLower(entity)),
+		fmt.Sprintf("Err%s%sAlreadyExist", field, entity),
+	)
+}
+
 var (
 	ErrUnAuthorization  = NewFullErrorResponse(401, nil, "UnAuthorization", "UnAuthorization", "ErrUnAuthorization")
 	ErrPermissionDenied = NewFullErrorResponse(403, nil, "You don't have permission to do this action", "You don't have permission to do this action", "ErrPermissionDenied")
