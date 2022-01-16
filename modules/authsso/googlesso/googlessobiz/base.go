@@ -2,8 +2,8 @@ package googlessobiz
 
 import (
 	"context"
-	"fooddelivery/modules/authsso/googlesso/googlessomodel"
-	"fooddelivery/modules/user/usermodel"
+	"foodlive/modules/authsso/googlesso/googlessomodel"
+	"foodlive/modules/user/usermodel"
 )
 
 type UserStore interface {

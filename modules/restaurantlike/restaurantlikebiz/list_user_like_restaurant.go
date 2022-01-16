@@ -2,8 +2,8 @@ package restaurantlikebiz
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/modules/restaurantlike/restaurantlikemodel"
+	"foodlive/common"
+	"foodlive/modules/restaurantlike/restaurantlikemodel"
 )
 
 type ListUserLikRestaurantStore interface {

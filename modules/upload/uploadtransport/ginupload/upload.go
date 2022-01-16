@@ -1,10 +1,10 @@
 package ginupload
 
 import (
-	"fooddelivery/common"
-	"fooddelivery/component"
-	"fooddelivery/modules/upload/uploadbiz"
-	"fooddelivery/modules/upload/uploadstore"
+	"foodlive/common"
+	"foodlive/component"
+	"foodlive/modules/upload/uploadbiz"
+	"foodlive/modules/upload/uploadstore"
 	"github.com/gin-gonic/gin"
 )
 

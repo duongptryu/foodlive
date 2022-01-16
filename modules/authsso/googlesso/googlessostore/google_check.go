@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"fooddelivery/modules/authsso/googlesso/googlessomodel"
+	"foodlive/modules/authsso/googlesso/googlessomodel"
 	"github.com/dgrijalva/jwt-go"
 	"io/ioutil"
 	"net/http"

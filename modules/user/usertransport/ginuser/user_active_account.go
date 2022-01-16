@@ -1,11 +1,11 @@
 package ginuser
 
 import (
-	"fooddelivery/common"
-	"fooddelivery/component"
-	"fooddelivery/modules/user/userbiz"
-	"fooddelivery/modules/user/usermodel"
-	"fooddelivery/modules/user/userstorage"
+	"foodlive/common"
+	"foodlive/component"
+	"foodlive/modules/user/userbiz"
+	"foodlive/modules/user/usermodel"
+	"foodlive/modules/user/userstorage"
 	"github.com/gin-gonic/gin"
 )
 

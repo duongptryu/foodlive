@@ -2,9 +2,9 @@ package restaurantlikebiz
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/modules/restaurantlike/restaurantlikemodel"
-	"fooddelivery/pubsub"
+	"foodlive/common"
+	"foodlive/modules/restaurantlike/restaurantlikemodel"
+	"foodlive/pubsub"
 )
 
 type UserLikeRestaurantStore interface {

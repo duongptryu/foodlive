@@ -2,8 +2,8 @@ package restaurantownerbiz
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/modules/restaurantowner/restaurantownermodel"
+	"foodlive/common"
+	"foodlive/modules/restaurantowner/restaurantownermodel"
 	"golang.org/x/crypto/bcrypt"
 )
 

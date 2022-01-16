@@ -1,6 +1,6 @@
 package foodmodel
 
-import "fooddelivery/common"
+import "foodlive/common"
 
 const (
 	EntityName = "Food"

@@ -1,4 +1,8 @@
 .idea/
 config.yaml
+config_stg.yaml
 food-hub.log
 go.sum
+deploy.sh
+deploy/
+foodlive

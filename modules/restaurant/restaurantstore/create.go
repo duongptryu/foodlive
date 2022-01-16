@@ -2,8 +2,8 @@ package restaurantstore
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/modules/restaurant/restaurantmodel"
+	"foodlive/common"
+	"foodlive/modules/restaurant/restaurantmodel"
 )
 
 func (s *sqlStore) CreateRestaurant(ctx context.Context, data *restaurantmodel.RestaurantCreate) error {

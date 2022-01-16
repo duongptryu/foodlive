@@ -2,9 +2,9 @@ package foodbiz
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/modules/food/foodmodel"
-	"fooddelivery/modules/restaurant/restaurantmodel"
+	"foodlive/common"
+	"foodlive/modules/food/foodmodel"
+	"foodlive/modules/restaurant/restaurantmodel"
 )
 
 type deleteFoodBiz struct {

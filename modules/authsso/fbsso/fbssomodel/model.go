@@ -1,8 +1,8 @@
 package fbssomodel
 
 import (
-	"fooddelivery/common"
-	"fooddelivery/component/tokenprovider"
+	"foodlive/common"
+	"foodlive/component/tokenprovider"
 )
 
 const EntityName = "UserFacebook"

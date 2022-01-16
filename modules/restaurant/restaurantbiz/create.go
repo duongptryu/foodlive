@@ -2,8 +2,8 @@ package restaurantbiz
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/modules/restaurant/restaurantmodel"
+	"foodlive/common"
+	"foodlive/modules/restaurant/restaurantmodel"
 )
 
 type CreateRestaurantStore interface {

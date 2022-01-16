@@ -1,6 +1,6 @@
 package common
 
-import "fooddelivery/pubsub"
+import "foodlive/pubsub"
 
 const (
 	TopicUserLikeRestaurant    pubsub.Topic = "TopicUserLikeRestaurant"

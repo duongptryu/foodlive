@@ -2,8 +2,8 @@ package userstorage
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/modules/user/usermodel"
+	"foodlive/common"
+	"foodlive/modules/user/usermodel"
 )
 
 func (s *sqlStore) FindUser(ctx context.Context, conditions map[string]interface{}, moreKey ...string) (*usermodel.User, error) {

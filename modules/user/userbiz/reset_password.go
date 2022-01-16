@@ -2,9 +2,9 @@ package userbiz
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/component/mycache"
-	"fooddelivery/modules/user/usermodel"
+	"foodlive/common"
+	"foodlive/component/mycache"
+	"foodlive/modules/user/usermodel"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 )

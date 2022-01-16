@@ -2,8 +2,8 @@ package restaurantownermodel
 
 import (
 	"errors"
-	"fooddelivery/common"
-	"fooddelivery/component/tokenprovider"
+	"foodlive/common"
+	"foodlive/component/tokenprovider"
 	"time"
 )
 

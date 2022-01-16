@@ -3,8 +3,8 @@ package middleware
 import (
 	"errors"
 	"fmt"
-	"fooddelivery/common"
-	"fooddelivery/component"
+	"foodlive/common"
+	"foodlive/component"
 	"github.com/gin-gonic/gin"
 	"strings"
 )

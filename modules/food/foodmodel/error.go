@@ -1,6 +1,6 @@
 package foodmodel
 
-import "fooddelivery/common"
+import "foodlive/common"
 
 var (
 	ErrInvalidLengthNameFood        = common.NewCustomError(nil, "Name food must be greater than 3 characters", "ErrInvalidLengthNameFood")

@@ -2,7 +2,7 @@ package uploadprovider
 
 import (
 	"context"
-	"fooddelivery/common"
+	"foodlive/common"
 )
 
 type UploadProvider interface {

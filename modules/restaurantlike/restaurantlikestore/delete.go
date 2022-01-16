@@ -2,8 +2,8 @@ package restaurantlikestore
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/modules/restaurantlike/restaurantlikemodel"
+	"foodlive/common"
+	"foodlive/modules/restaurantlike/restaurantlikemodel"
 )
 
 func (s *sqlStore) Delete(ctx context.Context, userId, restaurantId int) error {

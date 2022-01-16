@@ -1,7 +1,7 @@
 package restaurantmodel
 
 import (
-	"fooddelivery/common"
+	"foodlive/common"
 	"strings"
 )
 

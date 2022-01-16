@@ -2,7 +2,7 @@ package uploadstore
 
 import (
 	"context"
-	"fooddelivery/common"
+	"foodlive/common"
 )
 
 func (store *sqlStore) CreateImage(context context.Context, data *common.Image) error {

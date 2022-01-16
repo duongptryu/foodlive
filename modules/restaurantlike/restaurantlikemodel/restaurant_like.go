@@ -2,7 +2,7 @@ package restaurantlikemodel
 
 import (
 	"fmt"
-	"fooddelivery/common"
+	"foodlive/common"
 	"time"
 )
 

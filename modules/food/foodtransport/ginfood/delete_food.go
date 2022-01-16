@@ -1,11 +1,11 @@
 package ginfood
 
 import (
-	"fooddelivery/common"
-	"fooddelivery/component"
-	"fooddelivery/modules/food/foodbiz"
-	"fooddelivery/modules/food/foodstore"
-	"fooddelivery/modules/restaurant/restaurantstore"
+	"foodlive/common"
+	"foodlive/component"
+	"foodlive/modules/food/foodbiz"
+	"foodlive/modules/food/foodstore"
+	"foodlive/modules/restaurant/restaurantstore"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )

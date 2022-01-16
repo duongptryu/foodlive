@@ -1,12 +1,12 @@
 package ginfbsso
 
 import (
-	"fooddelivery/common"
-	"fooddelivery/component"
-	"fooddelivery/modules/authsso/fbsso/fbssobiz"
-	"fooddelivery/modules/authsso/fbsso/fbssomodel"
-	"fooddelivery/modules/authsso/fbsso/fbssostore"
-	"fooddelivery/modules/user/userstorage"
+	"foodlive/common"
+	"foodlive/component"
+	"foodlive/modules/authsso/fbsso/fbssobiz"
+	"foodlive/modules/authsso/fbsso/fbssomodel"
+	"foodlive/modules/authsso/fbsso/fbssostore"
+	"foodlive/modules/user/userstorage"
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,8 +1,8 @@
 package googlessomodel
 
 import (
-	"fooddelivery/common"
-	"fooddelivery/component/tokenprovider"
+	"foodlive/common"
+	"foodlive/component/tokenprovider"
 	"github.com/dgrijalva/jwt-go"
 )
 

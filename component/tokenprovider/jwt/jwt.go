@@ -1,7 +1,7 @@
 package jwt
 
 import (
-	"fooddelivery/component/tokenprovider"
+	"foodlive/component/tokenprovider"
 	"github.com/dgrijalva/jwt-go"
 	"time"
 )

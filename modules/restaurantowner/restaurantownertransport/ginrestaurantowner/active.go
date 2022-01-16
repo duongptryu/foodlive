@@ -1,11 +1,11 @@
 package ginrestaurantowner
 
 import (
-	"fooddelivery/common"
-	"fooddelivery/component"
-	"fooddelivery/modules/restaurantowner/restaurantownerbiz"
-	"fooddelivery/modules/restaurantowner/restaurantownermodel"
-	"fooddelivery/modules/restaurantowner/restaurantownerstore"
+	"foodlive/common"
+	"foodlive/component"
+	"foodlive/modules/restaurantowner/restaurantownerbiz"
+	"foodlive/modules/restaurantowner/restaurantownermodel"
+	"foodlive/modules/restaurantowner/restaurantownerstore"
 	"github.com/gin-gonic/gin"
 )
 

@@ -2,8 +2,8 @@ package fbssobiz
 
 import (
 	"context"
-	"fooddelivery/modules/authsso/fbsso/fbssomodel"
-	"fooddelivery/modules/user/usermodel"
+	"foodlive/modules/authsso/fbsso/fbssomodel"
+	"foodlive/modules/user/usermodel"
 )
 
 type UserStore interface {

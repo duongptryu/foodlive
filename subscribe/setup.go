@@ -2,7 +2,7 @@ package subscribe
 
 import (
 	"context"
-	"fooddelivery/component"
+	"foodlive/component"
 )
 
 func SetupSubscriber(appCtx component.AppContext) {

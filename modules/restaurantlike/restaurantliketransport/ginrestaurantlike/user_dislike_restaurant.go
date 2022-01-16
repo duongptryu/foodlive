@@ -1,10 +1,10 @@
 package ginrestaurantlike
 
 import (
-	"fooddelivery/common"
-	"fooddelivery/component"
-	"fooddelivery/modules/restaurantlike/restaurantlikebiz"
-	"fooddelivery/modules/restaurantlike/restaurantlikestore"
+	"foodlive/common"
+	"foodlive/component"
+	"foodlive/modules/restaurantlike/restaurantlikebiz"
+	"foodlive/modules/restaurantlike/restaurantlikestore"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"

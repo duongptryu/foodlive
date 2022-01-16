@@ -2,7 +2,7 @@ package uploadmodel
 
 import (
 	"errors"
-	"fooddelivery/common"
+	"foodlive/common"
 )
 
 const EntityName = "Upload"

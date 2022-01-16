@@ -2,8 +2,8 @@ package userstorage
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/modules/user/usermodel"
+	"foodlive/common"
+	"foodlive/modules/user/usermodel"
 )
 
 func (s *sqlStore) UpdateStatusUser(ctx context.Context, phoneNumber string) error {

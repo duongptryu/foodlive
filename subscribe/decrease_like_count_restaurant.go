@@ -2,9 +2,9 @@ package subscribe
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/component"
-	"fooddelivery/modules/restaurant/restaurantstore"
+	"foodlive/common"
+	"foodlive/component"
+	"foodlive/modules/restaurant/restaurantstore"
 	log "github.com/sirupsen/logrus"
 )
 

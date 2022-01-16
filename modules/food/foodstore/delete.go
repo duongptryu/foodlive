@@ -2,8 +2,8 @@ package foodstore
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/modules/food/foodmodel"
+	"foodlive/common"
+	"foodlive/modules/food/foodmodel"
 )
 
 func (s *sqlStore) DeleteFood(ctx context.Context, id int) error {

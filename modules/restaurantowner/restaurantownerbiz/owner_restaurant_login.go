@@ -2,10 +2,10 @@ package restaurantownerbiz
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/component/mycache"
-	"fooddelivery/component/tokenprovider"
-	"fooddelivery/modules/restaurantowner/restaurantownermodel"
+	"foodlive/common"
+	"foodlive/component/mycache"
+	"foodlive/component/tokenprovider"
+	"foodlive/modules/restaurantowner/restaurantownermodel"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 )

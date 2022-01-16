@@ -2,7 +2,7 @@ package uploadstore
 
 import (
 	"context"
-	"fooddelivery/common"
+	"foodlive/common"
 )
 
 func (store *sqlStore) DeleteImages(ctx context.Context, ids []int) error {

@@ -3,8 +3,8 @@ package pubsublocal
 import (
 	"context"
 	"fmt"
-	"fooddelivery/common"
-	"fooddelivery/pubsub"
+	"foodlive/common"
+	"foodlive/pubsub"
 	"sync"
 )
 

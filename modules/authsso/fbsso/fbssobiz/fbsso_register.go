@@ -2,9 +2,9 @@ package fbssobiz
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/modules/authsso/fbsso/fbssomodel"
-	"fooddelivery/modules/user/usermodel"
+	"foodlive/common"
+	"foodlive/modules/authsso/fbsso/fbssomodel"
+	"foodlive/modules/user/usermodel"
 )
 
 type registerFbSsoStore struct {

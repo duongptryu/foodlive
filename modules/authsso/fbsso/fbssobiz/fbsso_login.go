@@ -2,9 +2,9 @@ package fbssobiz
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/component/tokenprovider"
-	"fooddelivery/modules/authsso/fbsso/fbssomodel"
+	"foodlive/common"
+	"foodlive/component/tokenprovider"
+	"foodlive/modules/authsso/fbsso/fbssomodel"
 )
 
 type loginFbBiz struct {

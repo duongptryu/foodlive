@@ -2,8 +2,8 @@ package restaurantownerstore
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/modules/restaurantowner/restaurantownermodel"
+	"foodlive/common"
+	"foodlive/modules/restaurantowner/restaurantownermodel"
 )
 
 func (s *sqlStore) CreateOwnerRestaurant(ctx context.Context, data *restaurantownermodel.OwnerRestaurantCreate) error {

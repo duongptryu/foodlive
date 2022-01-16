@@ -1,12 +1,12 @@
 package gingooglesso
 
 import (
-	"fooddelivery/common"
-	"fooddelivery/component"
-	"fooddelivery/modules/authsso/googlesso/googlessobiz"
-	"fooddelivery/modules/authsso/googlesso/googlessomodel"
-	"fooddelivery/modules/authsso/googlesso/googlessostore"
-	"fooddelivery/modules/user/userstorage"
+	"foodlive/common"
+	"foodlive/component"
+	"foodlive/modules/authsso/googlesso/googlessobiz"
+	"foodlive/modules/authsso/googlesso/googlessomodel"
+	"foodlive/modules/authsso/googlesso/googlessostore"
+	"foodlive/modules/user/userstorage"
 	"github.com/gin-gonic/gin"
 )
 

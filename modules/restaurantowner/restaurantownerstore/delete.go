@@ -2,8 +2,8 @@ package restaurantownerstore
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/modules/restaurantowner/restaurantownermodel"
+	"foodlive/common"
+	"foodlive/modules/restaurantowner/restaurantownermodel"
 )
 
 func (s *sqlStore) DeleteOwnerRestaurant(ctx context.Context, id int) error {

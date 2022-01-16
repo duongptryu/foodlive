@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"fooddelivery/common"
-	"fooddelivery/component"
+	"foodlive/common"
+	"foodlive/component"
 	"github.com/gin-gonic/gin"
 )
 
@@ -27,4 +27,3 @@ func Recover(appCtx component.AppContext) gin.HandlerFunc {
 		c.Next()
 	}
 }
-

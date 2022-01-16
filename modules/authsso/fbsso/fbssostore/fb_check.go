@@ -3,8 +3,8 @@ package fbssostore
 import (
 	"context"
 	"encoding/json"
-	"fooddelivery/common"
-	"fooddelivery/modules/authsso/fbsso/fbssomodel"
+	"foodlive/common"
+	"foodlive/modules/authsso/fbsso/fbssomodel"
 	"net/http"
 	"time"
 )

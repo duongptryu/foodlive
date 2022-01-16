@@ -2,9 +2,9 @@ package googlessobiz
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/modules/authsso/googlesso/googlessomodel"
-	"fooddelivery/modules/user/usermodel"
+	"foodlive/common"
+	"foodlive/modules/authsso/googlesso/googlessomodel"
+	"foodlive/modules/user/usermodel"
 )
 
 type registerGoogleBiz struct {

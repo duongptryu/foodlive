@@ -2,7 +2,7 @@ package tokenprovider
 
 import (
 	"errors"
-	"fooddelivery/common"
+	"foodlive/common"
 	"time"
 )
 

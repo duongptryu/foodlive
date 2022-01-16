@@ -2,8 +2,8 @@ package restaurantownerstore
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/modules/restaurantowner/restaurantownermodel"
+	"foodlive/common"
+	"foodlive/modules/restaurantowner/restaurantownermodel"
 )
 
 func (s *sqlStore) ListOwnerRestaurant(ctx context.Context, condition map[string]interface{}, paging *common.Paging, moreKeys ...string) ([]restaurantownermodel.OwnerRestaurant, error) {

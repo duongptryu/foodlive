@@ -1,12 +1,12 @@
 package component
 
 import (
-	"fooddelivery/component/gosms"
-	"fooddelivery/component/mycache"
-	"fooddelivery/component/tokenprovider"
-	"fooddelivery/component/uploadprovider"
-	"fooddelivery/config"
-	"fooddelivery/pubsub"
+	"foodlive/component/gosms"
+	"foodlive/component/mycache"
+	"foodlive/component/tokenprovider"
+	"foodlive/component/uploadprovider"
+	"foodlive/config"
+	"foodlive/pubsub"
 	"gorm.io/gorm"
 )
 

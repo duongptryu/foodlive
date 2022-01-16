@@ -2,9 +2,9 @@ package restaurantownerbiz
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/component/mycache"
-	"fooddelivery/modules/restaurantowner/restaurantownermodel"
+	"foodlive/common"
+	"foodlive/component/mycache"
+	"foodlive/modules/restaurantowner/restaurantownermodel"
 	log "github.com/sirupsen/logrus"
 )
 

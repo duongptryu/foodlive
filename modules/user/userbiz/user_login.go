@@ -2,9 +2,9 @@ package userbiz
 
 import (
 	"context"
-	"fooddelivery/common"
-	"fooddelivery/component/tokenprovider"
-	"fooddelivery/modules/user/usermodel"
+	"foodlive/common"
+	"foodlive/component/tokenprovider"
+	"foodlive/modules/user/usermodel"
 	"golang.org/x/crypto/bcrypt"
 )
 

@@ -2,7 +2,7 @@ package restaurantbiz
 
 import (
 	"context"
-	"fooddelivery/modules/restaurant/restaurantmodel"
+	"foodlive/modules/restaurant/restaurantmodel"
 )
 
 type UpdateRestaurantStore interface {

@@ -1,16 +1,16 @@
 package main
 
 import (
-	"fooddelivery/component"
-	"fooddelivery/middleware"
-	"fooddelivery/modules/authsso/fbsso/fbssotransport/ginfbsso"
-	"fooddelivery/modules/authsso/googlesso/googlessotransport/gingooglesso"
-	"fooddelivery/modules/food/foodtransport/ginfood"
-	"fooddelivery/modules/restaurant/restauranttransport/ginrestaurant"
-	"fooddelivery/modules/restaurantlike/restaurantliketransport/ginrestaurantlike"
-	"fooddelivery/modules/restaurantowner/restaurantownertransport/ginrestaurantowner"
-	"fooddelivery/modules/upload/uploadtransport/ginupload"
-	"fooddelivery/modules/user/usertransport/ginuser"
+	"foodlive/component"
+	"foodlive/middleware"
+	"foodlive/modules/authsso/fbsso/fbssotransport/ginfbsso"
+	"foodlive/modules/authsso/googlesso/googlessotransport/gingooglesso"
+	"foodlive/modules/food/foodtransport/ginfood"
+	"foodlive/modules/restaurant/restauranttransport/ginrestaurant"
+	"foodlive/modules/restaurantlike/restaurantliketransport/ginrestaurantlike"
+	"foodlive/modules/restaurantowner/restaurantownertransport/ginrestaurantowner"
+	"foodlive/modules/upload/uploadtransport/ginupload"
+	"foodlive/modules/user/usertransport/ginuser"
 	"github.com/gin-gonic/gin"
 )
 

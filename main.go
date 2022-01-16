@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fooddelivery/config"
+	"foodlive/config"
 	"github.com/gin-gonic/gin"
 	"log"
 )
