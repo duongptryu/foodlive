@@ -3,6 +3,7 @@ package ginfood
 import (
 	"foodlive/common"
 	"foodlive/component"
+	"foodlive/modules/category/categorystore"
 	"foodlive/modules/food/foodbiz"
 	"foodlive/modules/food/foodmodel"
 	"foodlive/modules/food/foodstore"
@@ -26,12 +27,13 @@ func CreateFood(appCtx component.AppContext) func(c *gin.Context) {
 
 		foodStore := foodstore.NewSqlStore(appCtx.GetDatabase())
 		restaurantStore := restaurantstore.NewSqlStore(appCtx.GetDatabase())
-		biz := foodbiz.NewCreateFoodBiz(foodStore, restaurantStore)
+		categoryStore := categorystore.NewSqlStore(appCtx.GetDatabase())
+		biz := foodbiz.NewCreateFoodBiz(foodStore, restaurantStore, categoryStore)
 
 		if err := biz.CreateFoodBiz(c.Request.Context(), &data, userId); err != nil {
 			panic(err)
 		}
-
+		s
 		c.JSON(201, common.NewSimpleSuccessResponse(data))
 	}
 }

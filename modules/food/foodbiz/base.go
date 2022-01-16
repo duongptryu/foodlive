@@ -3,6 +3,7 @@ package foodbiz
 import (
 	"context"
 	"foodlive/common"
+	"foodlive/modules/category/categorymodel"
 	"foodlive/modules/food/foodmodel"
 	"foodlive/modules/restaurant/restaurantmodel"
 )
@@ -17,4 +18,8 @@ type FoodStore interface {
 
 type RestaurantStore interface {
 	FindRestaurant(ctx context.Context, condition map[string]interface{}, moreKeys ...string) (*restaurantmodel.Restaurant, error)
+}
+
+type CategoryStore interface {
+	FindCategory(ctx context.Context, conditions map[string]interface{}, moreKeys ...string) (*categorymodel.Category, error)
 }
