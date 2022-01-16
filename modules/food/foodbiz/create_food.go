@@ -3,6 +3,7 @@ package foodbiz
 import (
 	"context"
 	"foodlive/common"
+	"foodlive/modules/category/categorymodel"
 	"foodlive/modules/food/foodmodel"
 	"foodlive/modules/restaurant/restaurantmodel"
 )
@@ -10,12 +11,14 @@ import (
 type createFoodBiz struct {
 	foodStore       FoodStore
 	restaurantStore RestaurantStore
+	categoryStore   CategoryStore
 }
 
-func NewCreateFoodBiz(foodStore FoodStore, restaurantStore RestaurantStore) *createFoodBiz {
+func NewCreateFoodBiz(foodStore FoodStore, restaurantStore RestaurantStore, categoryStore CategoryStore) *createFoodBiz {
 	return &createFoodBiz{
 		foodStore:       foodStore,
 		restaurantStore: restaurantStore,
+		categoryStore:   categoryStore,
 	}
 }
 
@@ -39,6 +42,14 @@ func (biz *createFoodBiz) CreateFoodBiz(ctx context.Context, data *foodmodel.Foo
 	}
 
 	//check if category is exist
+	cateDb, err := biz.categoryStore.FindCategory(ctx, map[string]interface{}{"id": data.CategoryId, "status": true})
+	if err != nil {
+		return err
+	}
+
+	if cateDb.Id == 0 {
+		return common.ErrCannotCreateEntity(foodmodel.EntityName, common.ErrDataNotFound(categorymodel.EntityName))
+	}
 
 	if err := biz.foodStore.CreateFood(ctx, data); err != nil {
 		return common.ErrCannotCreateEntity(foodmodel.EntityName, err)
