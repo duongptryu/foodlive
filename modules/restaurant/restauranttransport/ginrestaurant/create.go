@@ -3,6 +3,7 @@ package ginrestaurant
 import (
 	"foodlive/common"
 	"foodlive/component"
+	"foodlive/modules/city/citystore"
 	"foodlive/modules/restaurant/restaurantbiz"
 	"foodlive/modules/restaurant/restaurantmodel"
 	"foodlive/modules/restaurant/restaurantstore"
@@ -24,7 +25,8 @@ func CreateRestaurant(appCtx component.AppContext) func(c *gin.Context) {
 		data.OwnerId = userIdRaw.(int)
 
 		createRestaurantStore := restaurantstore.NewSqlStore(appCtx.GetDatabase())
-		createRestaurantBiz := restaurantbiz.NewCreateRestaurantBiz(createRestaurantStore)
+		cityStore := citystore.NewSqlStore(appCtx.GetDatabase())
+		createRestaurantBiz := restaurantbiz.NewCreateRestaurantBiz(createRestaurantStore, cityStore)
 
 		if err := createRestaurantBiz.CreateRestaurantBiz(c.Request.Context(), &data); err != nil {
 			panic(err)

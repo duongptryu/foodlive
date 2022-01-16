@@ -3,6 +3,7 @@ package ginrestaurant
 import (
 	"foodlive/common"
 	"foodlive/component"
+	"foodlive/modules/city/citystore"
 	"foodlive/modules/restaurant/restaurantbiz"
 	"foodlive/modules/restaurant/restaurantmodel"
 	"foodlive/modules/restaurant/restaurantstore"
@@ -24,7 +25,8 @@ func UpdateRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 		}
 
 		store := restaurantstore.NewSqlStore(appCtx.GetDatabase())
-		biz := restaurantbiz.NewUpdateRestaurantBiz(store)
+		cityStore := citystore.NewSqlStore(appCtx.GetDatabase())
+		biz := restaurantbiz.NewUpdateRestaurantBiz(store, cityStore)
 
 		if err := biz.UpdateRestaurantBiz(c.Request.Context(), id, &data); err != nil {
 			panic(err)
@@ -48,7 +50,8 @@ func UpdateRestaurantStatus(appCtx component.AppContext) gin.HandlerFunc {
 		}
 
 		store := restaurantstore.NewSqlStore(appCtx.GetDatabase())
-		biz := restaurantbiz.NewUpdateRestaurantBiz(store)
+		cityStore := citystore.NewSqlStore(appCtx.GetDatabase())
+		biz := restaurantbiz.NewUpdateRestaurantBiz(store, cityStore)
 
 		if err := biz.UpdateRestaurantStatusBiz(c.Request.Context(), id, &data); err != nil {
 			panic(err)
