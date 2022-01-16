@@ -5,6 +5,7 @@ import (
 	"foodlive/middleware"
 	"foodlive/modules/authsso/fbsso/fbssotransport/ginfbsso"
 	"foodlive/modules/authsso/googlesso/googlessotransport/gingooglesso"
+	"foodlive/modules/category/categorytransport/gincategory"
 	"foodlive/modules/food/foodtransport/ginfood"
 	"foodlive/modules/restaurant/restauranttransport/ginrestaurant"
 	"foodlive/modules/restaurantlike/restaurantliketransport/ginrestaurantlike"
@@ -48,6 +49,14 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			{
 				restaurant.DELETE("/:id", ginrestaurant.DeleteRestaurant(appCtx))
 				restaurant.PUT("/:id/status", ginrestaurant.UpdateRestaurantStatus(appCtx))
+			}
+
+			category := admin.Group("/category")
+			{
+				category.POST("", gincategory.CreateCategory(appCtx))
+				category.PUT("/:id", gincategory.UpdateCategory(appCtx))
+				category.DELETE("/:id", gincategory.DeleteCategory(appCtx))
+				category.GET("", gincategory.AdminListCategory(appCtx))
 			}
 		}
 
