@@ -16,7 +16,7 @@ func (s *sqlStore) ListRestaurant(ctx context.Context,
 
 	db := s.db
 
-	db = db.Table(restaurantmodel.Restaurant{}.TableName()).Where(condition).Where("status = ?", true)
+	db = db.Table(restaurantmodel.Restaurant{}.TableName()).Where(condition)
 
 	if v := filter; v != nil {
 		if v.CityId > 0 {

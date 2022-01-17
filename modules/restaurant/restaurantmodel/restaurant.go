@@ -2,6 +2,7 @@ package restaurantmodel
 
 import (
 	"foodlive/common"
+	"foodlive/modules/city/citymodel"
 	"strings"
 )
 
@@ -16,12 +17,12 @@ type Restaurant struct {
 	Cover           *common.Images `json:"cover" gorm:"column:cover;"`
 	//User            *common.SimpleUser `json:"user" gorm:"preload:false"`
 	//LikeCount int `json:"like_count" gorm:"column:liked_count"`
-	CityId int `json:"city_id" gorm:"city_id"`
-	//City   *citymodel.City `json:"city" gorm:"preload:false"`
-	Lat              float64 `json:"lat" gorm:"lat"`
-	Lng              float64 `json:"lng" gorm:"lng"`
-	ShippingFeePerKm float64 `json:"shipping_fee_per_km" gorm:"shipping_fee_per_km"`
-	Status           bool    `json:"status" gorm:"status"`
+	CityId           int             `json:"city_id" gorm:"city_id"`
+	City             *citymodel.City `json:"city" gorm:"preload:false"`
+	Lat              float64         `json:"lat" gorm:"lat"`
+	Lng              float64         `json:"lng" gorm:"lng"`
+	ShippingFeePerKm float64         `json:"shipping_fee_per_km" gorm:"shipping_fee_per_km"`
+	Status           bool            `json:"status" gorm:"status"`
 }
 
 func (Restaurant) TableName() string {
