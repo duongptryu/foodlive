@@ -12,6 +12,7 @@ import (
 	"foodlive/modules/restaurantowner/restaurantownertransport/ginrestaurantowner"
 	"foodlive/modules/upload/uploadtransport/ginupload"
 	"foodlive/modules/user/usertransport/ginuser"
+	"foodlive/modules/useraddress/useraddresstransport/ginuseraddress"
 	"github.com/gin-gonic/gin"
 )
 
@@ -60,6 +61,14 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 		category := v1.Group("/category", middleware.RequireAuth(appCtx))
 		{
 			category.GET("", gincategory.UserListCategory(appCtx))
+		}
+
+		userAddress := v1.Group("address", middleware.RequireAuth(appCtx))
+		{
+			userAddress.POST("", ginuseraddress.CreateUserAddress(appCtx))
+			userAddress.PUT("/:id", ginuseraddress.UpdateUserAddress(appCtx))
+			userAddress.DELETE("/:id", ginuseraddress.DeleteUserAddress(appCtx))
+			userAddress.GET("", ginuseraddress.ListUserAddress(appCtx))
 		}
 
 		//========================================================================================================

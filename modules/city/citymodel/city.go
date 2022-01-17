@@ -2,6 +2,10 @@ package citymodel
 
 import "foodlive/common"
 
+const (
+	EntityName = "City"
+)
+
 type City struct {
 	common.SQLModel
 	Title  string `json:"title" gorm:"title"`
