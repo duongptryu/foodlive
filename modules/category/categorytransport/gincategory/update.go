@@ -18,7 +18,7 @@ func UpdateCategory(appCtx component.AppContext) gin.HandlerFunc {
 		}
 
 		var data categorymodel.CategoryUpdate
-		if err := c.ShouldBind(&data); err != nil {
+		if err := c.ShouldBindJSON(&data); err != nil {
 			panic(common.ErrParseJson(err))
 		}
 

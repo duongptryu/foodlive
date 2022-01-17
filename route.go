@@ -41,6 +41,29 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			sso.POST("/login-facebook", ginfbsso.UserFacebookRegister(appCtx))
 		}
 
+		restaurant := v1.Group("/restaurant", middleware.RequireAuth(appCtx))
+		{
+			restaurant.GET("", ginrestaurant.ListRestaurant(appCtx))
+			restaurant.GET("/:id", ginrestaurant.FindRestaurant(appCtx))
+
+			//get food if restaurant
+			restaurant.GET("/:id/food", ginfood.UserListFoodOfRestaurant(appCtx))
+
+			//Like restaurant
+			restaurant.POST(":id/like", ginrestaurantlike.UserLikeRestaurant(appCtx))
+			restaurant.DELETE(":id/unlike", ginrestaurantlike.UserUnLikeRestaurant(appCtx))
+
+			//List user like restaurant
+			restaurant.GET(":id/like", ginrestaurantlike.ListUserLikeRestaurant(appCtx))
+		}
+
+		category := v1.Group("/category", middleware.RequireAuth(appCtx))
+		{
+			category.GET("", gincategory.UserListCategory(appCtx))
+		}
+
+		//========================================================================================================
+
 		admin := v1.Group("/admin")
 		{
 			admin.POST("/register-owner-restaurant", ginrestaurantowner.OwnerRestaurantRegister(appCtx))
@@ -70,32 +93,22 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			{
 				restaurant.POST("", ginrestaurant.CreateRestaurant(appCtx))
 				restaurant.PUT("/:id", ginrestaurant.UpdateRestaurant(appCtx))
-
+				restaurant.GET("", ginrestaurant.ListRestaurantOwner(appCtx))
+				restaurant.GET("/:id/food", ginfood.ListFoodOfRestaurant(appCtx)) // Get food of restaurant
 			}
 
-			food := ownerRestaurant.Group("/food")
+			food := ownerRestaurant.Group("/food", middleware.RequireAuthOwnerRestaurant(appCtx))
 			{
 				food.POST("", ginfood.CreateFood(appCtx))
 				food.PUT("/:id", ginfood.UpdateRestaurant(appCtx))
 				food.DELETE("/:id", ginfood.DeleteRestaurant(appCtx))
 				food.GET("", ginfood.ListFoodOfRestaurant(appCtx))
 			}
-		}
 
-		restaurant := v1.Group("/restaurant", middleware.RequireAuth(appCtx))
-		{
-			restaurant.GET("", ginrestaurant.ListRestaurant(appCtx))
-			restaurant.GET("/:id", ginrestaurant.FindRestaurant(appCtx))
-
-			//get food if restaurant
-			restaurant.GET("/:id/food", ginfood.ListFoodOfRestaurant(appCtx))
-
-			//Like restaurant
-			restaurant.POST(":id/like", ginrestaurantlike.UserLikeRestaurant(appCtx))
-			restaurant.DELETE(":id/unlike", ginrestaurantlike.UserUnLikeRestaurant(appCtx))
-
-			//List user like restaurant
-			restaurant.GET(":id/like", ginrestaurantlike.ListUserLikeRestaurant(appCtx))
+			category := ownerRestaurant.Group("/category")
+			{
+				category.GET("", gincategory.UserListCategory(appCtx))
+			}
 		}
 
 	}

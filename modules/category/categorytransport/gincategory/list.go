@@ -11,16 +11,16 @@ import (
 
 func AdminListCategory(appCtx component.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		var filter categorymodel.Filter
-		if err := c.ShouldBindJSON(&filter); err != nil {
-			panic(common.ErrParseJson(err))
-		}
-
 		var paging common.Paging
-		if err := c.ShouldBindJSON(&paging); err != nil {
+		if err := c.ShouldBind(&paging); err != nil {
 			panic(common.ErrParseJson(err))
 		}
 		paging.Fulfill()
+
+		var filter categorymodel.Filter
+		if err := c.ShouldBind(&filter); err != nil {
+			panic(common.ErrParseJson(err))
+		}
 
 		categoryStore := categorystore.NewSqlStore(appCtx.GetDatabase())
 		biz := categorybiz.NewListCategoryBiz(categoryStore)
@@ -37,12 +37,12 @@ func AdminListCategory(appCtx component.AppContext) func(c *gin.Context) {
 func UserListCategory(appCtx component.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var filter categorymodel.Filter
-		if err := c.ShouldBindJSON(&filter); err != nil {
+		if err := c.ShouldBind(&filter); err != nil {
 			panic(common.ErrParseJson(err))
 		}
 
 		var paging common.Paging
-		if err := c.ShouldBindJSON(&paging); err != nil {
+		if err := c.ShouldBind(&paging); err != nil {
 			panic(common.ErrParseJson(err))
 		}
 		paging.Fulfill()

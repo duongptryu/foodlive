@@ -29,7 +29,7 @@ type FoodCreate struct {
 	Description           string         `json:"description" gorm:"column:description" binding:"required"`
 	Price                 float64        `json:"price" gorm:"column:price" binding:"required"`
 	Images                *common.Images `json:"images" gorm:"images" binding:"required"`
-	Status                bool           `json:"-" gorm:"status"`
+	Status                bool           `json:"status" gorm:"status"`
 }
 
 func (FoodCreate) TableName() string {

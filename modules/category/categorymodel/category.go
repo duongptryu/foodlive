@@ -23,7 +23,7 @@ type CategoryCreate struct {
 	Name        string        `json:"name" gorm:"name" binding:"required"`
 	Description string        `json:"description" gorm:"description"  binding:"required"`
 	Icon        *common.Image `json:"icon" gorm:"icon"  binding:"required"`
-	Status      bool          `json:"-" gorm:"status"`
+	Status      bool          `json:"status" gorm:"status"`
 }
 
 func (CategoryCreate) TableName() string {

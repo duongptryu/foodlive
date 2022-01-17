@@ -16,19 +16,13 @@ func ListRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 		var filter restaurantmodel.Filter
 
 		if err := c.ShouldBind(&filter); err != nil {
-			c.JSON(401, gin.H{
-				"error": err.Error(),
-			})
-			return
+			panic(common.ErrParseJson(err))
 		}
 
 		var paging common.Paging
 
 		if err := c.ShouldBind(&paging); err != nil {
-			c.JSON(401, gin.H{
-				"error": err.Error(),
-			})
-			return
+			panic(common.ErrParseJson(err))
 		}
 
 		paging.Fulfill()
@@ -39,6 +33,42 @@ func ListRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 		biz := restaurantbiz.NewListRestaurantBiz(repo)
 
 		result, err := biz.ListRestaurant(c.Request.Context(), &filter, &paging)
+		if err != nil {
+			panic(err)
+		}
+
+		for i := range result {
+			if i == len(result)-1 {
+				paging.NextCursor = result[i].Id
+			}
+		}
+
+		c.JSON(http.StatusOK, common.NewSuccessResponse(result, paging, filter))
+	}
+}
+
+func ListRestaurantOwner(appCtx component.AppContext) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var filter restaurantmodel.Filter
+
+		if err := c.ShouldBind(&filter); err != nil {
+			panic(common.ErrParseJson(err))
+		}
+
+		var paging common.Paging
+		if err := c.ShouldBind(&paging); err != nil {
+			panic(common.ErrParseJson(err))
+		}
+		paging.Fulfill()
+
+		userId := c.MustGet(common.KeyUserHeader).(int)
+
+		store := restaurantstore.NewSqlStore(appCtx.GetDatabase())
+		//likeStore := restaurantlikestorage.NewSQLStore(appCtx.GetUploadProvider())
+		repo := restaurantrepo.NewListRestaurantRepo(store)
+		biz := restaurantbiz.NewListRestaurantBiz(repo)
+
+		result, err := biz.ListRestaurantOwner(c.Request.Context(), userId, &filter, &paging)
 		if err != nil {
 			panic(err)
 		}
