@@ -10,6 +10,7 @@ import (
 	"foodlive/modules/restaurant/restauranttransport/ginrestaurant"
 	"foodlive/modules/restaurantlike/restaurantliketransport/ginrestaurantlike"
 	"foodlive/modules/restaurantowner/restaurantownertransport/ginrestaurantowner"
+	"foodlive/modules/restaurantrating/restaurantratingtransport/ginrestaurantrating"
 	"foodlive/modules/upload/uploadtransport/ginupload"
 	"foodlive/modules/user/usertransport/ginuser"
 	"foodlive/modules/useraddress/useraddresstransport/ginuseraddress"
@@ -51,11 +52,16 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			restaurant.GET("/:id/food", ginfood.UserListFoodOfRestaurant(appCtx))
 
 			//Like restaurant
-			restaurant.POST(":id/like", ginrestaurantlike.UserLikeRestaurant(appCtx))
-			restaurant.DELETE(":id/unlike", ginrestaurantlike.UserUnLikeRestaurant(appCtx))
+			restaurant.POST("/:id/like", ginrestaurantlike.UserLikeRestaurant(appCtx))
+			restaurant.DELETE("/:id/unlike", ginrestaurantlike.UserUnLikeRestaurant(appCtx))
 
 			//List user like restaurant
-			restaurant.GET(":id/like", ginrestaurantlike.ListUserLikeRestaurant(appCtx))
+			restaurant.GET("/:id/like", ginrestaurantlike.ListUserLikeRestaurant(appCtx))
+
+			//User rating restaurant
+			restaurant.POST("/:id/rating", ginrestaurantrating.CreateRestaurantRating(appCtx))
+			restaurant.GET("/:id/rating", ginrestaurantrating.ListRestaurantRating(appCtx))
+			restaurant.PUT("/rating/:id_rating", ginrestaurantrating.UpdateRestaurantRating(appCtx))
 		}
 
 		category := v1.Group("/category", middleware.RequireAuth(appCtx))
