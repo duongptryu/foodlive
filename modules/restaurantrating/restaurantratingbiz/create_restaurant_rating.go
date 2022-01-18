@@ -6,6 +6,7 @@ import (
 	"foodlive/modules/restaurantlike/restaurantlikemodel"
 	"foodlive/modules/restaurantrating/restaurantratingmodel"
 	"foodlive/pubsub"
+	log "github.com/sirupsen/logrus"
 )
 
 type createRestaurantRatingBiz struct {
@@ -40,5 +41,9 @@ func (biz *createRestaurantRatingBiz) CreateRestaurantRatingBiz(ctx context.Cont
 	}
 
 	//pubsub to calculate rating of restaurant
+	err = biz.pubSub.Publish(ctx, common.TopicUserCreateRestaurantRating, pubsub.NewMessage(data))
+	if err != nil {
+		log.Error(err)
+	}
 	return nil
 }

@@ -46,3 +46,13 @@ func (s *sqlStore) DecreaseLikeCount(ctx context.Context, id int) error {
 
 	return nil
 }
+
+func (s *sqlStore) UpdateRestaurantRating(ctx context.Context, rstId int, rating float64) error {
+	db := s.db
+
+	if err := db.Table(restaurantmodel.Restaurant{}.TableName()).Where("id = ?", rstId).Update("rated_count", rating).Error; err != nil {
+		return common.ErrDB(err)
+	}
+
+	return nil
+}
