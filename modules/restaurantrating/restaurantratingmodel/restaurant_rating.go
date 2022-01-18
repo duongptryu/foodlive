@@ -32,6 +32,14 @@ func (RestaurantRatingCreate) TableName() string {
 	return RestaurantRating{}.TableName()
 }
 
+func (data *RestaurantRatingCreate) GetRestaurantId() int {
+	return data.RestaurantId
+}
+
+func (data *RestaurantRatingCreate) GetPoint() float64 {
+	return data.Point
+}
+
 func (data *RestaurantRatingCreate) Validate() error {
 	return nil
 }
