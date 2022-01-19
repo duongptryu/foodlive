@@ -5,6 +5,7 @@ import (
 	"foodlive/middleware"
 	"foodlive/modules/authsso/fbsso/fbssotransport/ginfbsso"
 	"foodlive/modules/authsso/googlesso/googlessotransport/gingooglesso"
+	"foodlive/modules/cart/carttransport/gincart"
 	"foodlive/modules/category/categorytransport/gincategory"
 	"foodlive/modules/food/foodtransport/ginfood"
 	"foodlive/modules/restaurant/restauranttransport/ginrestaurant"
@@ -75,6 +76,15 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			userAddress.PUT("/:id", ginuseraddress.UpdateUserAddress(appCtx))
 			userAddress.DELETE("/:id", ginuseraddress.DeleteUserAddress(appCtx))
 			userAddress.GET("", ginuseraddress.ListUserAddress(appCtx))
+		}
+
+		cart := v1.Group("/cart", middleware.RequireAuth(appCtx))
+		{
+			cart.POST("", gincart.CreateItemInCart(appCtx))
+			cart.PUT("", gincart.UpdateItemInCart(appCtx))
+			cart.DELETE("/:food_id", gincart.DeleteAItemInCart(appCtx))
+			cart.DELETE("", gincart.DeleteAllItemInCart(appCtx))
+			cart.GET("", gincart.ListItemInCart(appCtx))
 		}
 
 		//========================================================================================================
