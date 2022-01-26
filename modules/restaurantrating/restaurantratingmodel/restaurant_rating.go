@@ -21,7 +21,7 @@ func (RestaurantRating) TableName() string {
 
 type RestaurantRatingCreate struct {
 	common.SQLModelCreate
-	UserId       int     `json:"user_id" gorm:"user_id"`
+	UserId       int     `json:"-" gorm:"user_id"`
 	RestaurantId int     `json:"restaurant_id" gorm:"restaurant_id"`
 	Point        float64 `json:"point" gorm:"point"`
 	Comment      string  `json:"comment" gorm:"comment"`
@@ -32,16 +32,17 @@ func (RestaurantRatingCreate) TableName() string {
 	return RestaurantRating{}.TableName()
 }
 
+func (data *RestaurantRatingCreate) Validate() error {
+	data.Status = true
+	return nil
+}
+
 func (data *RestaurantRatingCreate) GetRestaurantId() int {
 	return data.RestaurantId
 }
 
 func (data *RestaurantRatingCreate) GetPoint() float64 {
 	return data.Point
-}
-
-func (data *RestaurantRatingCreate) Validate() error {
-	return nil
 }
 
 type RestaurantRatingUpdate struct {
