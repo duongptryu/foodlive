@@ -8,6 +8,7 @@ import (
 	"foodlive/modules/cart/carttransport/gincart"
 	"foodlive/modules/category/categorytransport/gincategory"
 	"foodlive/modules/food/foodtransport/ginfood"
+	"foodlive/modules/order/ordertransport/ginorder"
 	"foodlive/modules/restaurant/restauranttransport/ginrestaurant"
 	"foodlive/modules/restaurantlike/restaurantliketransport/ginrestaurantlike"
 	"foodlive/modules/restaurantowner/restaurantownertransport/ginrestaurantowner"
@@ -93,6 +94,12 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			userDeviceToken.GET("/my-device", ginuserdevicetoken.FindUserDeviceToken(appCtx))
 			userDeviceToken.POST("", ginuserdevicetoken.CreateUserDeviceToken(appCtx))
 		}
+    
+    order := v1.Group("/order", middleware.Recover(appCtx))
+		{
+			order.POST("", ginorder.CreateOrder(appCtx))
+			order.GET("/:order_id", ginorder.FindOrder(appCtx))
+			order.GET("", ginorder.ListOrder(appCtx))
 
 		//========================================================================================================
 

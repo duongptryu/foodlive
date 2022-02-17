@@ -23,3 +23,4 @@ func (s *sqlStore) FindOrder(ctx context.Context, conditions map[string]interfac
 
 	return &result, nil
 }
+

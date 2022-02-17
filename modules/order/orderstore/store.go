@@ -4,7 +4,6 @@ import (
 	"context"
 	"foodlive/common"
 	"foodlive/modules/order/ordermodel"
-
 	"gorm.io/gorm"
 )
 
@@ -20,7 +19,6 @@ func NewSqlStore(db *gorm.DB) *sqlStore {
 
 type OrderStore interface {
 	CreateOrder(ctx context.Context, data *ordermodel.OrderCreate) error
-	DeleteOrder(ctx context.Context, condition map[string]interface{}) error
 	FindOrder(ctx context.Context, conditions map[string]interface{}, moreKeys ...string) (*ordermodel.Order, error)
 	ListOrder(ctx context.Context,
 		condition map[string]interface{},

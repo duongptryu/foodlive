@@ -2,6 +2,10 @@ package ordermodel
 
 import "foodlive/common"
 
+const (
+	EntityName = "Order"
+)
+
 type Order struct {
 	common.SQLModel
 	UserId     int     `json:"user_id" gorm:"user_id"`

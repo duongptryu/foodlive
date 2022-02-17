@@ -1,5 +1,3 @@
 package ordermodel
 
-type Filter struct {
-	
-}
+type Filter struct{}

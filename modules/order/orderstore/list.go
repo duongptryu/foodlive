@@ -6,7 +6,6 @@ import (
 	"foodlive/modules/order/ordermodel"
 )
 
-
 func (s *sqlStore) ListOrder(ctx context.Context,
 	condition map[string]interface{},
 	filter *ordermodel.Filter,
@@ -19,9 +18,9 @@ func (s *sqlStore) ListOrder(ctx context.Context,
 
 	db = db.Table(ordermodel.Order{}.TableName()).Where(condition)
 
-	// if v := filter; v != nil {
+	if v := filter; v != nil {
 
-	// }
+	}
 
 	if err := db.Count(&paging.Total).Error; err != nil {
 		return nil, common.ErrDB(err)
@@ -42,3 +41,4 @@ func (s *sqlStore) ListOrder(ctx context.Context,
 	}
 	return result, nil
 }
+
