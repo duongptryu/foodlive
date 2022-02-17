@@ -34,10 +34,6 @@ func (OrderDetailCreate) TableName() string {
 	return OrderDetail{}.TableName()
 }
 
-func (data *OrderDetailCreate) Validate() error {
-	return nil
-}
-
 type OrderDetailUpdate struct {
 	common.SQLModelUpdate
 	Status bool   `json:"-" gorm:"bool"`
