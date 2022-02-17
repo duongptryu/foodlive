@@ -101,60 +101,61 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			order.GET("/:order_id", ginorder.FindOrder(appCtx))
 			order.GET("", ginorder.ListOrder(appCtx))
 
-			//========================================================================================================
-
-			admin := v1.Group("/admin")
-			{
-				admin.POST("/register-owner-restaurant", ginrestaurantowner.OwnerRestaurantRegister(appCtx))
-
-				adminRestaurant := admin.Group("/restaurant")
-				{
-					adminRestaurant.DELETE("/:id", ginrestaurant.DeleteRestaurant(appCtx))
-					adminRestaurant.PUT("/:id/status", ginrestaurant.UpdateRestaurantStatus(appCtx))
-				}
-
-				adminCategory := admin.Group("/category")
-				{
-					adminCategory.POST("", gincategory.CreateCategory(appCtx))
-					adminCategory.PUT("/:id", gincategory.UpdateCategory(appCtx))
-					adminCategory.DELETE("/:id", gincategory.DeleteCategory(appCtx))
-					adminCategory.GET("", gincategory.AdminListCategory(appCtx))
-				}
-
-				adminUserDeviceToken := admin.Group("/user-device-token")
-				{
-					adminUserDeviceToken.GET("", ginuserdevicetoken.ListUserDeviceToken(appCtx))
-				}
-			}
-
-			ownerRestaurant := v1.Group("/owner-restaurant")
-			{
-				ownerRestaurant.POST("/login", ginrestaurantowner.OwnerRestaurantLogin(appCtx))
-				ownerRestaurant.POST("/active", ginrestaurantowner.OwnerRestaurantActive(appCtx))
-				ownerRestaurant.POST("/send-otp", ginrestaurantowner.SendOTPActiveOwnerRestaurant(appCtx))
-
-				ownerRestaurant1 := ownerRestaurant.Group("/restaurant", middleware.RequireAuthOwnerRestaurant(appCtx))
-				{
-					ownerRestaurant1.POST("", ginrestaurant.CreateRestaurant(appCtx))
-					ownerRestaurant1.PUT("/:id", ginrestaurant.UpdateRestaurant(appCtx))
-					ownerRestaurant1.GET("", ginrestaurant.ListRestaurantOwner(appCtx))
-					ownerRestaurant1.GET("/:id/food", ginfood.ListFoodOfRestaurant(appCtx)) // Get food of restaurant
-				}
-
-				ownerFood := ownerRestaurant.Group("/food", middleware.RequireAuthOwnerRestaurant(appCtx))
-				{
-					ownerFood.POST("", ginfood.CreateFood(appCtx))
-					ownerFood.PUT("/:id", ginfood.UpdateRestaurant(appCtx))
-					ownerFood.DELETE("/:id", ginfood.DeleteRestaurant(appCtx))
-					ownerFood.GET("", ginfood.ListFoodOfRestaurant(appCtx))
-				}
-
-				ownerCategory := ownerRestaurant.Group("/category")
-				{
-					ownerCategory.GET("", gincategory.UserListCategory(appCtx))
-				}
-			}
-
 		}
+
+		//========================================================================================================
+
+		admin := v1.Group("/admin")
+		{
+			admin.POST("/register-owner-restaurant", ginrestaurantowner.OwnerRestaurantRegister(appCtx))
+
+			adminRestaurant := admin.Group("/restaurant")
+			{
+				adminRestaurant.DELETE("/:id", ginrestaurant.DeleteRestaurant(appCtx))
+				adminRestaurant.PUT("/:id/status", ginrestaurant.UpdateRestaurantStatus(appCtx))
+			}
+
+			adminCategory := admin.Group("/category")
+			{
+				adminCategory.POST("", gincategory.CreateCategory(appCtx))
+				adminCategory.PUT("/:id", gincategory.UpdateCategory(appCtx))
+				adminCategory.DELETE("/:id", gincategory.DeleteCategory(appCtx))
+				adminCategory.GET("", gincategory.AdminListCategory(appCtx))
+			}
+
+			adminUserDeviceToken := admin.Group("/user-device-token")
+			{
+				adminUserDeviceToken.GET("", ginuserdevicetoken.ListUserDeviceToken(appCtx))
+			}
+		}
+
+		ownerRestaurant := v1.Group("/owner-restaurant")
+		{
+			ownerRestaurant.POST("/login", ginrestaurantowner.OwnerRestaurantLogin(appCtx))
+			ownerRestaurant.POST("/active", ginrestaurantowner.OwnerRestaurantActive(appCtx))
+			ownerRestaurant.POST("/send-otp", ginrestaurantowner.SendOTPActiveOwnerRestaurant(appCtx))
+
+			ownerRestaurant1 := ownerRestaurant.Group("/restaurant", middleware.RequireAuthOwnerRestaurant(appCtx))
+			{
+				ownerRestaurant1.POST("", ginrestaurant.CreateRestaurant(appCtx))
+				ownerRestaurant1.PUT("/:id", ginrestaurant.UpdateRestaurant(appCtx))
+				ownerRestaurant1.GET("", ginrestaurant.ListRestaurantOwner(appCtx))
+				ownerRestaurant1.GET("/:id/food", ginfood.ListFoodOfRestaurant(appCtx)) // Get food of restaurant
+			}
+
+			ownerFood := ownerRestaurant.Group("/food", middleware.RequireAuthOwnerRestaurant(appCtx))
+			{
+				ownerFood.POST("", ginfood.CreateFood(appCtx))
+				ownerFood.PUT("/:id", ginfood.UpdateRestaurant(appCtx))
+				ownerFood.DELETE("/:id", ginfood.DeleteRestaurant(appCtx))
+				ownerFood.GET("", ginfood.ListFoodOfRestaurant(appCtx))
+			}
+
+			ownerCategory := ownerRestaurant.Group("/category")
+			{
+				ownerCategory.GET("", gincategory.UserListCategory(appCtx))
+			}
+		}
+
 	}
 }
