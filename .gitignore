@@ -6,3 +6,4 @@ go.sum
 deploy.sh
 deploy/
 foodlive
+app

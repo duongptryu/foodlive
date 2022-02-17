@@ -1,5 +1,4 @@
 package ginorder
-
 import (
 	"foodlive/common"
 	"foodlive/component"

@@ -16,6 +16,7 @@ import (
 	"foodlive/modules/upload/uploadtransport/ginupload"
 	"foodlive/modules/user/usertransport/ginuser"
 	"foodlive/modules/useraddress/useraddresstransport/ginuseraddress"
+	"foodlive/modules/userdevicetoken/userdevicetokentransport/ginuserdevicetoken"
 	"github.com/gin-gonic/gin"
 )
 
@@ -88,12 +89,17 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			cart.GET("", gincart.ListItemInCart(appCtx))
 		}
 
-		order := v1.Group("/order", middleware.Recover(appCtx))
+		userDeviceToken := v1.Group("/user-device-token", middleware.RequireAuth(appCtx))
+		{
+			userDeviceToken.GET("/my-device", ginuserdevicetoken.FindUserDeviceToken(appCtx))
+			userDeviceToken.POST("", ginuserdevicetoken.CreateUserDeviceToken(appCtx))
+		}
+    
+    order := v1.Group("/order", middleware.Recover(appCtx))
 		{
 			order.POST("", ginorder.CreateOrder(appCtx))
 			order.GET("/:order_id", ginorder.FindOrder(appCtx))
 			order.GET("", ginorder.ListOrder(appCtx))
-		}
 
 		//========================================================================================================
 
@@ -101,18 +107,23 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 		{
 			admin.POST("/register-owner-restaurant", ginrestaurantowner.OwnerRestaurantRegister(appCtx))
 
-			restaurant := admin.Group("/restaurant")
+			adminRestaurant := admin.Group("/restaurant")
 			{
-				restaurant.DELETE("/:id", ginrestaurant.DeleteRestaurant(appCtx))
-				restaurant.PUT("/:id/status", ginrestaurant.UpdateRestaurantStatus(appCtx))
+				adminRestaurant.DELETE("/:id", ginrestaurant.DeleteRestaurant(appCtx))
+				adminRestaurant.PUT("/:id/status", ginrestaurant.UpdateRestaurantStatus(appCtx))
 			}
 
-			category := admin.Group("/category")
+			adminCategory := admin.Group("/category")
 			{
-				category.POST("", gincategory.CreateCategory(appCtx))
-				category.PUT("/:id", gincategory.UpdateCategory(appCtx))
-				category.DELETE("/:id", gincategory.DeleteCategory(appCtx))
-				category.GET("", gincategory.AdminListCategory(appCtx))
+				adminCategory.POST("", gincategory.CreateCategory(appCtx))
+				adminCategory.PUT("/:id", gincategory.UpdateCategory(appCtx))
+				adminCategory.DELETE("/:id", gincategory.DeleteCategory(appCtx))
+				adminCategory.GET("", gincategory.AdminListCategory(appCtx))
+			}
+
+			adminUserDeviceToken := admin.Group("/user-device-token")
+			{
+				adminUserDeviceToken.GET("", ginuserdevicetoken.ListUserDeviceToken(appCtx))
 			}
 		}
 
@@ -122,25 +133,25 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			ownerRestaurant.POST("/active", ginrestaurantowner.OwnerRestaurantActive(appCtx))
 			ownerRestaurant.POST("/send-otp", ginrestaurantowner.SendOTPActiveOwnerRestaurant(appCtx))
 
-			restaurant := ownerRestaurant.Group("/restaurant", middleware.RequireAuthOwnerRestaurant(appCtx))
+			ownerRestaurant1 := ownerRestaurant.Group("/restaurant", middleware.RequireAuthOwnerRestaurant(appCtx))
 			{
-				restaurant.POST("", ginrestaurant.CreateRestaurant(appCtx))
-				restaurant.PUT("/:id", ginrestaurant.UpdateRestaurant(appCtx))
-				restaurant.GET("", ginrestaurant.ListRestaurantOwner(appCtx))
-				restaurant.GET("/:id/food", ginfood.ListFoodOfRestaurant(appCtx)) // Get food of restaurant
+				ownerRestaurant1.POST("", ginrestaurant.CreateRestaurant(appCtx))
+				ownerRestaurant1.PUT("/:id", ginrestaurant.UpdateRestaurant(appCtx))
+				ownerRestaurant1.GET("", ginrestaurant.ListRestaurantOwner(appCtx))
+				ownerRestaurant1.GET("/:id/food", ginfood.ListFoodOfRestaurant(appCtx)) // Get food of restaurant
 			}
 
-			food := ownerRestaurant.Group("/food", middleware.RequireAuthOwnerRestaurant(appCtx))
+			ownerFood := ownerRestaurant.Group("/food", middleware.RequireAuthOwnerRestaurant(appCtx))
 			{
-				food.POST("", ginfood.CreateFood(appCtx))
-				food.PUT("/:id", ginfood.UpdateRestaurant(appCtx))
-				food.DELETE("/:id", ginfood.DeleteRestaurant(appCtx))
-				food.GET("", ginfood.ListFoodOfRestaurant(appCtx))
+				ownerFood.POST("", ginfood.CreateFood(appCtx))
+				ownerFood.PUT("/:id", ginfood.UpdateRestaurant(appCtx))
+				ownerFood.DELETE("/:id", ginfood.DeleteRestaurant(appCtx))
+				ownerFood.GET("", ginfood.ListFoodOfRestaurant(appCtx))
 			}
 
-			category := ownerRestaurant.Group("/category")
+			ownerCategory := ownerRestaurant.Group("/category")
 			{
-				category.GET("", gincategory.UserListCategory(appCtx))
+				ownerCategory.GET("", gincategory.UserListCategory(appCtx))
 			}
 		}
 
