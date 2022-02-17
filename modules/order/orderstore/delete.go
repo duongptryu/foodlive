@@ -6,7 +6,7 @@ import (
 	"foodlive/modules/order/ordermodel"
 )
 
-func (s *sqlStore) DeleteOrder (ctx context.Context, condition map[string]interface{}) error {
+func (s *sqlStore) DeleteOrder(ctx context.Context, condition map[string]interface{}) error {
 	db := s.db
 
 	if err := db.Table(ordermodel.Order{}.TableName()).Where(condition).Delete(nil).Error; err != nil {
@@ -14,4 +14,4 @@ func (s *sqlStore) DeleteOrder (ctx context.Context, condition map[string]interf
 	}
 
 	return nil
-} 
+}
