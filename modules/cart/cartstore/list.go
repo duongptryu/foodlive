@@ -21,7 +21,7 @@ func (s *sqlStore) ListCartItem(ctx context.Context, condition map[string]interf
 		db = db.Preload(moreKey[i])
 	}
 
-	if err := db.Order("id desc").Find(&result).Error; err != nil {
+	if err := db.Order("created_at desc").Find(&result).Error; err != nil {
 		return nil, common.ErrDB(err)
 	}
 	return result, nil

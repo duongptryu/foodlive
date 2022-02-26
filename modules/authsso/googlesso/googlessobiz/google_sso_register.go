@@ -40,7 +40,7 @@ func (biz *registerGoogleBiz) RegisterGoogleBiz(ctx context.Context, data *googl
 		LastName:  result.LastName,
 		FirstName: result.FirstName,
 		Password:  "",
-		GgId:      result.Subject,
+		GgId:      &result.Subject,
 	}
 
 	if err := biz.userStore.CreateUser(ctx, &userCreate); err != nil {

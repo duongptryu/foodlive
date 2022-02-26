@@ -3,6 +3,7 @@ package component
 import (
 	"foodlive/component/gosms"
 	"foodlive/component/mycache"
+	"foodlive/component/paymentprovider"
 	"foodlive/component/tokenprovider"
 	"foodlive/component/uploadprovider"
 	"foodlive/config"
@@ -18,27 +19,30 @@ type AppContext interface {
 	GetTokenProvider() tokenprovider.TokenProvider
 	GetUploadProvider() uploadprovider.UploadProvider
 	GetPubSubProvider() pubsub.PubSub
+	GetPaymentProvider() paymentprovider.PaymentProvider
 }
 
 type appCtx struct {
-	appConfig      *config.AppConfig
-	database       *gorm.DB
-	myCache        mycache.Cache
-	mySms          gosms.GoSMS
-	tokenProvider  tokenprovider.TokenProvider
-	uploadProvider uploadprovider.UploadProvider
-	pubSubProvider pubsub.PubSub
+	appConfig       *config.AppConfig
+	database        *gorm.DB
+	myCache         mycache.Cache
+	mySms           gosms.GoSMS
+	tokenProvider   tokenprovider.TokenProvider
+	uploadProvider  uploadprovider.UploadProvider
+	pubSubProvider  pubsub.PubSub
+	paymentProvider paymentprovider.PaymentProvider
 }
 
-func NewAppContext(appConfig *config.AppConfig, database *gorm.DB, myCache mycache.Cache, mySms gosms.GoSMS, tokenProvider tokenprovider.TokenProvider, uploadProvider uploadprovider.UploadProvider, pubSubProvider pubsub.PubSub) *appCtx {
+func NewAppContext(appConfig *config.AppConfig, database *gorm.DB, myCache mycache.Cache, mySms gosms.GoSMS, tokenProvider tokenprovider.TokenProvider, uploadProvider uploadprovider.UploadProvider, pubSubProvider pubsub.PubSub, paymentProvider paymentprovider.PaymentProvider) *appCtx {
 	return &appCtx{
-		appConfig:      appConfig,
-		database:       database,
-		myCache:        myCache,
-		mySms:          mySms,
-		tokenProvider:  tokenProvider,
-		uploadProvider: uploadProvider,
-		pubSubProvider: pubSubProvider,
+		appConfig:       appConfig,
+		database:        database,
+		myCache:         myCache,
+		mySms:           mySms,
+		tokenProvider:   tokenProvider,
+		uploadProvider:  uploadProvider,
+		pubSubProvider:  pubSubProvider,
+		paymentProvider: paymentProvider,
 	}
 }
 
@@ -68,4 +72,8 @@ func (ctx *appCtx) GetUploadProvider() uploadprovider.UploadProvider {
 
 func (ctx *appCtx) GetPubSubProvider() pubsub.PubSub {
 	return ctx.pubSubProvider
+}
+
+func (ctx *appCtx) GetPaymentProvider() paymentprovider.PaymentProvider {
+	return ctx.paymentProvider
 }

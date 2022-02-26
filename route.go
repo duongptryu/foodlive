@@ -36,6 +36,7 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 		v1.POST("/login", ginuser.UserLogin(appCtx))
 
 		v1.POST("/upload", ginupload.Upload(appCtx))
+		v1.POST("/ipn", ginorder.HandleWebHookPayment(appCtx))
 
 		sso := v1.Group("/sso")
 		{
@@ -95,7 +96,7 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			userDeviceToken.POST("", ginuserdevicetoken.CreateUserDeviceToken(appCtx))
 		}
 
-		order := v1.Group("/order", middleware.Recover(appCtx))
+		order := v1.Group("/order", middleware.RequireAuth(appCtx))
 		{
 			order.POST("", ginorder.CreateOrder(appCtx))
 			order.GET("/:order_id", ginorder.FindOrder(appCtx))

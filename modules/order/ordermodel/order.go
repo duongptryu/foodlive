@@ -20,10 +20,10 @@ func (Order) TableName() string {
 
 type OrderCreate struct {
 	common.SQLModelCreate
-	UserId     int     `json:"user_id" gorm:"user_id"`
+	UserId     int     `json:"-" gorm:"user_id"`
 	TotalPrice float64 `json:"total_price" gorm:"total_price"`
-	ShipperId  int     `json:"shipper_id" gorm:"shipper_id"`
-	Status     bool    `json:"status" gorm:"status"`
+	ShipperId  int     `json:"-" gorm:"shipper_id"`
+	Status     bool    `json:"-" gorm:"status"`
 }
 
 func (OrderCreate) TableName() string {
@@ -34,15 +34,32 @@ func (data *OrderCreate) Validate() error {
 	return nil
 }
 
-type OrderUpdate struct {
-	common.SQLModelUpdate
-	Status bool `json:"status" gorm:"status"`
+func (data *OrderCreate) GetOrderId() int {
+	return data.Id
 }
 
-func (OrderUpdate) TableName() string {
-	return Order{}.TableName()
+func (data *OrderCreate) GetPrice() float64 {
+	return data.TotalPrice
 }
 
-func (data *OrderUpdate) Validate() error {
+type WebHookPayment struct {
+	PartnerCode  string `json:"partnerCode"`
+	RequestID    string `json:"requestId"`
+	Amount       string `json:"amount"`
+	OrderID      string `json:"orderId"`
+	Message      string `json:"message"`
+	ResponseTime string `json:"responseTime"`
+	ExtraData    string `json:"extraData"`
+	Signature    string `json:"signature"`
+	PayType      string `json:"payType"`
+	ErrorCode    string `json:"errorCode"`
+	AccessKey    string `json:"accessKey"`
+	OrderType    string `json:"orderType"`
+	OrderInfo    string `json:"orderInfo"`
+	TransID      string `json:"transId"`
+	LocalMessage string `json:"localMessage"`
+}
+
+func (data *WebHookPayment) Validate() error {
 	return nil
 }

@@ -14,6 +14,7 @@ type AppConfig struct {
 	Sms      Sms      `yaml:"sms"`
 	Token    string   `yaml:"token"`
 	S3AWS    S3AWS    `yaml:"s3_aws"`
+	MomoConfig MomoConfig `yaml:"momo_config"`
 }
 
 type Database struct {
@@ -43,6 +44,16 @@ type S3AWS struct {
 	ApiKey     string `yaml:"api_key"`
 	Secret     string `yaml:"secret"`
 	Domain     string `yaml:"domain"`
+}
+
+type MomoConfig struct {
+	EndPointMomo  string `yaml:"end_point_momo"`
+	PartnerCode   string `yaml:"partner_code"`
+	AccessKey     string `yaml:"access_key"`
+	SecretKey     string `yaml:"secret_key"`
+	RequestType   string `yaml:"request_type"`
+	NotifyUrl     string `yaml:"notify_url"`
+	BaseReturnUrl string `yaml:"base_return_url"`
 }
 
 func NewAppConfig(configPath string) (*AppConfig, error) {

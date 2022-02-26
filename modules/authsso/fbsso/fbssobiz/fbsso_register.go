@@ -40,7 +40,7 @@ func (biz *registerFbSsoStore) RegisterFbSsoBiz(ctx context.Context, data *fbsso
 		LastName:  result.Name,
 		FirstName: result.Name,
 		Password:  "",
-		FbId:      result.ID,
+		FbId:      &result.ID,
 	}
 
 	if err := biz.userStore.CreateUser(ctx, &userCreate); err != nil {

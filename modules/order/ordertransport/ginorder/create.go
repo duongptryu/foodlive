@@ -1,7 +1,9 @@
 package ginorder
+
 import (
 	"foodlive/common"
 	"foodlive/component"
+	"foodlive/modules/cart/cartstore"
 	"foodlive/modules/order/orderbiz"
 	"foodlive/modules/order/ordermodel"
 	"foodlive/modules/order/orderstore"
@@ -12,7 +14,7 @@ func CreateOrder(appCtx component.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var data ordermodel.OrderCreate
 
-		if err := c.ShouldBindJSON(&data); err != nil {
+		if err := c.BindJSON(&data); err != nil {
 			panic(common.ErrParseJson(err))
 		}
 
@@ -20,16 +22,18 @@ func CreateOrder(appCtx component.AppContext) func(c *gin.Context) {
 		if err := userIdRaw.(int); err == 0 {
 			panic(common.ErrUnAuthorization)
 		}
-		data.UserId = userIdRaw.(int)
+		userIdInt := userIdRaw.(int)
 
 		orderStore := orderstore.NewSqlStore(appCtx.GetDatabase())
+		cartStore := cartstore.NewSqlStore(appCtx.GetDatabase())
 
-		orderBiz := orderbiz.NewCreateOrderBiz(orderStore)
+		orderBiz := orderbiz.NewCreateOrderBiz(orderStore, cartStore, appCtx.GetPaymentProvider())
 
-		if err := orderBiz.CreateOrderBiz(c.Request.Context(), &data); err != nil {
+		resp, err := orderBiz.CreateOrderBiz(c.Request.Context(), userIdInt, &data)
+		if err != nil {
 			panic(err)
 		}
 
-		c.JSON(201, common.NewSimpleSuccessResponse(data))
+		c.JSON(201, common.NewSimpleSuccessResponse(resp))
 	}
 }

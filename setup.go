@@ -5,6 +5,7 @@ import (
 	"foodlive/component"
 	"foodlive/component/gosms"
 	"foodlive/component/mycache"
+	"foodlive/component/paymentprovider/momoprovider"
 	"foodlive/component/tokenprovider/jwt"
 	"foodlive/component/uploadprovider"
 	"foodlive/config"
@@ -42,8 +43,11 @@ func setupAppContext(appConfig *config.AppConfig) component.AppContext {
 	//init pubsub local
 	psLocal := pubsublocal.NewPubSubLocal()
 
+	//init momo provider
+	momoProvider := momoprovider.NewMomoProvider(appConfig.MomoConfig)
+
 	//init app context
-	appCtx := component.NewAppContext(appConfig, FDDatabase, myCache, mySms, tokenProvider, s3Provider, psLocal)
+	appCtx := component.NewAppContext(appConfig, FDDatabase, myCache, mySms, tokenProvider, s3Provider, psLocal, momoProvider)
 
 	//setup subscriber
 	subscribe.SetupSubscriber(appCtx)

@@ -26,5 +26,4 @@ type OrderStore interface {
 		paging *common.Paging,
 		moreKey ...string,
 	) ([]ordermodel.Order, error)
-	UpdateOrder(ctx context.Context, id int, data *ordermodel.OrderUpdate) error
 }

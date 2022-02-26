@@ -28,14 +28,14 @@ func (User) TableName() string {
 
 type UserCreate struct {
 	common.SQLModel `json:",inline"`
-	Phone           string `json:"phone" gorm:"column:phone" binding:"required"`
-	Password        string `json:"password" gorm:"column:password" binding:"required"`
-	LastName        string `json:"last_name" gorm:"column:last_name" binding:"required"`
-	FirstName       string `json:"first_name" gorm:"column:first_name" binding:"required"`
-	Status          bool   `json:"-" gorm:"column:status"`
-	Role            string `json:"-" gorm:"column:role"`
-	GgId            string `json:"-" gorm:"gg_id"`
-	FbId            string `json:"-" gorm:"fb_id"`
+	Phone           string  `json:"phone" gorm:"column:phone" binding:"required"`
+	Password        string  `json:"password" gorm:"column:password" binding:"required"`
+	LastName        string  `json:"last_name" gorm:"column:last_name" binding:"required"`
+	FirstName       string  `json:"first_name" gorm:"column:first_name" binding:"required"`
+	Status          bool    `json:"-" gorm:"column:status"`
+	Role            string  `json:"-" gorm:"column:role"`
+	GgId            *string `json:"-" gorm:"gg_id"`
+	FbId            *string `json:"-" gorm:"fb_id"`
 }
 
 func (UserCreate) TableName() string {
