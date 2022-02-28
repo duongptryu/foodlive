@@ -19,4 +19,5 @@ func NewSqlStore(db *gorm.DB) *sqlStore {
 type OrderStore interface {
 	CreateOrderDetail(ctx context.Context, data *orderdetailmodel.OrderDetailCreate) error
 	UpdateOrderDetail(ctx context.Context, id int, data *orderdetailmodel.OrderDetailUpdate) error
+	CreateBulkOrderDetail(ctx context.Context, data []orderdetailmodel.OrderDetailCreate) error
 }

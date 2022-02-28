@@ -5,19 +5,12 @@ import (
 	"foodlive/component"
 	"foodlive/modules/cart/cartstore"
 	"foodlive/modules/order/orderbiz"
-	"foodlive/modules/order/ordermodel"
 	"foodlive/modules/order/orderstore"
 	"github.com/gin-gonic/gin"
 )
 
 func CreateOrder(appCtx component.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		var data ordermodel.OrderCreate
-
-		if err := c.BindJSON(&data); err != nil {
-			panic(common.ErrParseJson(err))
-		}
-
 		userIdRaw := c.MustGet(common.KeyUserHeader)
 		if err := userIdRaw.(int); err == 0 {
 			panic(common.ErrUnAuthorization)
@@ -29,7 +22,7 @@ func CreateOrder(appCtx component.AppContext) func(c *gin.Context) {
 
 		orderBiz := orderbiz.NewCreateOrderBiz(orderStore, cartStore, appCtx.GetPaymentProvider())
 
-		resp, err := orderBiz.CreateOrderBiz(c.Request.Context(), userIdInt, &data)
+		resp, err := orderBiz.CreateOrderBiz(c.Request.Context(), userIdInt)
 		if err != nil {
 			panic(err)
 		}

@@ -2,6 +2,7 @@ package main
 
 import (
 	"foodlive/config"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log"
 )
@@ -28,6 +29,7 @@ func runService() {
 	appCtx := setupAppContext(appConfig)
 
 	r := gin.Default()
+	r.Use(cors.Default())
 
 	setupRouter(r, appCtx)
 

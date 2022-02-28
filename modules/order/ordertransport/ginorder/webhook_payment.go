@@ -2,7 +2,6 @@ package ginorder
 
 import (
 	"encoding/json"
-	"fmt"
 	"foodlive/common"
 	"foodlive/component"
 	"foodlive/modules/order/orderbiz"
@@ -13,7 +12,6 @@ import (
 
 func HandleWebHookPayment(appCtx component.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		fmt.Println("Requset from momo", c.Request)
 		c.Request.ParseForm()
 		var result = make(map[string]string)
 		for key, value := range c.Request.PostForm {

@@ -8,6 +8,7 @@ import (
 	"foodlive/modules/cart/cartstore"
 	"foodlive/modules/order/ordermodel"
 	"foodlive/modules/order/orderstore"
+	"foodlive/modules/orderdetail/orderdetailmodel"
 )
 
 type createOrderBiz struct {
@@ -24,7 +25,7 @@ func NewCreateOrderBiz(orderStore orderstore.OrderStore, cartStore cartstore.Car
 	}
 }
 
-func (biz *createOrderBiz) CreateOrderBiz(ctx context.Context, userId int, data *ordermodel.OrderCreate) (*paymentprovider.TransactionResp, error) {
+func (biz *createOrderBiz) CreateOrderBiz(ctx context.Context, userId int) (*paymentprovider.TransactionResp, error) {
 	cartFilter := cartmodel.Filter{}
 	listCart, err := biz.cartStore.ListCartItem(ctx, map[string]interface{}{"user_id": userId}, &cartFilter, "Food")
 	if err != nil {
@@ -49,9 +50,22 @@ func (biz *createOrderBiz) CreateOrderBiz(ctx context.Context, userId int, data 
 		return nil, common.ErrCannotCreateEntity(ordermodel.EntityName, err)
 	}
 
-	checkoutResp, err := biz.paymentProvider.SendRequestPayment(ctx, data, "Test")
+	//create order detail and order tracking
+	var orderDetails []orderdetailmodel.OrderDetailCreate
+	for i, _ := range listCart {
+		orderDetails[i] = orderdetailmodel.OrderDetailCreate{
+			common.SQLModelCreate{},
+			userId,
+			order.Id,
+		}
+	}
+
+	checkoutResp, err := biz.paymentProvider.SendRequestPayment(ctx, &order, "Test")
 	if err != nil {
 		return nil, err
+	}
+	if checkoutResp.ErrorCode != 0 {
+
 	}
 
 	return checkoutResp, nil

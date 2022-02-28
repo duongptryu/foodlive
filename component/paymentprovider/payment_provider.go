@@ -17,9 +17,9 @@ type TransactionReq struct {
 }
 
 type TransactionResp struct {
-	ErrorCode    int    `json:"status_code"`
-	LocalMessage string `json:"local_msg"`
-	Message      string `json:"msg"`
+	ErrorCode    int    `json:"errorCode"`
+	LocalMessage string `json:"localMessage"`
+	Message      string `json:"message"`
 	OrderID      string `json:"orderId,omitempty"`
 	PayUrl       string `json:"payUrl,omitempty"`
 }
