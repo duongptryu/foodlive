@@ -8,7 +8,6 @@ import (
 	"foodlive/modules/cart/cartstore"
 	"foodlive/modules/order/ordermodel"
 	"foodlive/modules/order/orderstore"
-	"foodlive/modules/orderdetail/orderdetailmodel"
 )
 
 type createOrderBiz struct {
@@ -51,14 +50,14 @@ func (biz *createOrderBiz) CreateOrderBiz(ctx context.Context, userId int) (*pay
 	}
 
 	//create order detail and order tracking
-	var orderDetails []orderdetailmodel.OrderDetailCreate
-	for i, _ := range listCart {
-		orderDetails[i] = orderdetailmodel.OrderDetailCreate{
-			common.SQLModelCreate{},
-			userId,
-			order.Id,
-		}
-	}
+	//var orderDetails []orderdetailmodel.OrderDetailCreate
+	//for i, _ := range listCart {
+	//	orderDetails[i] = orderdetailmodel.OrderDetailCreate{
+	//		common.SQLModelCreate{},
+	//		userId,
+	//		order.Id,
+	//	}
+	//}
 
 	checkoutResp, err := biz.paymentProvider.SendRequestPayment(ctx, &order, "Test")
 	if err != nil {
