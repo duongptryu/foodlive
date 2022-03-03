@@ -37,6 +37,8 @@ func (biz *addFoodToCartBiz) AddFoodToCartBiz(ctx context.Context, data *cartmod
 		if exist.UserId != 0 {
 			return cartmodel.ErrItemAlreadyExist
 		}
+
+		data.RestaurantId = exist.RestaurantId
 	}
 
 	//cart of user is empty, add item to cart

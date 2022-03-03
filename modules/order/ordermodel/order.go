@@ -6,12 +6,25 @@ const (
 	EntityName = "Order"
 )
 
+const (
+	PaymentStatus     = "PAYMENT_STATUS"
+	PrepareStatus     = "PREPARE_STATUS"
+	DeliveryStatus    = "DELIVERY_STATUS"
+	CompleteStatus    = "COMPLETE_STATUS"
+	PaymentFailStatus = "PAYMENT_FAIL_STATUS"
+)
+
+type Checkout struct {
+	UserAddrId int `json:"user_addr_id"`
+}
+
 type Order struct {
 	common.SQLModel
-	UserId     int     `json:"user_id" gorm:"user_id"`
-	TotalPrice float64 `json:"total_price" gorm:"total_price"`
-	ShipperId  int     `json:"shipper_id" gorm:"shipper_id"`
-	Status     bool    `json:"status" gorm:"status"`
+	UserId         int     `json:"user_id" gorm:"user_id"`
+	TotalPrice     float64 `json:"total_price" gorm:"total_price"`
+	ShipperId      int     `json:"shipper_id" gorm:"shipper_id"`
+	UserAddressOri string  `json:"user_address_ori" gorm:"user_address_ori"`
+	Status         bool    `json:"status" gorm:"status"`
 }
 
 func (Order) TableName() string {
@@ -20,10 +33,12 @@ func (Order) TableName() string {
 
 type OrderCreate struct {
 	common.SQLModelCreate
-	UserId     int     `json:"-" gorm:"user_id"`
-	TotalPrice float64 `json:"total_price" gorm:"total_price"`
-	ShipperId  int     `json:"-" gorm:"shipper_id"`
-	Status     bool    `json:"-" gorm:"status"`
+	UserId         int     `json:"-" gorm:"user_id"`
+	RestaurantId   int     `json:"-" gorm:"restaurant_id"`
+	TotalPrice     float64 `json:"total_price" gorm:"total_price"`
+	ShipperId      int     `json:"-" gorm:"shipper_id"`
+	UserAddressOri string  `json:"user_address_ori" gorm:"user_address_ori"`
+	Status         bool    `json:"-" gorm:"status"`
 }
 
 func (OrderCreate) TableName() string {
@@ -63,3 +78,5 @@ type WebHookPayment struct {
 func (data *WebHookPayment) Validate() error {
 	return nil
 }
+
+var ErrPaymentFailed = common.NewFullErrorResponse(409, nil, "Cannot get payment, please try again!", "Cannot get payment, please try again!", "ErrPaymentFailed")

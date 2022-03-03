@@ -6,13 +6,14 @@ import (
 )
 
 type CartItem struct {
-	UserId    int               `json:"-" gorm:"user_id"`
-	FoodId    int               `json:"food_id" gorm:"food_id"`
-	Food      common.SimpleFood `json:"food" gorm:"preload:false"`
-	Quantity  int               `json:"quantity" gorm:"quantity"`
-	Status    bool              `json:"status" gorm:"status"`
-	CreatedAt time.Time         `json:"created_at" gorm:"created_at"`
-	UpdatedAt time.Time         `json:"updated_at" gorm:"updated_at"`
+	UserId       int               `json:"-" gorm:"user_id"`
+	FoodId       int               `json:"food_id" gorm:"food_id"`
+	RestaurantId int               `json:"restaurant_id" gorm:"restaurant_id"`
+	Food         common.SimpleFood `json:"food" gorm:"preload:false"`
+	Quantity     int               `json:"quantity" gorm:"quantity"`
+	Status       bool              `json:"status" gorm:"status"`
+	CreatedAt    time.Time         `json:"created_at" gorm:"created_at"`
+	UpdatedAt    time.Time         `json:"updated_at" gorm:"updated_at"`
 }
 
 func (CartItem) TableName() string {
@@ -20,12 +21,13 @@ func (CartItem) TableName() string {
 }
 
 type CartItemCreate struct {
-	UserId    int        `json:"-" gorm:"user_id"`
-	FoodId    int        `json:"food_id" gorm:"food_id"`
-	Quantity  int        `json:"quantity" gorm:"quantity"`
-	Status    bool       `json:"-" gorm:"status"`
-	CreatedAt *time.Time `json:"-" gorm:"created_at"`
-	UpdatedAt *time.Time `json:"-" gorm:"updated_at"`
+	UserId       int        `json:"-" gorm:"user_id"`
+	FoodId       int        `json:"food_id" gorm:"food_id"`
+	RestaurantId int        `json:"-" gorm:"restaurant_id"`
+	Quantity     int        `json:"quantity" gorm:"quantity"`
+	Status       bool       `json:"-" gorm:"status"`
+	CreatedAt    *time.Time `json:"-" gorm:"created_at"`
+	UpdatedAt    *time.Time `json:"-" gorm:"updated_at"`
 }
 
 func (CartItemCreate) TableName() string {

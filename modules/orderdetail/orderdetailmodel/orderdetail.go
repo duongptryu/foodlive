@@ -4,14 +4,12 @@ import "foodlive/common"
 
 type OrderDetail struct {
 	common.SQLModel
-	UserId         int     `json:"user_id" gorm:"user_id"`
-	OrderId        int     `json:"order_id" gorm:"order_id"`
-	AddrUserOrigin string  `json:"addr_user_origin" gorm:"addr_user_origin"`
-	Price          float64 `json:"price" gorm:"price"`
-	Quantity       int     `json:"quantity" gorm:"quantity"`
-	Discount       float64 `json:"discount" gorm:"discount"`
-	Status         bool    `json:"bool" gorm:"bool"`
-	PaymentType    string  `json:"payment_type" gorm:"payment_type"`
+	UserId       int                `json:"user_id" gorm:"user_id"`
+	OrderId      int                `json:"order_id" gorm:"order_id"`
+	RestaurantId int                `json:"restaurant_id" gorm:"restaurant_id"`
+	FoodOrigin   *common.FoodOrigin `json:"food_origin" gorm:"food_origin"`
+	Price        float64            `json:"price" gorm:"price"`
+	Quantity     int                `json:"quantity" gorm:"quantity"`
 }
 
 func (OrderDetail) TableName() string {
@@ -20,14 +18,12 @@ func (OrderDetail) TableName() string {
 
 type OrderDetailCreate struct {
 	common.SQLModelCreate
-	UserId         int     `json:"user_id" gorm:"user_id"`
-	OrderId        int     `json:"order_id" gorm:"order_id"`
-	AddrUserOrigin string  `json:"addr_user_origin" gorm:"addr_user_origin"`
-	Price          float64 `json:"price" gorm:"price"`
-	Quantity       int     `json:"quantity" gorm:"quantity"`
-	Discount       float64 `json:"discount" gorm:"discount"`
-	Status         bool    `json:"-" gorm:"bool"`
-	PaymentType    string  `json:"-" gorm:"payment_type"`
+	UserId       int                `json:"user_id" gorm:"user_id"`
+	OrderId      int                `json:"order_id" gorm:"order_id"`
+	RestaurantId int                `json:"restaurant_id" gorm:"restaurant_id"`
+	FoodOrigin   *common.FoodOrigin `json:"food_origin" gorm:"food_origin"`
+	Price        float64            `json:"price" gorm:"price"`
+	Quantity     int                `json:"quantity" gorm:"quantity"`
 }
 
 func (OrderDetailCreate) TableName() string {
@@ -36,8 +32,6 @@ func (OrderDetailCreate) TableName() string {
 
 type OrderDetailUpdate struct {
 	common.SQLModelUpdate
-	Status bool   `json:"-" gorm:"bool"`
-	Reason string `json:"-" gorm:"reason"`
 }
 
 func (OrderDetailUpdate) TableName() string {

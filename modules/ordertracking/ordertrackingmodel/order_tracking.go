@@ -14,7 +14,7 @@ func (OrderTracking) TableName() string {
 }
 
 type OrderTrackingCreate struct {
-	common.SQLModel
+	common.SQLModelCreate
 	OrderId int    `gorm:"order_id"`
 	State   string `gorm:"state"`
 	Status  bool   `gorm:"status"`
@@ -25,7 +25,7 @@ func (OrderTrackingCreate) TableName() string {
 }
 
 type OrderTrackingUpdate struct {
-	common.SQLModel
+	common.SQLModelUpdate
 	State  string `gorm:"state"`
 	Status bool   `gorm:"status"`
 }
