@@ -7,6 +7,7 @@ import (
 	"foodlive/modules/order/orderbiz"
 	"foodlive/modules/order/ordermodel"
 	"foodlive/modules/order/orderstore"
+	"foodlive/modules/ordertracking/ordertrackingstore"
 	"github.com/gin-gonic/gin"
 )
 
@@ -29,8 +30,9 @@ func HandleWebHookPayment(appCtx component.AppContext) func(c *gin.Context) {
 		}
 
 		orderStore := orderstore.NewSqlStore(appCtx.GetDatabase())
+		orderTracking := ordertrackingstore.NewSqlStore(appCtx.GetDatabase())
 
-		biz := orderbiz.NewWebHookPaymentBiz(orderStore)
+		biz := orderbiz.NewWebHookPaymentBiz(orderStore, orderTracking)
 
 		if err := biz.WebHookPaymentBiz(c.Request.Context(), &resp); err != nil {
 			panic(err)

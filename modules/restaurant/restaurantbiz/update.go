@@ -57,7 +57,7 @@ func (biz *updateRestaurantBiz) UpdateRestaurantStatusBiz(ctx context.Context, i
 		return err
 	}
 
-	oldData, err := biz.Store.FindRestaurant(ctx, map[string]interface{}{"id": id, "status": false})
+	oldData, err := biz.Store.FindRestaurant(ctx, map[string]interface{}{"id": id})
 	if err != nil {
 		return err
 	}

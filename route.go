@@ -17,11 +17,15 @@ import (
 	"foodlive/modules/user/usertransport/ginuser"
 	"foodlive/modules/useraddress/useraddresstransport/ginuseraddress"
 	"foodlive/modules/userdevicetoken/userdevicetokentransport/ginuserdevicetoken"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func setupRouter(r *gin.Engine, appCtx component.AppContext) {
 	r.Use(middleware.Recover(appCtx))
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"*"}
+	r.Use(cors.New(config))
 	v1Route(r, appCtx)
 }
 
@@ -106,12 +110,17 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 
 		admin := v1.Group("/admin")
 		{
-			admin.POST("/register-owner-restaurant", ginrestaurantowner.OwnerRestaurantRegister(appCtx))
+			adminOwnerRst := admin.Group("/owner-rst")
+			{
+				adminOwnerRst.GET("", ginrestaurantowner.ListOwnerRestaurant(appCtx))
+				adminOwnerRst.POST("", ginrestaurantowner.OwnerRestaurantRegister(appCtx))
+			}
 
 			adminRestaurant := admin.Group("/restaurant")
 			{
 				adminRestaurant.DELETE("/:id", ginrestaurant.DeleteRestaurant(appCtx))
-				adminRestaurant.PUT("/:id/status", ginrestaurant.UpdateRestaurantStatus(appCtx))
+				adminRestaurant.GET("", ginrestaurant.ListRestaurantForAdmin(appCtx))
+				adminRestaurant.PUT("/:id", ginrestaurant.UpdateRestaurantStatus(appCtx))
 			}
 
 			adminCategory := admin.Group("/category")

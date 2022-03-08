@@ -7,6 +7,9 @@ import (
 	"foodlive/modules/order/orderbiz"
 	"foodlive/modules/order/ordermodel"
 	"foodlive/modules/order/orderstore"
+	"foodlive/modules/orderdetail/orderdetailstore"
+	"foodlive/modules/ordertracking/ordertrackingstore"
+	"foodlive/modules/useraddress/useraddressstore"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,10 +28,13 @@ func CreateOrder(appCtx component.AppContext) func(c *gin.Context) {
 
 		orderStore := orderstore.NewSqlStore(appCtx.GetDatabase())
 		cartStore := cartstore.NewSqlStore(appCtx.GetDatabase())
+		orderDetail := orderdetailstore.NewSqlStore(appCtx.GetDatabase())
+		orderTracking := ordertrackingstore.NewSqlStore(appCtx.GetDatabase())
+		userAddressStore := useraddressstore.NewSQLStore(appCtx.GetDatabase())
 
-		orderBiz := orderbiz.NewCreateOrderBiz(orderStore, cartStore, appCtx.GetPaymentProvider())
+		orderBiz := orderbiz.NewCreateOrderBiz(orderStore, orderDetail, orderTracking, userAddressStore, cartStore, appCtx.GetPaymentProvider())
 
-		resp, err := orderBiz.CreateOrderBiz(c.Request.Context(), userIdInt)
+		resp, err := orderBiz.CreateOrderBiz(c.Request.Context(), userIdInt, &checkOut)
 		if err != nil {
 			panic(err)
 		}

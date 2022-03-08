@@ -16,7 +16,7 @@ func NewListUserDeviceTokenBiz(store userdevicetokenstore.UserDeviceTokenStore) 
 }
 
 func (biz *listUserDeviceTokenBiz) ListUserDeviceTokenBiz(ctx context.Context, paging *common.Paging, filter *userdevicetokenmodel.Filter) ([]userdevicetokenmodel.UserDeviceToken, error) {
-	result, err := biz.store.ListUserDeviceToken(ctx, nil, filter, paging)
+	result, err := biz.store.ListUserDeviceToken(ctx, nil, filter, paging, "User")
 	if err != nil {
 		return nil, err
 	}

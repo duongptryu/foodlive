@@ -1,6 +1,9 @@
 package userdevicetokenmodel
 
-import "foodlive/common"
+import (
+	"foodlive/common"
+	"foodlive/modules/user/usermodel"
+)
 
 const (
 	EntityName = "UserDeviceToken"
@@ -8,10 +11,11 @@ const (
 
 type UserDeviceToken struct {
 	common.SQLModel
-	UserId int    `json:"user_id" gorm:"user_id"`
-	Os     string `json:"os" gorm:"os"`
-	Token  string `json:"token" gorm:"token"`
-	Status bool   `json:"status" gorm:"status"`
+	UserId int            `json:"user_id" gorm:"user_id"`
+	User   usermodel.User `json:"user" gorm:"preload:false"`
+	Os     string         `json:"os" gorm:"os"`
+	Token  string         `json:"token" gorm:"token"`
+	Status bool           `json:"status" gorm:"status"`
 }
 
 func (UserDeviceToken) TableName() string {

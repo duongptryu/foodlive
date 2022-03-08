@@ -6,7 +6,7 @@ import (
 	"foodlive/modules/restaurantowner/restaurantownermodel"
 )
 
-func (s *sqlStore) ListOwnerRestaurant(ctx context.Context, condition map[string]interface{}, paging *common.Paging, moreKeys ...string) ([]restaurantownermodel.OwnerRestaurant, error) {
+func (s *sqlStore) ListOwnerRestaurant(ctx context.Context, condition map[string]interface{}, filter *restaurantownermodel.Filter, paging *common.Paging, moreKeys ...string) ([]restaurantownermodel.OwnerRestaurant, error) {
 	db := s.db
 	var result []restaurantownermodel.OwnerRestaurant
 
