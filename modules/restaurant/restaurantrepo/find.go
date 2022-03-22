@@ -56,3 +56,34 @@ func (repo *findRestaurantRepo) FindRestaurantByIdRepo(ctx context.Context, id i
 
 	return result, nil
 }
+
+func (repo *findRestaurantRepo) FindRestaurantByIdRepoWithoutStatus(ctx context.Context, id int) (*restaurantmodel.Restaurant, error) {
+	result, err := repo.store.FindRestaurant(ctx, map[string]interface{}{"id": id})
+
+	if err != nil {
+		return nil, common.ErrCannotListEntity(restaurantmodel.EntityName, err)
+	}
+
+	if result.Id == 0 {
+		return nil, restaurantmodel.ErrRestaurantNotFound
+	}
+
+	//ids := make([]int, len(result))
+
+	//for i := range result {
+	//	ids[i] = result[i].Id
+	//}
+
+	//mapResLike, err := repo.likeStore.GetRestaurantLike(ctx, ids)
+	//if err != nil {
+	//	log.Println("Cannot get restaurant likes: ", err)
+	//}
+	//
+	//if v := mapResLike; v != nil {
+	//	for i, item := range result {
+	//		result[i].LikeCount = mapResLike[item.Id]
+	//	}
+	//}
+
+	return result, nil
+}

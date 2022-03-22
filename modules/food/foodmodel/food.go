@@ -8,13 +8,13 @@ const (
 
 type Food struct {
 	common.SQLModel `json:",inline"`
-	RestaurantId    int            `json:"restaurant_id" gorm:"column:restaurant_id"`
-	CategoryId      int            `json:"category_id" gorm:"column:category_id"`
-	Name            string         `json:"name" gorm:"column:name"`
-	Description     string         `json:"description" gorm:"column:description"`
-	Price           float64        `json:"price" gorm:"column:price"`
-	Images          *common.Images `json:"images" gorm:"images"`
-	Status          bool           `json:"status" gorm:"status"`
+	RestaurantId    int           `json:"restaurant_id" gorm:"column:restaurant_id"`
+	CategoryId      int           `json:"category_id" gorm:"column:category_id"`
+	Name            string        `json:"name" gorm:"column:name"`
+	Description     string        `json:"description" gorm:"column:description"`
+	Price           float64       `json:"price" gorm:"column:price"`
+	Images          *common.Image `json:"images" gorm:"images"`
+	Status          bool          `json:"status" gorm:"status"`
 }
 
 func (Food) TableName() string {
@@ -23,13 +23,13 @@ func (Food) TableName() string {
 
 type FoodCreate struct {
 	common.SQLModelCreate `json:",inline"`
-	RestaurantId          int            `json:"restaurant_id" gorm:"column:restaurant_id"`
-	CategoryId            int            `json:"category_id" gorm:"column:category_id" binding:"required"`
-	Name                  string         `json:"name" gorm:"column:name" binding:"required"`
-	Description           string         `json:"description" gorm:"column:description" binding:"required"`
-	Price                 float64        `json:"price" gorm:"column:price" binding:"required"`
-	Images                *common.Images `json:"images" gorm:"images" binding:"required"`
-	Status                bool           `json:"status" gorm:"status"`
+	RestaurantId          int           `json:"restaurant_id" gorm:"column:restaurant_id"`
+	CategoryId            int           `json:"category_id" gorm:"column:category_id" binding:"required"`
+	Name                  string        `json:"name" gorm:"column:name" binding:"required"`
+	Description           string        `json:"description" gorm:"column:description" binding:"required"`
+	Price                 float64       `json:"price" gorm:"column:price" binding:"required"`
+	Images                *common.Image `json:"images" gorm:"images" binding:"required"`
+	Status                bool          `json:"status" gorm:"status"`
 }
 
 func (FoodCreate) TableName() string {
@@ -50,12 +50,12 @@ func (data *FoodCreate) Validate() error {
 
 type FoodUpdate struct {
 	common.SQLModelUpdate `json:",inline"`
-	CategoryId            int            `json:"category_id" gorm:"column:category_id"`
-	Name                  string         `json:"name" gorm:"column:name"`
-	Description           string         `json:"description" gorm:"column:description"`
-	Price                 float64        `json:"price" gorm:"column:price"`
-	Images                *common.Images `json:"images" gorm:"images"`
-	Status                bool           `json:"status" gorm:"status"`
+	CategoryId            int           `json:"category_id" gorm:"column:category_id"`
+	Name                  string        `json:"name" gorm:"column:name"`
+	Description           string        `json:"description" gorm:"column:description"`
+	Price                 float64       `json:"price" gorm:"column:price"`
+	Images                *common.Image `json:"images" gorm:"images"`
+	Status                bool          `json:"status" gorm:"status"`
 }
 
 func (FoodUpdate) TableName() string {

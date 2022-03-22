@@ -113,6 +113,7 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			adminOwnerRst := admin.Group("/owner-rst")
 			{
 				adminOwnerRst.GET("", ginrestaurantowner.ListOwnerRestaurant(appCtx))
+				adminOwnerRst.GET("/:id", ginrestaurantowner.FindOwnerRstByAdmin(appCtx))
 				adminOwnerRst.POST("", ginrestaurantowner.OwnerRestaurantRegister(appCtx))
 			}
 
@@ -120,7 +121,10 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			{
 				adminRestaurant.DELETE("/:id", ginrestaurant.DeleteRestaurant(appCtx))
 				adminRestaurant.GET("", ginrestaurant.ListRestaurantForAdmin(appCtx))
+				adminRestaurant.GET("/:id", ginrestaurant.FindRestaurantWithoutStatus(appCtx))
 				adminRestaurant.PUT("/:id", ginrestaurant.UpdateRestaurantStatus(appCtx))
+
+				adminRestaurant.GET("/:id/food", ginfood.ListFoodOfRestaurant(appCtx))
 			}
 
 			adminCategory := admin.Group("/category")

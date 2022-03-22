@@ -31,3 +31,24 @@ func FindRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 		c.JSON(http.StatusOK, common.NewSimpleSuccessResponse(result))
 	}
 }
+
+func FindRestaurantWithoutStatus(appCtx component.AppContext) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			panic(common.ErrParseJson(err))
+		}
+
+		store := restaurantstore.NewSqlStore(appCtx.GetDatabase())
+		//likeStore := restaurantlikestorage.NewSQLStore(appCtx.GetUploadProvider())
+		repo := restaurantrepo.NewFindRestaurantRepo(store)
+		biz := restaurantbiz.NewFindRestaurantBiz(repo)
+
+		result, err := biz.FindRestaurantByIdWithoutStatus(c.Request.Context(), id)
+		if err != nil {
+			panic(err)
+		}
+
+		c.JSON(http.StatusOK, common.NewSimpleSuccessResponse(result))
+	}
+}
