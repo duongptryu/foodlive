@@ -13,7 +13,7 @@ type SimpleFood struct {
 	CategoryId   int     `json:"category_id" gorm:"column:category_id"`
 	Name         string  `json:"name" gorm:"column:name"`
 	Price        float64 `json:"price" gorm:"column:price"`
-	Images       *Images `json:"images" gorm:"images"`
+	Images       *Image `json:"images" gorm:"images"`
 }
 
 func (SimpleFood) TableName() string {
@@ -24,7 +24,7 @@ type FoodOrigin struct {
 	Id           int     `json:"id"`
 	Name         string  `json:"name"`
 	Price        float64 `json:"price"`
-	Images       *Images `json:"images"`
+	Images       *Image `json:"images"`
 }
 
 
