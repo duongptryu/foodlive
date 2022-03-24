@@ -16,7 +16,7 @@ func NewListFoodInCartBiz(cartStore CartStore) *listFoodInCartBiz {
 }
 
 func (biz *listFoodInCartBiz) ListFoodInCartBiz(ctx context.Context, userId int, filter *cartmodel.Filter) ([]cartmodel.CartItem, error) {
-	result, err := biz.cartStore.ListCartItem(ctx, map[string]interface{}{"user_id": userId}, filter, "Food")
+	result, err := biz.cartStore.ListCartItem(ctx, map[string]interface{}{"user_id": userId}, filter, "Food", "Food.Images")
 	if err != nil {
 		return nil, err
 	}

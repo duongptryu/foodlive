@@ -2,6 +2,7 @@ package orderbiz
 
 import (
 	"context"
+	"fmt"
 	"foodlive/common"
 	"foodlive/component/paymentprovider"
 	"foodlive/modules/cart/cartmodel"
@@ -37,7 +38,7 @@ func NewCreateOrderBiz(orderStore orderstore.OrderStore, orderDetailStore orderd
 	}
 }
 
-func (biz *createOrderBiz) CreateOrderBiz(ctx context.Context, userId int, data *ordermodel.Checkout) (*paymentprovider.TransactionResp, error) {
+func (biz *createOrderBiz) CreateOrderMomoBiz(ctx context.Context, userId int, data *ordermodel.Checkout) (*paymentprovider.TransactionResp, error) {
 	addressDb, err := biz.userAddressStore.FindUserAddressById(ctx, map[string]interface{}{"user_id": userId, "id": data.UserAddrId})
 	if err != nil {
 		return nil, err
@@ -62,6 +63,7 @@ func (biz *createOrderBiz) CreateOrderBiz(ctx context.Context, userId int, data 
 		ShipperId:      1,
 		Status:         true,
 		UserAddressOri: addressDb.Addr,
+		TypePayment:    ordermodel.TypeMomo,
 	}
 
 	if err := biz.orderStore.CreateOrder(ctx, &order); err != nil {
@@ -128,4 +130,89 @@ func (biz *createOrderBiz) CreateOrderBiz(ctx context.Context, userId int, data 
 	}()
 
 	return checkoutResp, nil
+}
+
+func (biz *createOrderBiz) CreateOrderCryptoBiz(ctx context.Context, userId int, data *ordermodel.Checkout, rinkebyProvider paymentprovider.CryptoPaymentProvider) (*ordermodel.PaymentCoinResp, error) {
+	addressDb, err := biz.userAddressStore.FindUserAddressById(ctx, map[string]interface{}{"user_id": userId, "id": data.UserAddrId})
+	if err != nil {
+		return nil, err
+	}
+
+	cartFilter := cartmodel.Filter{}
+	listCart, err := biz.cartStore.ListCartItem(ctx, map[string]interface{}{"user_id": userId}, &cartFilter, "Food")
+	if err != nil {
+		return nil, err
+	}
+
+	//generate order
+	var totalPrice float64
+	for i, _ := range listCart {
+		totalPrice += listCart[i].Food.Price * float64(listCart[i].Quantity)
+	}
+
+	priceEth, err := rinkebyProvider.ParsePriceToEth(ctx, totalPrice)
+	if err != nil {
+		return nil, common.ErrInternal(err)
+	}
+
+	var order = ordermodel.OrderCreate{
+		UserId:         userId,
+		RestaurantId:   listCart[0].RestaurantId,
+		TotalPrice:     totalPrice,
+		ShipperId:      1,
+		Status:         true,
+		UserAddressOri: addressDb.Addr,
+		TypePayment:    ordermodel.TypeCrypto,
+		TotalPriceEth:  priceEth,
+	}
+
+	if err := biz.orderStore.CreateOrder(ctx, &order); err != nil {
+		return nil, common.ErrCannotCreateEntity(ordermodel.EntityName, err)
+	}
+
+	go func() {
+		biz.cartStore.DeleteCartItem(ctx, map[string]interface{}{"user_id": userId})
+
+		//create order detail
+		var orderDetails []orderdetailmodel.OrderDetailCreate
+		for i, v := range listCart {
+			orderDetails[i] = orderdetailmodel.OrderDetailCreate{
+				UserId:       userId,
+				OrderId:      order.Id,
+				RestaurantId: v.RestaurantId,
+				FoodOrigin: &common.FoodOrigin{
+					Id:     v.Food.Id,
+					Name:   v.Food.Name,
+					Price:  v.Food.Price,
+					Images: v.Food.Images,
+				},
+				Price:    v.Food.Price,
+				Quantity: v.Quantity,
+			}
+		}
+
+		err = biz.orderDetailStore.CreateBulkOrderDetail(ctx, orderDetails)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		//create order tracking
+		orderTracking := ordertrackingmodel.OrderTrackingCreate{
+			OrderId: order.Id,
+			State:   ordermodel.PaymentStatus,
+			Status:  true,
+		}
+		if err := biz.orderTracking.CreateOrderTracking(ctx, &orderTracking); err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	result := ordermodel.PaymentCoinResp{
+		Web: fmt.Sprintf("https://foodlive.tech/order/%v", order.Id),
+		App: fmt.Sprintf("https://metamask.app.link/dapp/foodlive.tech/order/%v", order.Id),
+	}
+
+	return &result, nil
 }

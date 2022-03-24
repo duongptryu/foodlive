@@ -102,7 +102,9 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 
 		order := v1.Group("/order", middleware.RequireAuth(appCtx))
 		{
-			order.POST("", ginorder.CreateOrder(appCtx))
+			order.POST("/momo", ginorder.CreateOrderMomo(appCtx))
+			order.POST("/crypto", ginorder.CreateOrderCrypto(appCtx))
+			order.GET("/preview", ginorder.PreviewOrder(appCtx))
 			order.GET("/:order_id", ginorder.FindOrder(appCtx))
 			order.GET("", ginorder.ListOrder(appCtx))
 		}

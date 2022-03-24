@@ -13,7 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CreateOrder(appCtx component.AppContext) func(c *gin.Context) {
+func CreateOrderMomo(appCtx component.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var checkOut ordermodel.Checkout
 		if err := c.BindJSON(&checkOut); err != nil {
@@ -34,7 +34,37 @@ func CreateOrder(appCtx component.AppContext) func(c *gin.Context) {
 
 		orderBiz := orderbiz.NewCreateOrderBiz(orderStore, orderDetail, orderTracking, userAddressStore, cartStore, appCtx.GetPaymentProvider())
 
-		resp, err := orderBiz.CreateOrderBiz(c.Request.Context(), userIdInt, &checkOut)
+		resp, err := orderBiz.CreateOrderMomoBiz(c.Request.Context(), userIdInt, &checkOut)
+		if err != nil {
+			panic(err)
+		}
+
+		c.JSON(201, common.NewSimpleSuccessResponse(resp))
+	}
+}
+
+func CreateOrderCrypto(appCtx component.AppContext) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		var checkOut ordermodel.Checkout
+		if err := c.BindJSON(&checkOut); err != nil {
+			panic(common.ErrParseJson(err))
+		}
+
+		userIdRaw := c.MustGet(common.KeyUserHeader)
+		if err := userIdRaw.(int); err == 0 {
+			panic(common.ErrUnAuthorization)
+		}
+		userIdInt := userIdRaw.(int)
+
+		orderStore := orderstore.NewSqlStore(appCtx.GetDatabase())
+		cartStore := cartstore.NewSqlStore(appCtx.GetDatabase())
+		orderDetail := orderdetailstore.NewSqlStore(appCtx.GetDatabase())
+		orderTracking := ordertrackingstore.NewSqlStore(appCtx.GetDatabase())
+		userAddressStore := useraddressstore.NewSQLStore(appCtx.GetDatabase())
+
+		orderBiz := orderbiz.NewCreateOrderBiz(orderStore, orderDetail, orderTracking, userAddressStore, cartStore, appCtx.GetPaymentProvider())
+
+		resp, err := orderBiz.CreateOrderCryptoBiz(c.Request.Context(), userIdInt, &checkOut, appCtx.GetCryptoPaymentProvider())
 		if err != nil {
 			panic(err)
 		}

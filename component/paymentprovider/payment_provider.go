@@ -32,3 +32,8 @@ type OrderRequester interface {
 type PaymentProvider interface {
 	SendRequestPayment(ctx context.Context, data OrderRequester, dataExtra string) (*TransactionResp, error)
 }
+
+type CryptoPaymentProvider interface {
+	ParsePriceToEth(ctx context.Context, priceDola float64) (float64, error)
+	CheckStatusTxn(ctx context.Context, txnHash string) (string, error)
+}

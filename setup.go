@@ -6,6 +6,7 @@ import (
 	"foodlive/component/gosms"
 	"foodlive/component/mycache"
 	"foodlive/component/paymentprovider/momoprovider"
+	"foodlive/component/paymentprovider/rinkebycrypto"
 	"foodlive/component/tokenprovider/jwt"
 	"foodlive/component/uploadprovider"
 	"foodlive/config"
@@ -46,8 +47,11 @@ func setupAppContext(appConfig *config.AppConfig) component.AppContext {
 	//init momo provider
 	momoProvider := momoprovider.NewMomoProvider(appConfig.MomoConfig)
 
+	//rinkeby crypto payment
+	rinkebyProvider := rinkebycrypto.NewCryptoPayment(appConfig.EtherscanAPIKey)
+
 	//init app context
-	appCtx := component.NewAppContext(appConfig, FDDatabase, myCache, mySms, tokenProvider, s3Provider, psLocal, momoProvider)
+	appCtx := component.NewAppContext(appConfig, FDDatabase, myCache, mySms, tokenProvider, s3Provider, psLocal, momoProvider, rinkebyProvider)
 
 	//setup subscriber
 	subscribe.SetupSubscriber(appCtx)

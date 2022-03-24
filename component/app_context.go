@@ -20,29 +20,32 @@ type AppContext interface {
 	GetUploadProvider() uploadprovider.UploadProvider
 	GetPubSubProvider() pubsub.PubSub
 	GetPaymentProvider() paymentprovider.PaymentProvider
+	GetCryptoPaymentProvider() paymentprovider.CryptoPaymentProvider
 }
 
 type appCtx struct {
-	appConfig       *config.AppConfig
-	database        *gorm.DB
-	myCache         mycache.Cache
-	mySms           gosms.GoSMS
-	tokenProvider   tokenprovider.TokenProvider
-	uploadProvider  uploadprovider.UploadProvider
-	pubSubProvider  pubsub.PubSub
-	paymentProvider paymentprovider.PaymentProvider
+	appConfig             *config.AppConfig
+	database              *gorm.DB
+	myCache               mycache.Cache
+	mySms                 gosms.GoSMS
+	tokenProvider         tokenprovider.TokenProvider
+	uploadProvider        uploadprovider.UploadProvider
+	pubSubProvider        pubsub.PubSub
+	paymentProvider       paymentprovider.PaymentProvider
+	cryptoPaymentProvider paymentprovider.CryptoPaymentProvider
 }
 
-func NewAppContext(appConfig *config.AppConfig, database *gorm.DB, myCache mycache.Cache, mySms gosms.GoSMS, tokenProvider tokenprovider.TokenProvider, uploadProvider uploadprovider.UploadProvider, pubSubProvider pubsub.PubSub, paymentProvider paymentprovider.PaymentProvider) *appCtx {
+func NewAppContext(appConfig *config.AppConfig, database *gorm.DB, myCache mycache.Cache, mySms gosms.GoSMS, tokenProvider tokenprovider.TokenProvider, uploadProvider uploadprovider.UploadProvider, pubSubProvider pubsub.PubSub, paymentProvider paymentprovider.PaymentProvider, cryptoPaymentProvider paymentprovider.CryptoPaymentProvider) *appCtx {
 	return &appCtx{
-		appConfig:       appConfig,
-		database:        database,
-		myCache:         myCache,
-		mySms:           mySms,
-		tokenProvider:   tokenProvider,
-		uploadProvider:  uploadProvider,
-		pubSubProvider:  pubSubProvider,
-		paymentProvider: paymentProvider,
+		appConfig:             appConfig,
+		database:              database,
+		myCache:               myCache,
+		mySms:                 mySms,
+		tokenProvider:         tokenProvider,
+		uploadProvider:        uploadProvider,
+		pubSubProvider:        pubSubProvider,
+		paymentProvider:       paymentProvider,
+		cryptoPaymentProvider: cryptoPaymentProvider,
 	}
 }
 
@@ -76,4 +79,8 @@ func (ctx *appCtx) GetPubSubProvider() pubsub.PubSub {
 
 func (ctx *appCtx) GetPaymentProvider() paymentprovider.PaymentProvider {
 	return ctx.paymentProvider
+}
+
+func (ctx *appCtx) GetCryptoPaymentProvider() paymentprovider.CryptoPaymentProvider {
+	return ctx.cryptoPaymentProvider
 }

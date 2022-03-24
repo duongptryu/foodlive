@@ -9,12 +9,13 @@ import (
 )
 
 type AppConfig struct {
-	Server   Server   `yaml:"server"`
-	Database Database `yaml:"database"`
-	Sms      Sms      `yaml:"sms"`
-	Token    string   `yaml:"token"`
-	S3AWS    S3AWS    `yaml:"s3_aws"`
-	MomoConfig MomoConfig `yaml:"momo_config"`
+	Server          Server     `yaml:"server"`
+	Database        Database   `yaml:"database"`
+	Sms             Sms        `yaml:"sms"`
+	Token           string     `yaml:"token"`
+	S3AWS           S3AWS      `yaml:"s3_aws"`
+	MomoConfig      MomoConfig `yaml:"momo_config"`
+	EtherscanAPIKey string     `json:"etherscan_api_key"`
 }
 
 type Database struct {
