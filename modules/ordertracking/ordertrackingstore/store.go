@@ -16,7 +16,8 @@ func NewSqlStore(db *gorm.DB) *sqlStore {
 	}
 }
 
-type OrderStore interface {
+type OrderTrackingStore interface {
 	CreateOrderTracking(ctx context.Context, data *ordertrackingmodel.OrderTrackingCreate) error
 	UpdateOrder(ctx context.Context, id int, data *ordertrackingmodel.OrderTrackingUpdate) error
+	FindOrderTracking(ctx context.Context, conditions map[string]interface{}, moreKeys ...string) (*ordertrackingmodel.OrderTracking, error)
 }

@@ -2,7 +2,6 @@ package orderbiz
 
 import (
 	"context"
-	"foodlive/common"
 	"foodlive/modules/order/ordermodel"
 	"foodlive/modules/order/orderstore"
 	"foodlive/modules/ordertracking/ordertrackingmodel"
@@ -13,10 +12,10 @@ import (
 
 type webHookPaymentBiz struct {
 	orderStore         orderstore.OrderStore
-	orderTrackingStore ordertrackingstore.OrderStore
+	orderTrackingStore ordertrackingstore.OrderTrackingStore
 }
 
-func NewWebHookPaymentBiz(orderStore orderstore.OrderStore, orderTrackingStore ordertrackingstore.OrderStore) *webHookPaymentBiz {
+func NewWebHookPaymentBiz(orderStore orderstore.OrderStore, orderTrackingStore ordertrackingstore.OrderTrackingStore) *webHookPaymentBiz {
 	return &webHookPaymentBiz{
 		orderStore:         orderStore,
 		orderTrackingStore: orderTrackingStore,
@@ -32,15 +31,14 @@ func (biz *webHookPaymentBiz) WebHookPaymentBiz(ctx context.Context, data *order
 	var state string
 
 	if data.ErrorCode != "0" {
-		state = ordermodel.PaymentFailStatus
+		state = ordertrackingmodel.StatePaymentFail
 	} else {
-		state = ordermodel.PrepareStatus
+		state = ordertrackingmodel.StatePreparing
 	}
 
 	orderTracking := ordertrackingmodel.OrderTrackingUpdate{
-		common.SQLModelUpdate{},
-		state,
-		true,
+		State:  state,
+		Status: true,
 	}
 	if err := biz.orderTrackingStore.UpdateOrder(ctx, orderId, &orderTracking); err != nil {
 		log.Println(err)

@@ -2,16 +2,20 @@ package cartbiz
 
 import (
 	"context"
+	"foodlive/common"
 	"foodlive/modules/cart/cartmodel"
+	"foodlive/modules/food/foodmodel"
 )
 
 type addFoodToCartBiz struct {
 	cartStore CartStore
+	foodStore FoodStore
 }
 
-func NewAddFoodToCartBiz(cartStore CartStore) *addFoodToCartBiz {
+func NewAddFoodToCartBiz(cartStore CartStore, foodStore FoodStore) *addFoodToCartBiz {
 	return &addFoodToCartBiz{
 		cartStore: cartStore,
+		foodStore: foodStore,
 	}
 }
 
@@ -20,13 +24,21 @@ func (biz *addFoodToCartBiz) AddFoodToCartBiz(ctx context.Context, data *cartmod
 		return err
 	}
 
-	itemDb, err := biz.cartStore.FindCartItem(ctx, map[string]interface{}{"user_id": data.UserId}, "Food")
+	food, err := biz.foodStore.FindFood(ctx, map[string]interface{}{"id": data.FoodId})
+	if err != nil {
+		return err
+	}
+	if food.Id == 0 {
+		return common.ErrDataNotFound(foodmodel.EntityName)
+	}
+
+	itemDb, err := biz.cartStore.FindCartItem(ctx, map[string]interface{}{"user_id": data.UserId})
 	if err != nil {
 		return err
 	}
 	if itemDb.UserId != 0 {
 		//cart of user already exist 1 or more item
-		if itemDb.Food.Id != data.FoodId {
+		if itemDb.RestaurantId != food.RestaurantId {
 			return cartmodel.ErrFoodInAnotherRestaurant
 		}
 
@@ -37,9 +49,9 @@ func (biz *addFoodToCartBiz) AddFoodToCartBiz(ctx context.Context, data *cartmod
 		if exist.UserId != 0 {
 			return cartmodel.ErrItemAlreadyExist
 		}
-
-		data.RestaurantId = exist.RestaurantId
 	}
+
+	data.RestaurantId = food.RestaurantId
 
 	//cart of user is empty, add item to cart
 	if err := biz.cartStore.CreateCartItem(ctx, data); err != nil {

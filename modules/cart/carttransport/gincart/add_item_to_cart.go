@@ -6,6 +6,7 @@ import (
 	"foodlive/modules/cart/cartbiz"
 	"foodlive/modules/cart/cartmodel"
 	"foodlive/modules/cart/cartstore"
+	"foodlive/modules/food/foodstore"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,7 +25,8 @@ func CreateItemInCart(appCtx component.AppContext) func(c *gin.Context) {
 		data.UserId = userIdRaw.(int)
 
 		cartStore := cartstore.NewSqlStore(appCtx.GetDatabase())
-		biz := cartbiz.NewAddFoodToCartBiz(cartStore)
+		foodStore := foodstore.NewSqlStore(appCtx.GetDatabase())
+		biz := cartbiz.NewAddFoodToCartBiz(cartStore, foodStore)
 
 		if err := biz.AddFoodToCartBiz(c.Request.Context(), &data); err != nil {
 			panic(err)

@@ -23,6 +23,9 @@ type s3Provider struct {
 }
 
 func NewS3Provider(bucketName string, region string, apiKey string, secret string, domain string) *s3Provider {
+	if bucketName == "" || region == "" || apiKey == "" || secret == "" || domain == "" {
+		log.Fatalln("S3 Store config is empty")
+	}
 	provider := &s3Provider{
 		bucketName: bucketName,
 		region:     region,

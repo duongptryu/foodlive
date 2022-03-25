@@ -42,6 +42,8 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 		v1.POST("/upload", ginupload.Upload(appCtx))
 		v1.POST("/ipn", ginorder.HandleWebHookPayment(appCtx))
 
+		v1.GET("/order/crypto/:order_id", ginorder.FindOrderCryptoInWeb(appCtx))
+
 		sso := v1.Group("/sso")
 		{
 			sso.POST("/register-google", gingooglesso.UserGoogleLogin(appCtx))

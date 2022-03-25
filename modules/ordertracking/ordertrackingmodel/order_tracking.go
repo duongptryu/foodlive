@@ -2,22 +2,30 @@ package ordertrackingmodel
 
 import "foodlive/common"
 
+const (
+	StateWaitingShipper = "waiting_for_shipper"
+	StatePreparing      = "preparing"
+	StateOnTheWay       = "on_the_way"
+	StateDelivered      = "delivered"
+	StateCancel         = "cancel"
+	StatePaymentFail    = "payment_fail"
+	StateWaitingPayment = "waiting_for_payment"
+)
+
 type OrderTracking struct {
 	common.SQLModel
 	OrderId int    `json:"order_id" gorm:"order_id"`
 	State   string `json:"state" gorm:"state"`
-	Status  bool   `json:"status:" gorm:"status"`
 }
 
 func (OrderTracking) TableName() string {
-	return "orders_tracking"
+	return "order_trackings"
 }
 
 type OrderTrackingCreate struct {
 	common.SQLModelCreate
 	OrderId int    `gorm:"order_id"`
 	State   string `gorm:"state"`
-	Status  bool   `gorm:"status"`
 }
 
 func (OrderTrackingCreate) TableName() string {

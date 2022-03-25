@@ -14,20 +14,20 @@ import (
 	"foodlive/modules/ordertracking/ordertrackingmodel"
 	"foodlive/modules/ordertracking/ordertrackingstore"
 	"foodlive/modules/useraddress/useraddressstore"
-	"log"
+	log "github.com/sirupsen/logrus"
 )
 
 type createOrderBiz struct {
 	orderStore       orderstore.OrderStore
 	cartStore        cartstore.CartStore
-	orderDetailStore orderdetailstore.OrderStore
-	orderTracking    ordertrackingstore.OrderStore
+	orderDetailStore orderdetailstore.OrderDetailStore
+	orderTracking    ordertrackingstore.OrderTrackingStore
 	userAddressStore useraddressstore.UserAddressStore
 	paymentProvider  paymentprovider.PaymentProvider
 }
 
-func NewCreateOrderBiz(orderStore orderstore.OrderStore, orderDetailStore orderdetailstore.OrderStore,
-	orderTracking ordertrackingstore.OrderStore, userAddressStore useraddressstore.UserAddressStore, cartStore cartstore.CartStore, paymentProvider paymentprovider.PaymentProvider) *createOrderBiz {
+func NewCreateOrderBiz(orderStore orderstore.OrderStore, orderDetailStore orderdetailstore.OrderDetailStore,
+	orderTracking ordertrackingstore.OrderTrackingStore, userAddressStore useraddressstore.UserAddressStore, cartStore cartstore.CartStore, paymentProvider paymentprovider.PaymentProvider) *createOrderBiz {
 	return &createOrderBiz{
 		orderStore:       orderStore,
 		orderTracking:    orderTracking,
@@ -79,8 +79,7 @@ func (biz *createOrderBiz) CreateOrderMomoBiz(ctx context.Context, userId int, d
 		//create order tracking
 		orderTracking := ordertrackingmodel.OrderTrackingCreate{
 			OrderId: order.Id,
-			State:   ordermodel.PaymentFailStatus,
-			Status:  true,
+			State:   ordertrackingmodel.StatePaymentFail,
 		}
 		if err := biz.orderTracking.CreateOrderTracking(ctx, &orderTracking); err != nil {
 			log.Println(err)
@@ -91,15 +90,11 @@ func (biz *createOrderBiz) CreateOrderMomoBiz(ctx context.Context, userId int, d
 	}
 
 	go func() {
-		biz.cartStore.DeleteCartItem(ctx, map[string]interface{}{"user_id": userId})
-
 		//create order detail
 		var orderDetails []orderdetailmodel.OrderDetailCreate
 		for i, v := range listCart {
 			orderDetails[i] = orderdetailmodel.OrderDetailCreate{
-				UserId:       userId,
-				OrderId:      order.Id,
-				RestaurantId: v.RestaurantId,
+				OrderId: order.Id,
 				FoodOrigin: &common.FoodOrigin{
 					Id:     v.Food.Id,
 					Name:   v.Food.Name,
@@ -120,12 +115,14 @@ func (biz *createOrderBiz) CreateOrderMomoBiz(ctx context.Context, userId int, d
 		//create order tracking
 		orderTracking := ordertrackingmodel.OrderTrackingCreate{
 			OrderId: order.Id,
-			State:   ordermodel.PaymentStatus,
-			Status:  true,
+			State:   ordertrackingmodel.StateWaitingPayment,
 		}
 		if err := biz.orderTracking.CreateOrderTracking(ctx, &orderTracking); err != nil {
-			log.Println(err)
+			log.Error(err)
 			return
+		}
+		if err = biz.cartStore.DeleteCartItem(ctx, map[string]interface{}{"user_id": userId}); err != nil {
+			log.Error(err)
 		}
 	}()
 
@@ -142,6 +139,10 @@ func (biz *createOrderBiz) CreateOrderCryptoBiz(ctx context.Context, userId int,
 	listCart, err := biz.cartStore.ListCartItem(ctx, map[string]interface{}{"user_id": userId}, &cartFilter, "Food")
 	if err != nil {
 		return nil, err
+	}
+
+	if len(listCart) == 0 {
+		return nil, ordermodel.ErrCartEmpty
 	}
 
 	//generate order
@@ -170,16 +171,12 @@ func (biz *createOrderBiz) CreateOrderCryptoBiz(ctx context.Context, userId int,
 		return nil, common.ErrCannotCreateEntity(ordermodel.EntityName, err)
 	}
 
-	go func() {
-		biz.cartStore.DeleteCartItem(ctx, map[string]interface{}{"user_id": userId})
-
+	go func(cartItems []cartmodel.CartItem) {
 		//create order detail
-		var orderDetails []orderdetailmodel.OrderDetailCreate
-		for i, v := range listCart {
+		var orderDetails = make([]orderdetailmodel.OrderDetailCreate, len(cartItems))
+		for i, v := range cartItems {
 			orderDetails[i] = orderdetailmodel.OrderDetailCreate{
-				UserId:       userId,
-				OrderId:      order.Id,
-				RestaurantId: v.RestaurantId,
+				OrderId: order.Id,
 				FoodOrigin: &common.FoodOrigin{
 					Id:     v.Food.Id,
 					Name:   v.Food.Name,
@@ -200,18 +197,21 @@ func (biz *createOrderBiz) CreateOrderCryptoBiz(ctx context.Context, userId int,
 		//create order tracking
 		orderTracking := ordertrackingmodel.OrderTrackingCreate{
 			OrderId: order.Id,
-			State:   ordermodel.PaymentStatus,
-			Status:  true,
+			State:   ordertrackingmodel.StateWaitingPayment,
 		}
 		if err := biz.orderTracking.CreateOrderTracking(ctx, &orderTracking); err != nil {
 			log.Println(err)
 			return
 		}
-	}()
+		if err = biz.cartStore.DeleteCartItem(ctx, map[string]interface{}{"user_id": userId}); err != nil {
+			log.Error(err)
+		}
+	}(listCart)
 
 	result := ordermodel.PaymentCoinResp{
-		Web: fmt.Sprintf("https://foodlive.tech/order/%v", order.Id),
-		App: fmt.Sprintf("https://metamask.app.link/dapp/foodlive.tech/order/%v", order.Id),
+		OrderId: order.Id,
+		Web:     fmt.Sprintf("https://foodlive.tech/order/%v", order.Id),
+		App:     fmt.Sprintf("https://metamask.app.link/dapp/foodlive.tech/order/%v", order.Id),
 	}
 
 	return &result, nil

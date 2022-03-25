@@ -36,11 +36,15 @@ func (biz *previewOrderBiz) PreviewOrderBiz(ctx context.Context, userId int, rin
 		totalPrice += listCart[i].Food.Price * float64(listCart[i].Quantity)
 	}
 
+	shipFee := float64(10)
+
+	totalPrice += shipFee
+
 	priceEth, err := rinkebyProvider.ParsePriceToEth(ctx, totalPrice)
 
 	result := ordermodel.PreviewOrder{
 		Foods:         foods,
-		ShipFee:       10000,
+		ShipFee:       shipFee,
 		TotalPrice:    totalPrice,
 		TotalPriceEth: priceEth,
 	}

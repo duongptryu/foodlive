@@ -32,7 +32,7 @@ func NewListRestaurantRepo(store ListRestaurantStore) *listRestaurantRepo {
 }
 
 func (repo *listRestaurantRepo) ListRestaurantRepo(ctx context.Context, filter *restaurantmodel.Filter, paging *common.Paging) ([]restaurantmodel.Restaurant, error) {
-	result, err := repo.store.ListRestaurant(ctx, map[string]interface{}{"status": true}, filter, paging)
+	result, err := repo.store.ListRestaurant(ctx, map[string]interface{}{"status": true}, filter, paging, "City")
 
 	if err != nil {
 		return nil, common.ErrCannotListEntity(restaurantmodel.EntityName, err)

@@ -1,17 +1,13 @@
 package ordermodel
 
-import "foodlive/common"
-
-const (
-	EntityName = "Order"
+import (
+	"foodlive/common"
+	"foodlive/modules/orderdetail/orderdetailmodel"
+	"foodlive/modules/ordertracking/ordertrackingmodel"
 )
 
 const (
-	PaymentStatus     = "PAYMENT_STATUS"
-	PrepareStatus     = "PREPARE_STATUS"
-	DeliveryStatus    = "DELIVERY_STATUS"
-	CompleteStatus    = "COMPLETE_STATUS"
-	PaymentFailStatus = "PAYMENT_FAIL_STATUS"
+	EntityName = "Order"
 )
 
 const (
@@ -25,14 +21,16 @@ type Checkout struct {
 
 type Order struct {
 	common.SQLModel
-	UserId         int     `json:"user_id" gorm:"user_id"`
-	TotalPrice     float64 `json:"total_price" gorm:"total_price"`
-	ShipperId      int     `json:"shipper_id" gorm:"shipper_id"`
-	UserAddressOri string  `json:"user_address_ori" gorm:"user_address_ori"`
-	Status         bool    `json:"status" gorm:"status"`
-	TypePayment    string  `json:"type_payment" gorm:"column:type_payment"`
-	TxnHash        string  `json:"txn_hash" gorm:"column:txn_hash"`
-	TotalPriceEth  float64 `json:"total_price_eth" gorm:"column:total_price_eth"`
+	UserId         int               `json:"user_id" gorm:"user_id"`
+	TotalPrice     float64           `json:"total_price" gorm:"total_price"`
+	ShipperId      int               `json:"shipper_id" gorm:"shipper_id"`
+	UserAddressOri string            `json:"user_address_ori" gorm:"user_address_ori"`
+	Status         bool              `json:"status" gorm:"status"`
+	TypePayment    string            `json:"type_payment" gorm:"column:type_payment"`
+	TxnHash        string            `json:"txn_hash" gorm:"column:txn_hash"`
+	TotalPriceEth  float64           `json:"total_price_eth" gorm:"column:total_price_eth"`
+	RestaurantId   int               `json:"restaurant_id" gorm:"restaurant_id"`
+	Restaurant     *common.SimpleRst `json:"restaurant" gorm:"preload:false"`
 }
 
 func (Order) TableName() string {
@@ -112,8 +110,16 @@ type PreviewOrder struct {
 }
 
 type PaymentCoinResp struct {
-	Web string `json:"web"`
-	App string `json:"app"`
+	OrderId int    `json:"order_id"`
+	Web     string `json:"web"`
+	App     string `json:"app"`
+}
+
+type OrderResponse struct {
+	Order         *Order                            `json:"order"`
+	OrderDetail   []orderdetailmodel.OrderDetail    `json:"order_detail"`
+	OrderTracking *ordertrackingmodel.OrderTracking `json:"order_tracking"`
 }
 
 var ErrPaymentFailed = common.NewFullErrorResponse(409, nil, "Cannot get payment, please try again!", "Cannot get payment, please try again!", "ErrPaymentFailed")
+var ErrCartEmpty = common.NewCustomError(nil, "Cart is empty", "ErrCartEmpty")

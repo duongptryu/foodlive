@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -30,6 +31,9 @@ type RespTxn struct {
 }
 
 func NewCryptoPayment(apiKey string) *cryptoPayment {
+	if apiKey == "" {
+		log.Fatal("Etherscan API key is empty")
+	}
 	return &cryptoPayment{
 		ApiKey: apiKey,
 	}

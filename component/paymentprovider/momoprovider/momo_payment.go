@@ -12,6 +12,7 @@ import (
 	"foodlive/component/paymentprovider"
 	"foodlive/config"
 	guuid "github.com/google/uuid"
+	"log"
 	"net/http"
 )
 
@@ -26,6 +27,9 @@ type momoProvider struct {
 }
 
 func NewMomoProvider(cf config.MomoConfig) *momoProvider {
+	if cf.EndPointMomo == "" || cf.SecretKey == "" || cf.AccessKey == "" || cf.NotifyUrl == "" || cf.BaseReturnUrl == "" || cf.PartnerCode == "" || cf.RequestType == "" {
+		log.Fatal("Momo config is empty")
+	}
 	return &momoProvider{
 		EndPointMomo:  cf.EndPointMomo,
 		PartnerCode:   cf.PartnerCode,
