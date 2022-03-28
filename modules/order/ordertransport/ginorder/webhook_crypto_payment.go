@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func HandleWebHookPayment(appCtx component.AppContext) func(c *gin.Context) {
+func HandleWebHookCryptoPayment(appCtx component.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 
 		var resp ordermodel.WebHookPayment

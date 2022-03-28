@@ -14,7 +14,7 @@ type AppConfig struct {
 	Sms             Sms        `yaml:"sms"`
 	Token           string     `yaml:"token"`
 	S3AWS           S3AWS      `yaml:"s3_aws"`
-	MomoConfig      MomoConfig `yaml:"momo_config"`
+	MomoConfig      MomoConfig `yaml:"momo"`
 	EtherscanAPIKey string     `yaml:"etherscan_api_key"`
 }
 

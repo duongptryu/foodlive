@@ -2,7 +2,7 @@ package historypaymentstore
 
 import (
 	"context"
-	"foodlive/modules/ordertracking/ordertrackingmodel"
+	"foodlive/modules/historypayment/historypaymentmodel"
 	"gorm.io/gorm"
 )
 
@@ -16,7 +16,6 @@ func NewSqlStore(db *gorm.DB) *sqlStore {
 	}
 }
 
-type OrderStore interface {
-	CreateOrderTracking(ctx context.Context, data *ordertrackingmodel.OrderTrackingCreate) error
-	UpdateOrder(ctx context.Context, id int, data *ordertrackingmodel.OrderTrackingUpdate) error
+type HistoryPaymentStore interface {
+	CreateHistoryPayment(ctx context.Context, data *historypaymentmodel.HistoryPaymentCreate) error
 }

@@ -6,10 +6,10 @@ import (
 	"foodlive/modules/ordertracking/ordertrackingmodel"
 )
 
-func (s *sqlStore) UpdateOrder(ctx context.Context, id int, data *ordertrackingmodel.OrderTrackingUpdate) error {
+func (s *sqlStore) UpdateOrderTracking(ctx context.Context, orderId int, data *ordertrackingmodel.OrderTrackingUpdate) error {
 	db := s.db
 
-	if err := db.Where("id = ?", id).Updates(data).Error; err != nil {
+	if err := db.Where("order_id = ?", orderId).Updates(data).Error; err != nil {
 		return common.ErrDB(err)
 	}
 

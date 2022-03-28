@@ -64,7 +64,7 @@ func CreateOrderCrypto(appCtx component.AppContext) func(c *gin.Context) {
 
 		orderBiz := orderbiz.NewCreateOrderBiz(orderStore, orderDetail, orderTracking, userAddressStore, cartStore, appCtx.GetPaymentProvider())
 
-		resp, err := orderBiz.CreateOrderCryptoBiz(c.Request.Context(), userIdInt, &checkOut, appCtx.GetCryptoPaymentProvider())
+		resp, err := orderBiz.CreateOrderCryptoBiz(c.Request.Context(), userIdInt, &checkOut)
 		if err != nil {
 			panic(err)
 		}

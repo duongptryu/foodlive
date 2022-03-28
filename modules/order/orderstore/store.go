@@ -18,7 +18,7 @@ func NewSqlStore(db *gorm.DB) *sqlStore {
 }
 
 type OrderStore interface {
-	CreateOrder(ctx context.Context, data *ordermodel.OrderCreate) error
+	CreateOrder(ctx context.Context, data *ordermodel.OrderCreate) (*gorm.DB, error)
 	FindOrder(ctx context.Context, conditions map[string]interface{}, moreKeys ...string) (*ordermodel.Order, error)
 	ListOrder(ctx context.Context,
 		condition map[string]interface{},
@@ -26,4 +26,5 @@ type OrderStore interface {
 		paging *common.Paging,
 		moreKey ...string,
 	) ([]ordermodel.Order, error)
+	UpdateOrder(ctx context.Context, id int, data *ordermodel.OrderUpdate) error
 }

@@ -4,24 +4,33 @@ import "context"
 
 type TransactionReq struct {
 	PartnerCode string `json:"partnerCode"`
+	PartnerName string `json:"partnerName"`
+	StoreId     string `json:"storeId"`
 	AccessKey   string `json:"accessKey"`
 	RequestType string `json:"requestType"`
-	NotifyURL   string `json:"notifyUrl"`
-	ReturnURL   string `json:"returnUrl"`
+	IpnUrl      string `json:"ipnUrl"`
+	RedirectUrl string `json:"redirectUrl"`
 	OrderID     string `json:"orderId"`
 	Amount      string `json:"amount"`
+	Lang        string `json:"lang"`
+	AutoCapture bool   `json:"autoCapture"`
 	OrderInfo   string `json:"orderInfo"`
-	RequestID   string `json:"requestId"`
+	RequestId   string `json:"requestId"`
 	ExtraData   string `json:"extraData"`
 	Signature   string `json:"signature"`
 }
 
 type TransactionResp struct {
-	ErrorCode    int    `json:"errorCode"`
-	LocalMessage string `json:"localMessage"`
-	Message      string `json:"message"`
-	OrderID      string `json:"orderId,omitempty"`
-	PayUrl       string `json:"payUrl,omitempty"`
+	PartnerCode  string  `json:"partnerCode"`
+	OrderId      string  `json:"orderId"`
+	RequestId    string  `json:"requestId"`
+	Amount       float64 `json:"amount"`
+	ResponseTime float64 `json:"responseTime"`
+	Message      string  `json:"message"`
+	ResultCode   int     `json:"resultCode"`
+	PayUrl       string  `json:"payUrl"`
+	Deeplink     string  `json:"deeplink"`
+	QrCodeUrl    string  `json:"qrCodeUrl"`
 }
 
 type OrderRequester interface {

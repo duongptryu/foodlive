@@ -14,6 +14,7 @@ import (
 	guuid "github.com/google/uuid"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type momoProvider struct {
@@ -53,30 +54,32 @@ func (m *momoProvider) SendRequestPayment(ctx context.Context, data paymentprovi
 	var orderInfo = dataExtra
 	var returnUrl = m.BaseReturnUrl + orderId
 	var notifyUrl = m.NotifyUrl
-	var amount = fmt.Sprintf("%v", data.GetPrice())
+	var amount = strconv.Itoa(int(data.GetPrice()))
 	var requestType = m.RequestType
 	var extraData = dataExtra
 
 	//build raw signature
 	var rawSignature bytes.Buffer
-	rawSignature.WriteString("partnerCode=")
-	rawSignature.WriteString(partnerCode)
-	rawSignature.WriteString("&accessKey=")
+	rawSignature.WriteString("accessKey=")
 	rawSignature.WriteString(accessKey)
-	rawSignature.WriteString("&requestId=")
-	rawSignature.WriteString(requestId)
 	rawSignature.WriteString("&amount=")
 	rawSignature.WriteString(amount)
+	rawSignature.WriteString("&extraData=")
+	rawSignature.WriteString(extraData)
+	rawSignature.WriteString("&ipnUrl=")
+	rawSignature.WriteString(notifyUrl)
 	rawSignature.WriteString("&orderId=")
 	rawSignature.WriteString(orderId)
 	rawSignature.WriteString("&orderInfo=")
 	rawSignature.WriteString(orderInfo)
-	rawSignature.WriteString("&returnUrl=")
+	rawSignature.WriteString("&partnerCode=")
+	rawSignature.WriteString(partnerCode)
+	rawSignature.WriteString("&redirectUrl=")
 	rawSignature.WriteString(returnUrl)
-	rawSignature.WriteString("&notifyUrl=")
-	rawSignature.WriteString(notifyUrl)
-	rawSignature.WriteString("&extraData=")
-	rawSignature.WriteString(extraData)
+	rawSignature.WriteString("&requestId=")
+	rawSignature.WriteString(requestId)
+	rawSignature.WriteString("&requestType=")
+	rawSignature.WriteString(requestType)
 
 	// Create a new HMAC by defining the hash type and the key (as byte array)
 	hmac := hmac.New(sha256.New, []byte(secretKey))
@@ -88,13 +91,17 @@ func (m *momoProvider) SendRequestPayment(ctx context.Context, data paymentprovi
 	signature := hex.EncodeToString(hmac.Sum(nil))
 	var payload = paymentprovider.TransactionReq{
 		PartnerCode: partnerCode,
-		AccessKey:   accessKey,
-		RequestID:   requestId,
-		Amount:      amount,
+		PartnerName: "Test",
+		StoreId:     partnerCode,
+		RequestId:   requestId,
+		IpnUrl:      notifyUrl,
+		RedirectUrl: returnUrl,
 		OrderID:     orderId,
+		AccessKey:   accessKey,
+		Amount:      amount,
+		Lang:        "vi",
+		AutoCapture: true,
 		OrderInfo:   orderInfo,
-		ReturnURL:   returnUrl,
-		NotifyURL:   notifyUrl,
 		ExtraData:   extraData,
 		RequestType: requestType,
 		Signature:   signature,
@@ -118,5 +125,6 @@ func (m *momoProvider) SendRequestPayment(ctx context.Context, data paymentprovi
 	if err != nil {
 		return nil, common.ErrInternal(err)
 	}
+
 	return &respTransaction, nil
 }

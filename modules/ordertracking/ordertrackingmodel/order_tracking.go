@@ -34,8 +34,7 @@ func (OrderTrackingCreate) TableName() string {
 
 type OrderTrackingUpdate struct {
 	common.SQLModelUpdate
-	State  string `gorm:"state"`
-	Status bool   `gorm:"status"`
+	State string `gorm:"state"`
 }
 
 func (OrderTrackingUpdate) TableName() string {

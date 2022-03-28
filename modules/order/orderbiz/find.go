@@ -3,6 +3,7 @@ package orderbiz
 import (
 	"context"
 	"foodlive/common"
+	"foodlive/component/paymentprovider"
 	"foodlive/modules/order/ordermodel"
 	"foodlive/modules/order/orderstore"
 	"foodlive/modules/orderdetail/orderdetailstore"
@@ -25,7 +26,7 @@ func NewFindOrderBiz(orderStore orderstore.OrderStore, orderDetail orderdetailst
 	}
 }
 
-func (biz *findOrderBiz) FindOrderBiz(ctx context.Context, orderId int, userId int) (*ordermodel.OrderResponse, error) {
+func (biz *findOrderBiz) FindOrderBiz(ctx context.Context, orderId int, userId int, rinkebyProvider paymentprovider.CryptoPaymentProvider) (*ordermodel.OrderResponse, error) {
 	order, err := biz.orderStore.FindOrder(ctx, map[string]interface{}{"id": orderId, "user_id": userId}, "Restaurant")
 	if err != nil {
 		return nil, common.ErrCannotListEntity(ordermodel.EntityName, err)
@@ -39,6 +40,12 @@ func (biz *findOrderBiz) FindOrderBiz(ctx context.Context, orderId int, userId i
 	if err != nil {
 		return nil, err
 	}
+
+	priceEth, err := rinkebyProvider.ParsePriceToEth(ctx, order.TotalPrice/23000)
+	if err != nil {
+		return nil, common.ErrInternal(err)
+	}
+	order.TotalPriceEth = priceEth
 
 	orderTracking, err := biz.orderTracking.FindOrderTracking(ctx, map[string]interface{}{"order_id": orderId})
 	if err != nil {
@@ -93,4 +100,3 @@ func (biz *findOrderBiz) FindOrderCryptoBiz(ctx context.Context, orderId int) (*
 
 	return &resp, nil
 }
-

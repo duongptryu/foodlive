@@ -17,15 +17,11 @@ import (
 	"foodlive/modules/user/usertransport/ginuser"
 	"foodlive/modules/useraddress/useraddresstransport/ginuseraddress"
 	"foodlive/modules/userdevicetoken/userdevicetokentransport/ginuserdevicetoken"
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func setupRouter(r *gin.Engine, appCtx component.AppContext) {
 	r.Use(middleware.Recover(appCtx))
-	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:3000"}
-	r.Use(cors.New(config))
 	v1Route(r, appCtx)
 }
 

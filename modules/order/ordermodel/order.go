@@ -46,7 +46,6 @@ type OrderCreate struct {
 	UserAddressOri string  `json:"user_address_ori" gorm:"user_address_ori"`
 	Status         bool    `json:"-" gorm:"status"`
 	TypePayment    string  `json:"-" gorm:"column:type_payment"`
-	TotalPriceEth  float64 `json:"-" gorm:"column:total_price_eth"`
 }
 
 func (OrderCreate) TableName() string {
@@ -67,8 +66,9 @@ func (data *OrderCreate) GetPrice() float64 {
 
 type OrderUpdate struct {
 	common.SQLModelUpdate
-	Status  *bool  `json:"-" gorm:"status"`
-	TxnHash string `json:"txn_hash" gorm:"column:txn_hash"`
+	Status        *bool   `json:"-" gorm:"status"`
+	TxnHash       string  `json:"txn_hash" gorm:"column:txn_hash"`
+	TotalPriceEth float64 `json:"total_price_eth" gorm:"column:total_price_eth"`
 }
 
 func (OrderUpdate) TableName() string {
@@ -76,21 +76,21 @@ func (OrderUpdate) TableName() string {
 }
 
 type WebHookPayment struct {
-	PartnerCode  string `json:"partnerCode"`
-	RequestID    string `json:"requestId"`
-	Amount       string `json:"amount"`
-	OrderID      string `json:"orderId"`
-	Message      string `json:"message"`
-	ResponseTime string `json:"responseTime"`
-	ExtraData    string `json:"extraData"`
-	Signature    string `json:"signature"`
-	PayType      string `json:"payType"`
-	ErrorCode    string `json:"errorCode"`
-	AccessKey    string `json:"accessKey"`
-	OrderType    string `json:"orderType"`
-	OrderInfo    string `json:"orderInfo"`
-	TransID      string `json:"transId"`
-	LocalMessage string `json:"localMessage"`
+	Amount       int     `json:"amount"`
+	OrderInfo    string  `json:"orderInfo"`
+	OrderType    string  `json:"orderType"`
+	TransID      float64 `json:"transId"`
+	Message      string  `json:"message"`
+	PartnerCode  string  `json:"partnerCode"`
+	RequestID    string  `json:"requestId"`
+	OrderID      string  `json:"orderId"`
+	ResponseTime float64 `json:"responseTime"`
+	ExtraData    string  `json:"extraData"`
+	Signature    string  `json:"signature"`
+	PayType      string  `json:"payType"`
+	ResultCode   int     `json:"resultCode"`
+	AccessKey    string  `json:"accessKey"`
+	LocalMessage string  `json:"localMessage"`
 }
 
 func (data *WebHookPayment) Validate() error {

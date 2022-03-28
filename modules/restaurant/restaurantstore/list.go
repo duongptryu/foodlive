@@ -22,6 +22,9 @@ func (s *sqlStore) ListRestaurant(ctx context.Context,
 		if v.CityId > 0 {
 			db = db.Where("city_id = ?", v.CityId)
 		}
+		if v.OwnerId != 0 {
+			db = db.Where("owner_id = ?", v.OwnerId)
+		}
 	}
 
 	if err := db.Count(&paging.Total).Error; err != nil {

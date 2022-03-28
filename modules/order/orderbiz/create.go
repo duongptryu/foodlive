@@ -50,6 +50,10 @@ func (biz *createOrderBiz) CreateOrderMomoBiz(ctx context.Context, userId int, d
 		return nil, err
 	}
 
+	if len(listCart) == 0 {
+		return nil, ordermodel.ErrCartEmpty
+	}
+
 	//generate order
 	var totalPrice float64
 	for i, _ := range listCart {
@@ -66,70 +70,73 @@ func (biz *createOrderBiz) CreateOrderMomoBiz(ctx context.Context, userId int, d
 		TypePayment:    ordermodel.TypeMomo,
 	}
 
-	if err := biz.orderStore.CreateOrder(ctx, &order); err != nil {
+	orderCreateRevert, err := biz.orderStore.CreateOrder(ctx, &order)
+	if err != nil {
 		return nil, common.ErrCannotCreateEntity(ordermodel.EntityName, err)
 	}
 
 	checkoutResp, err := biz.paymentProvider.SendRequestPayment(ctx, &order, "Payment for food delivery service and ship to "+addressDb.Addr)
 	if err != nil {
+		orderCreateRevert.Rollback()
 		return nil, err
 	}
-	if checkoutResp.ErrorCode != 0 {
-		//Update order, order detail, order tracking
-		//create order tracking
-		orderTracking := ordertrackingmodel.OrderTrackingCreate{
-			OrderId: order.Id,
-			State:   ordertrackingmodel.StatePaymentFail,
-		}
-		if err := biz.orderTracking.CreateOrderTracking(ctx, &orderTracking); err != nil {
-			log.Println(err)
-			return nil, err
-		}
-
+	if checkoutResp.ResultCode != 0 {
+		//fail
+		orderCreateRevert.Rollback()
 		return nil, ordermodel.ErrPaymentFailed
 	}
 
-	go func() {
-		//create order detail
-		var orderDetails []orderdetailmodel.OrderDetailCreate
-		for i, v := range listCart {
-			orderDetails[i] = orderdetailmodel.OrderDetailCreate{
-				OrderId: order.Id,
-				FoodOrigin: &common.FoodOrigin{
-					Id:     v.Food.Id,
-					Name:   v.Food.Name,
-					Price:  v.Food.Price,
-					Images: v.Food.Images,
-				},
-				Price:    v.Food.Price,
-				Quantity: v.Quantity,
-			}
-		}
-
-		err = biz.orderDetailStore.CreateBulkOrderDetail(ctx, orderDetails)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-
-		//create order tracking
-		orderTracking := ordertrackingmodel.OrderTrackingCreate{
+	//success
+	//create order detail
+	var orderDetails = make([]orderdetailmodel.OrderDetailCreate, len(listCart))
+	for i, v := range listCart {
+		orderDetails[i] = orderdetailmodel.OrderDetailCreate{
 			OrderId: order.Id,
-			State:   ordertrackingmodel.StateWaitingPayment,
+			FoodOrigin: &common.FoodOrigin{
+				Id:     v.Food.Id,
+				Name:   v.Food.Name,
+				Price:  v.Food.Price,
+				Images: v.Food.Images,
+			},
+			Price:    v.Food.Price,
+			Quantity: v.Quantity,
 		}
-		if err := biz.orderTracking.CreateOrderTracking(ctx, &orderTracking); err != nil {
-			log.Error(err)
-			return
-		}
-		if err = biz.cartStore.DeleteCartItem(ctx, map[string]interface{}{"user_id": userId}); err != nil {
-			log.Error(err)
-		}
-	}()
+	}
+
+	createOrderDetailRevert, err := biz.orderDetailStore.CreateBulkOrderDetail(ctx, orderDetails)
+	if err != nil {
+		orderCreateRevert.Rollback()
+		return nil, err
+	}
+
+	//create order tracking
+	orderTracking := ordertrackingmodel.OrderTrackingCreate{
+		OrderId: order.Id,
+		State:   ordertrackingmodel.StateWaitingPayment,
+	}
+
+	orderTrackingRevert, err := biz.orderTracking.CreateOrderTracking(ctx, &orderTracking)
+	if err != nil {
+		createOrderDetailRevert.Rollback()
+		orderCreateRevert.Rollback()
+		return nil, err
+	}
+
+	if err = biz.cartStore.DeleteCartItem(ctx, map[string]interface{}{"user_id": userId}); err != nil {
+		orderCreateRevert.Rollback()
+		createOrderDetailRevert.Rollback()
+		orderTrackingRevert.Rollback()
+		return nil, err
+	}
+
+	orderCreateRevert.Commit()
+	orderTrackingRevert.Commit()
+	createOrderDetailRevert.Commit()
 
 	return checkoutResp, nil
 }
 
-func (biz *createOrderBiz) CreateOrderCryptoBiz(ctx context.Context, userId int, data *ordermodel.Checkout, rinkebyProvider paymentprovider.CryptoPaymentProvider) (*ordermodel.PaymentCoinResp, error) {
+func (biz *createOrderBiz) CreateOrderCryptoBiz(ctx context.Context, userId int, data *ordermodel.Checkout) (*ordermodel.PaymentCoinResp, error) {
 	addressDb, err := biz.userAddressStore.FindUserAddressById(ctx, map[string]interface{}{"user_id": userId, "id": data.UserAddrId})
 	if err != nil {
 		return nil, err
@@ -151,11 +158,6 @@ func (biz *createOrderBiz) CreateOrderCryptoBiz(ctx context.Context, userId int,
 		totalPrice += listCart[i].Food.Price * float64(listCart[i].Quantity)
 	}
 
-	priceEth, err := rinkebyProvider.ParsePriceToEth(ctx, totalPrice)
-	if err != nil {
-		return nil, common.ErrInternal(err)
-	}
-
 	var order = ordermodel.OrderCreate{
 		UserId:         userId,
 		RestaurantId:   listCart[0].RestaurantId,
@@ -164,49 +166,57 @@ func (biz *createOrderBiz) CreateOrderCryptoBiz(ctx context.Context, userId int,
 		Status:         true,
 		UserAddressOri: addressDb.Addr,
 		TypePayment:    ordermodel.TypeCrypto,
-		TotalPriceEth:  priceEth,
 	}
 
-	if err := biz.orderStore.CreateOrder(ctx, &order); err != nil {
+	orderCreateRevert, err := biz.orderStore.CreateOrder(ctx, &order)
+	if err != nil {
 		return nil, common.ErrCannotCreateEntity(ordermodel.EntityName, err)
 	}
 
-	go func(cartItems []cartmodel.CartItem) {
-		//create order detail
-		var orderDetails = make([]orderdetailmodel.OrderDetailCreate, len(cartItems))
-		for i, v := range cartItems {
-			orderDetails[i] = orderdetailmodel.OrderDetailCreate{
-				OrderId: order.Id,
-				FoodOrigin: &common.FoodOrigin{
-					Id:     v.Food.Id,
-					Name:   v.Food.Name,
-					Price:  v.Food.Price,
-					Images: v.Food.Images,
-				},
-				Price:    v.Food.Price,
-				Quantity: v.Quantity,
-			}
-		}
-
-		err = biz.orderDetailStore.CreateBulkOrderDetail(ctx, orderDetails)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-
-		//create order tracking
-		orderTracking := ordertrackingmodel.OrderTrackingCreate{
+	//create order detail
+	var orderDetails = make([]orderdetailmodel.OrderDetailCreate, len(listCart))
+	for i, v := range listCart {
+		orderDetails[i] = orderdetailmodel.OrderDetailCreate{
 			OrderId: order.Id,
-			State:   ordertrackingmodel.StateWaitingPayment,
+			FoodOrigin: &common.FoodOrigin{
+				Id:     v.Food.Id,
+				Name:   v.Food.Name,
+				Price:  v.Food.Price,
+				Images: v.Food.Images,
+			},
+			Price:    v.Food.Price,
+			Quantity: v.Quantity,
 		}
-		if err := biz.orderTracking.CreateOrderTracking(ctx, &orderTracking); err != nil {
-			log.Println(err)
-			return
-		}
-		if err = biz.cartStore.DeleteCartItem(ctx, map[string]interface{}{"user_id": userId}); err != nil {
-			log.Error(err)
-		}
-	}(listCart)
+	}
+
+	orderDetailRevert, err := biz.orderDetailStore.CreateBulkOrderDetail(ctx, orderDetails)
+	if err != nil {
+		orderCreateRevert.Rollback()
+		return nil, err
+	}
+
+	//create order tracking
+	orderTracking := ordertrackingmodel.OrderTrackingCreate{
+		OrderId: order.Id,
+		State:   ordertrackingmodel.StateWaitingPayment,
+	}
+
+	orderTrackingRevert, err := biz.orderTracking.CreateOrderTracking(ctx, &orderTracking)
+	if err != nil {
+		orderCreateRevert.Rollback()
+		orderDetailRevert.Rollback()
+		return nil, err
+	}
+	if err = biz.cartStore.DeleteCartItem(ctx, map[string]interface{}{"user_id": userId}); err != nil {
+		orderCreateRevert.Rollback()
+		orderDetailRevert.Rollback()
+		orderTrackingRevert.Rollback()
+		log.Error(err)
+	}
+
+	orderCreateRevert.Commit()
+	orderDetailRevert.Commit()
+	orderTrackingRevert.Commit()
 
 	result := ordermodel.PaymentCoinResp{
 		OrderId: order.Id,

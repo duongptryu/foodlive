@@ -4,15 +4,15 @@ import (
 	"context"
 	"foodlive/common"
 	"foodlive/modules/order/ordermodel"
+	"gorm.io/gorm"
 )
 
-func (s *sqlStore) CreateOrder(ctx context.Context, data *ordermodel.OrderCreate) error {
-	db := s.db
+func (s *sqlStore) CreateOrder(ctx context.Context, data *ordermodel.OrderCreate) (*gorm.DB, error) {
+	db := s.db.Begin()
 
 	if err := db.Create(data).Error; err != nil {
-		return common.ErrDB(err)
+		return nil, common.ErrDB(err)
 	}
 
-	return nil
+	return db, nil
 }
-

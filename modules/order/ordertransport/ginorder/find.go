@@ -30,7 +30,7 @@ func FindOrder(appCtx component.AppContext) func(c *gin.Context) {
 
 		listOrderBiz := orderbiz.NewFindOrderBiz(orderStore, orderDetail, orderTracking)
 
-		result, err := listOrderBiz.FindOrderBiz(c.Request.Context(), orderId, userId)
+		result, err := listOrderBiz.FindOrderBiz(c.Request.Context(), orderId, userId, appCtx.GetCryptoPaymentProvider())
 		if err != nil {
 			panic(err)
 		}

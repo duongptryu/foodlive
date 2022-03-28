@@ -40,7 +40,7 @@ func (biz *previewOrderBiz) PreviewOrderBiz(ctx context.Context, userId int, rin
 
 	totalPrice += shipFee
 
-	priceEth, err := rinkebyProvider.ParsePriceToEth(ctx, totalPrice)
+	priceEth, err := rinkebyProvider.ParsePriceToEth(ctx, totalPrice/23000)
 
 	result := ordermodel.PreviewOrder{
 		Foods:         foods,
