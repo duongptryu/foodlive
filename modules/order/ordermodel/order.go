@@ -28,7 +28,7 @@ type Order struct {
 	Status         bool              `json:"status" gorm:"status"`
 	TypePayment    string            `json:"type_payment" gorm:"column:type_payment"`
 	TxnHash        string            `json:"txn_hash" gorm:"column:txn_hash"`
-	TotalPriceEth  float64           `json:"total_price_eth" gorm:"column:total_price_eth"`
+	TotalPriceEth  string            `json:"total_price_eth" gorm:"column:total_price_eth"`
 	RestaurantId   int               `json:"restaurant_id" gorm:"restaurant_id"`
 	Restaurant     *common.SimpleRst `json:"restaurant" gorm:"preload:false"`
 }
@@ -66,9 +66,9 @@ func (data *OrderCreate) GetPrice() float64 {
 
 type OrderUpdate struct {
 	common.SQLModelUpdate
-	Status        *bool   `json:"-" gorm:"status"`
-	TxnHash       string  `json:"txn_hash" gorm:"column:txn_hash"`
-	TotalPriceEth float64 `json:"total_price_eth" gorm:"column:total_price_eth"`
+	Status        *bool  `json:"-" gorm:"status"`
+	TxnHash       string `json:"-" gorm:"column:txn_hash"`
+	TotalPriceEth string `json:"-" gorm:"column:total_price_eth"`
 }
 
 func (OrderUpdate) TableName() string {
@@ -106,7 +106,7 @@ type PreviewOrder struct {
 	Foods         []FoodQuantity `json:"foods"`
 	ShipFee       float64        `json:"ship_fee"`
 	TotalPrice    float64        `json:"total_price"`
-	TotalPriceEth float64        `json:"total_price_eth"`
+	TotalPriceEth string         `json:"total_price_eth"`
 }
 
 type PaymentCoinResp struct {
@@ -119,6 +119,13 @@ type OrderResponse struct {
 	Order         *Order                            `json:"order"`
 	OrderDetail   []orderdetailmodel.OrderDetail    `json:"order_detail"`
 	OrderTracking *ordertrackingmodel.OrderTracking `json:"order_tracking"`
+}
+
+type PaymentOrderEvent struct {
+	OrderId     int
+	Value       string
+	Hash        string
+	BlockNumber uint64
 }
 
 var ErrPaymentFailed = common.NewFullErrorResponse(409, nil, "Cannot get payment, please try again!", "Cannot get payment, please try again!", "ErrPaymentFailed")

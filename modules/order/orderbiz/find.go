@@ -2,6 +2,7 @@ package orderbiz
 
 import (
 	"context"
+	"fmt"
 	"foodlive/common"
 	"foodlive/component/paymentprovider"
 	"foodlive/modules/order/ordermodel"
@@ -36,6 +37,10 @@ func (biz *findOrderBiz) FindOrderBiz(ctx context.Context, orderId int, userId i
 		return nil, common.ErrDataNotFound(ordermodel.EntityName)
 	}
 
+	if order.UserId != userId {
+		return nil, common.ErrDataNotFound(ordermodel.EntityName)
+	}
+
 	orderDetail, err := biz.orderDetail.FindOrderDetail(ctx, map[string]interface{}{"order_id": orderId})
 	if err != nil {
 		return nil, err
@@ -45,7 +50,10 @@ func (biz *findOrderBiz) FindOrderBiz(ctx context.Context, orderId int, userId i
 	if err != nil {
 		return nil, common.ErrInternal(err)
 	}
-	order.TotalPriceEth = priceEth
+
+	newPriceEth := fmt.Sprintf("%.18f", priceEth)
+
+	order.TotalPriceEth = newPriceEth
 
 	orderTracking, err := biz.orderTracking.FindOrderTracking(ctx, map[string]interface{}{"order_id": orderId})
 	if err != nil {
@@ -61,7 +69,7 @@ func (biz *findOrderBiz) FindOrderBiz(ctx context.Context, orderId int, userId i
 	return &resp, nil
 }
 
-func (biz *findOrderBiz) FindOrderCryptoBiz(ctx context.Context, orderId int) (*ordermodel.OrderResponse, error) {
+func (biz *findOrderBiz) FindOrderCryptoBiz(ctx context.Context, orderId int, rinkebyProvider paymentprovider.CryptoPaymentProvider) (*ordermodel.OrderResponse, error) {
 	order, err := biz.orderStore.FindOrder(ctx, map[string]interface{}{"id": orderId}, "Restaurant")
 	if err != nil {
 		return nil, common.ErrCannotListEntity(ordermodel.EntityName, err)
@@ -77,6 +85,12 @@ func (biz *findOrderBiz) FindOrderCryptoBiz(ctx context.Context, orderId int) (*
 	if order.TypePayment != ordermodel.TypeCrypto {
 		return nil, common.ErrDataNotFound(ordermodel.EntityName)
 	}
+
+	priceEth, err := rinkebyProvider.ParsePriceToEth(ctx, order.TotalPrice/23000)
+
+	newPriceEth := fmt.Sprintf("%.18f", priceEth)
+
+	order.TotalPriceEth = newPriceEth
 
 	orderDetail, err := biz.orderDetail.FindOrderDetail(ctx, map[string]interface{}{"order_id": orderId})
 	if err != nil {

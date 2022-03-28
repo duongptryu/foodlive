@@ -2,6 +2,7 @@ package main
 
 import (
 	"foodlive/config"
+	"foodlive/eventsmartcontract"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -27,6 +28,9 @@ func runService() {
 	defer f.Close()
 
 	appCtx := setupAppContext(appConfig)
+
+	eventWatcher := eventsmartcontract.NewEventWatcher(appConfig)
+	go eventWatcher.Watch(appCtx)
 
 	r := gin.Default()
 	r.Use(cors.Default())

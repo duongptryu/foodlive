@@ -12,6 +12,10 @@ const (
 	StateWaitingPayment = "waiting_for_payment"
 )
 
+const (
+	EntityName = "Order Tracking"
+)
+
 type OrderTracking struct {
 	common.SQLModel
 	OrderId int    `json:"order_id" gorm:"order_id"`

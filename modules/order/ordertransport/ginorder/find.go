@@ -52,7 +52,7 @@ func FindOrderCryptoInWeb(appCtx component.AppContext) func(c *gin.Context) {
 
 		listOrderBiz := orderbiz.NewFindOrderBiz(orderStore, orderDetail, orderTracking)
 
-		result, err := listOrderBiz.FindOrderCryptoBiz(c.Request.Context(), orderId)
+		result, err := listOrderBiz.FindOrderCryptoBiz(c.Request.Context(), orderId, appCtx.GetCryptoPaymentProvider())
 		if err != nil {
 			panic(err)
 		}

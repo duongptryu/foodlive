@@ -35,9 +35,9 @@ func (CartItemCreate) TableName() string {
 }
 
 func (data *CartItemCreate) Validate() error {
-	//if data.Quantity < 1 {
-	//	return
-	//}
+	if data.Quantity < 1 {
+		return ErrInvalidQuantity
+	}
 	data.Status = true
 	return nil
 }
@@ -54,9 +54,9 @@ func (CartItemUpdate) TableName() string {
 }
 
 func (data *CartItemUpdate) Validate() error {
-	//if data.Quantity < 1 {
-	//	return
-	//}
+	if data.Quantity < 1 {
+		return ErrInvalidQuantity
+	}
 	return nil
 }
 
@@ -64,4 +64,5 @@ var (
 	ErrFoodInAnotherRestaurant = common.NewCustomError(nil, "Foods need to be in the same restaurant", "ErrFoodInAnotherRestaurant")
 	ErrItemAlreadyExist        = common.NewCustomError(nil, "item already exist in cart", "ErrItemAlreadyExist")
 	ErrItemDoesNotExist        = common.NewCustomError(nil, "item does not exist in cart", "ErrItemDoesNotExist")
+	ErrInvalidQuantity         = common.NewCustomError(nil, "quantity must greater than 0", "ErrInvalidQuantity")
 )

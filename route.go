@@ -105,6 +105,7 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			order.GET("/preview", ginorder.PreviewOrder(appCtx))
 			order.GET("/:order_id", ginorder.FindOrder(appCtx))
 			order.GET("", ginorder.ListOrder(appCtx))
+			order.GET("/current", ginorder.ListMyCurrentOrder(appCtx))
 		}
 		//========================================================================================================
 

@@ -15,6 +15,7 @@ import (
 	"foodlive/modules/ordertracking/ordertrackingstore"
 	"foodlive/modules/useraddress/useraddressstore"
 	log "github.com/sirupsen/logrus"
+	"time"
 )
 
 type createOrderBiz struct {
@@ -59,6 +60,10 @@ func (biz *createOrderBiz) CreateOrderMomoBiz(ctx context.Context, userId int, d
 	for i, _ := range listCart {
 		totalPrice += listCart[i].Food.Price * float64(listCart[i].Quantity)
 	}
+
+	shipFee := float64(10000)
+
+	totalPrice += shipFee
 
 	var order = ordermodel.OrderCreate{
 		UserId:         userId,
@@ -133,6 +138,8 @@ func (biz *createOrderBiz) CreateOrderMomoBiz(ctx context.Context, userId int, d
 	orderTrackingRevert.Commit()
 	createOrderDetailRevert.Commit()
 
+	go biz.cancelOrder(ctx, order.Id, 10)
+
 	return checkoutResp, nil
 }
 
@@ -157,6 +164,10 @@ func (biz *createOrderBiz) CreateOrderCryptoBiz(ctx context.Context, userId int,
 	for i, _ := range listCart {
 		totalPrice += listCart[i].Food.Price * float64(listCart[i].Quantity)
 	}
+
+	shipFee := float64(10000)
+
+	totalPrice += shipFee
 
 	var order = ordermodel.OrderCreate{
 		UserId:         userId,
@@ -224,5 +235,59 @@ func (biz *createOrderBiz) CreateOrderCryptoBiz(ctx context.Context, userId int,
 		App:     fmt.Sprintf("https://metamask.app.link/dapp/foodlive.tech/order/%v", order.Id),
 	}
 
+	go biz.cancelOrder(ctx, order.Id, 1)
+
 	return &result, nil
+}
+
+func (biz *createOrderBiz) cancelOrder(ctx context.Context, orderId int, minute uint) {
+	time.AfterFunc(time.Duration(minute)*time.Minute, func() {
+		order, err := biz.orderStore.FindOrder(ctx, map[string]interface{}{"id": orderId})
+		if err != nil {
+			log.Error(err)
+			return
+		}
+		if order.Id == 0 {
+			log.Error(common.ErrDataNotFound(ordermodel.EntityName))
+			return
+		}
+
+		if order.Status == false {
+			return
+		}
+
+		orderTracking, err := biz.orderTracking.FindOrderTracking(ctx, map[string]interface{}{"order_id": orderId})
+		if err != nil {
+			log.Error(err)
+			return
+		}
+
+		if orderTracking.Id == 0 {
+			log.Error(common.ErrDataNotFound(ordertrackingmodel.EntityName))
+			return
+		}
+
+		if orderTracking.State != ordertrackingmodel.StateWaitingPayment {
+			return
+		}
+
+		status := false
+
+		orderUpdate := ordermodel.OrderUpdate{
+			Status: &status,
+		}
+
+		if err := biz.orderStore.UpdateOrder(ctx, orderId, &orderUpdate); err != nil {
+			log.Error(err)
+			return
+		}
+
+		orderTrackingUpdate := ordertrackingmodel.OrderTrackingUpdate{
+			State: ordertrackingmodel.StateCancel,
+		}
+		if err := biz.orderTracking.UpdateOrderTracking(ctx, orderId, &orderTrackingUpdate); err != nil {
+			log.Error(err)
+			return
+		}
+	})
 }

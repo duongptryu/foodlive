@@ -32,6 +32,6 @@ func CreateItemInCart(appCtx component.AppContext) func(c *gin.Context) {
 			panic(err)
 		}
 
-		c.JSON(201, common.NewSimpleSuccessResponse(data))
+		c.JSON(201, common.NewSimpleSuccessResponse(true))
 	}
 }

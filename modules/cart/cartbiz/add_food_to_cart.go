@@ -47,7 +47,10 @@ func (biz *addFoodToCartBiz) AddFoodToCartBiz(ctx context.Context, data *cartmod
 			return err
 		}
 		if exist.UserId != 0 {
-			return cartmodel.ErrItemAlreadyExist
+			if err := biz.cartStore.UpdateCartItem(ctx, &cartmodel.CartItemUpdate{UserId: data.UserId, FoodId: data.FoodId, Quantity: exist.Quantity + data.Quantity}); err != nil {
+				return err
+			}
+			return nil
 		}
 	}
 

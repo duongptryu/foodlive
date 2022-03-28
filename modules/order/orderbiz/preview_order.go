@@ -2,6 +2,7 @@ package orderbiz
 
 import (
 	"context"
+	"fmt"
 	"foodlive/component/paymentprovider"
 	"foodlive/modules/cart/cartmodel"
 	"foodlive/modules/cart/cartstore"
@@ -25,6 +26,10 @@ func (biz *previewOrderBiz) PreviewOrderBiz(ctx context.Context, userId int, rin
 		return nil, err
 	}
 
+	if len(listCart) == 0 {
+		return nil, ordermodel.ErrCartEmpty
+	}
+
 	//generate order
 	var totalPrice float64
 	var foods []ordermodel.FoodQuantity
@@ -36,17 +41,19 @@ func (biz *previewOrderBiz) PreviewOrderBiz(ctx context.Context, userId int, rin
 		totalPrice += listCart[i].Food.Price * float64(listCart[i].Quantity)
 	}
 
-	shipFee := float64(10)
+	shipFee := float64(10000)
 
 	totalPrice += shipFee
 
 	priceEth, err := rinkebyProvider.ParsePriceToEth(ctx, totalPrice/23000)
 
+	newPriceEth := fmt.Sprintf("%.18f", priceEth)
+
 	result := ordermodel.PreviewOrder{
 		Foods:         foods,
 		ShipFee:       shipFee,
 		TotalPrice:    totalPrice,
-		TotalPriceEth: priceEth,
+		TotalPriceEth: newPriceEth,
 	}
 
 	return &result, nil

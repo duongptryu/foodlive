@@ -1,4 +1,5 @@
 package orderbiz
+
 import (
 	"context"
 	"foodlive/common"
@@ -17,7 +18,16 @@ func NewListOrderBiz(orderStore orderstore.OrderStore) *listOrderBiz {
 }
 
 func (biz *listOrderBiz) ListOrderBiz(ctx context.Context, userId int, paging *common.Paging, filter *ordermodel.Filter) ([]ordermodel.Order, error) {
-	result, err := biz.orderStore.ListOrder(ctx, map[string]interface{}{"user_id": userId}, filter, paging)
+	result, err := biz.orderStore.ListOrder(ctx, map[string]interface{}{"user_id": userId, "status": false}, filter, paging, "Restaurant")
+	if err != nil {
+		return nil, common.ErrCannotListEntity(ordermodel.EntityName, err)
+	}
+
+	return result, nil
+}
+
+func (biz *listOrderBiz) ListMyCurrentOrderBiz(ctx context.Context, userId int, paging *common.Paging, filter *ordermodel.Filter) ([]ordermodel.Order, error) {
+	result, err := biz.orderStore.ListOrder(ctx, map[string]interface{}{"user_id": userId, "status": true}, filter, paging, "Restaurant")
 	if err != nil {
 		return nil, common.ErrCannotListEntity(ordermodel.EntityName, err)
 	}
