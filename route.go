@@ -116,6 +116,7 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 				adminOwnerRst.GET("", ginrestaurantowner.ListOwnerRestaurant(appCtx))
 				adminOwnerRst.GET("/:id", ginrestaurantowner.FindOwnerRstByAdmin(appCtx))
 				adminOwnerRst.POST("", ginrestaurantowner.OwnerRestaurantRegister(appCtx))
+				adminOwnerRst.PUT("/:id", ginrestaurantowner.AdminUpdateOwnerRst(appCtx))
 			}
 
 			adminRestaurant := admin.Group("/restaurant")
@@ -139,6 +140,11 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			adminUserDeviceToken := admin.Group("/user-device-token")
 			{
 				adminUserDeviceToken.GET("", ginuserdevicetoken.ListUserDeviceToken(appCtx))
+			}
+
+			adminUser := admin.Group("/user")
+			{
+				adminUser.PUT("/:id", ginuser.AdminUpdateUser(appCtx))
 			}
 		}
 
