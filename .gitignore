@@ -5,5 +5,4 @@ food-hub.log
 go.sum
 deploy.sh
 deploy/
-foodlive
 app
