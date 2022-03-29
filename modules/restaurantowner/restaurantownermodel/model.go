@@ -40,6 +40,16 @@ func (OwnerRestaurantCreate) TableName() string {
 	return OwnerRestaurant{}.TableName()
 }
 
+
+type OwnerRestaurantUpdate struct {
+	common.SQLModel `json:",inline"`
+	Status          bool   `json:"status" gorm:"column:status"`
+}
+
+func (OwnerRestaurantUpdate) TableName() string {
+	return OwnerRestaurant{}.TableName()
+}
+
 func (u *OwnerRestaurantCreate) Validate() error {
 	phone := common.RePhone.Find([]byte(u.Phone))
 	if phone == nil {

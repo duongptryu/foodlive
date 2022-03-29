@@ -235,7 +235,7 @@ func (biz *createOrderBiz) CreateOrderCryptoBiz(ctx context.Context, userId int,
 		App:     fmt.Sprintf("https://metamask.app.link/dapp/foodlive.tech/order/%v", order.Id),
 	}
 
-	go biz.cancelOrder(ctx, order.Id, 1)
+	go biz.cancelOrder(ctx, order.Id, 5)
 
 	return &result, nil
 }
