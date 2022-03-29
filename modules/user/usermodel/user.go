@@ -55,11 +55,10 @@ func (UserUpdate) TableName() string {
 }
 
 func (u *UserCreate) Validate() error {
-	phone := common.RePhone.Find([]byte(u.Phone))
-	if phone == nil {
+	check := common.RePhone.Match([]byte(u.Phone))
+	if !check {
 		return ErrPhoneInvalid
 	}
-	u.Phone = string(phone)
 
 	if len(u.Password) < 8 {
 		return ErrLengthPassword

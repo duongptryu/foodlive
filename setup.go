@@ -51,7 +51,7 @@ func setupAppContext(appConfig *config.AppConfig) component.AppContext {
 	rinkebyProvider := rinkebycrypto.NewCryptoPayment(appConfig.EtherscanAPIKey)
 
 	//init app context
-	appCtx := component.NewAppContext(appConfig, nil, myCache, mySms, tokenProvider, s3Provider, psLocal, momoProvider, rinkebyProvider)
+	appCtx := component.NewAppContext(appConfig, FDDatabase, myCache, mySms, tokenProvider, s3Provider, psLocal, momoProvider, rinkebyProvider)
 
 	//setup subscriber
 	subscribe.SetupSubscriber(appCtx)

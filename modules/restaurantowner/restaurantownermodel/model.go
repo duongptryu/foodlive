@@ -40,10 +40,9 @@ func (OwnerRestaurantCreate) TableName() string {
 	return OwnerRestaurant{}.TableName()
 }
 
-
 type OwnerRestaurantUpdate struct {
 	common.SQLModel `json:",inline"`
-	Status          bool   `json:"status" gorm:"column:status"`
+	Status          bool `json:"status" gorm:"column:status"`
 }
 
 func (OwnerRestaurantUpdate) TableName() string {
@@ -84,11 +83,10 @@ type UserLogin struct {
 }
 
 func (u *UserLogin) Validate() error {
-	phone := common.RePhone.Find([]byte(u.Phone))
-	if phone == nil {
+	check := common.RePhone.Match([]byte(u.Phone))
+	if !check {
 		return ErrPhoneInvalid
 	}
-	u.Phone = string(phone)
 
 	if len(u.Password) < 8 {
 		return ErrLengthPassword
