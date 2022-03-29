@@ -141,6 +141,11 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			{
 				adminUserDeviceToken.GET("", ginuserdevicetoken.ListUserDeviceToken(appCtx))
 			}
+
+			adminUser := admin.Group("/user")
+			{
+				adminUser.PUT("/:id", ginuser.AdminUpdateUser(appCtx))
+			}
 		}
 
 		ownerRestaurant := v1.Group("/owner-restaurant")

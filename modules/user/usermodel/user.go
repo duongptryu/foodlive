@@ -42,6 +42,18 @@ func (UserCreate) TableName() string {
 	return User{}.TableName()
 }
 
+type UserUpdate struct {
+	common.SQLModel `json:",inline"`
+	Phone           string `json:"phone" gorm:"column:phone" binding:"required"`
+	LastName        string `json:"last_name" gorm:"column:last_name" binding:"required"`
+	FirstName       string `json:"first_name" gorm:"column:first_name" binding:"required"`
+	Status          bool   `json:"status" gorm:"column:status"`
+}
+
+func (UserUpdate) TableName() string {
+	return User{}.TableName()
+}
+
 func (u *UserCreate) Validate() error {
 	phone := common.RePhone.Find([]byte(u.Phone))
 	if phone == nil {
