@@ -24,6 +24,7 @@ type Restaurant struct {
 	Lng              float64         `json:"lng" gorm:"lng"`
 	ShippingFeePerKm float64         `json:"shipping_fee_per_km" gorm:"shipping_fee_per_km"`
 	Status           bool            `json:"status" gorm:"status"`
+	Distance         string          `json:"distance" gorm:"distance"`
 }
 
 func (Restaurant) TableName() string {
@@ -108,4 +109,5 @@ var (
 	ErrStatusCannotBeNil  = common.NewCustomError(nil, "Status restaurant can't be nil", "ErrStatusCannotBeNil")
 	ErrStatusAlreadySet   = common.NewCustomError(nil, "Status restaurant already set", "ErrStatusAlreadySet")
 	ErrRestaurantNotFound = common.NewFullErrorResponse(404, nil, "Restaurant not found", "Restaurant not found", "ErrRestaurantNotFound")
+	ErrLatLngInvalid      = common.NewCustomError(nil, "Lat and long required", "ErrLatLngInvalid")
 )
