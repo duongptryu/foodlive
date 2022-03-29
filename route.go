@@ -169,7 +169,7 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 				ownerRestaurant1.GET("/order/:order_id", ginorder.FindOrderOfRestaurant(appCtx))
 			}
 
-			restaurantOrder := v1.Group("/order", middleware.RequireAuthOwnerRestaurant(appCtx))
+			restaurantOrder := ownerRestaurant.Group("/order", middleware.RequireAuthOwnerRestaurant(appCtx))
 			{
 				restaurantOrder.PUT("/:order_id", ginorder.RstConfirmPrepareDone(appCtx))
 			}
