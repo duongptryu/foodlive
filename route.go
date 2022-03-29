@@ -106,6 +106,9 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			order.GET("/:order_id", ginorder.FindOrder(appCtx))
 			order.GET("", ginorder.ListOrder(appCtx))
 			order.GET("/current", ginorder.ListMyCurrentOrder(appCtx))
+
+			//user confirm received
+			order.PUT("/:order_id", ginorder.UserConfirmReceived(appCtx))
 		}
 		//========================================================================================================
 
@@ -160,6 +163,15 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 				ownerRestaurant1.PUT("/:id", ginrestaurant.UpdateRestaurant(appCtx))
 				ownerRestaurant1.GET("", ginrestaurant.ListRestaurantOwner(appCtx))
 				ownerRestaurant1.GET("/:id/food", ginfood.ListFoodOfRestaurant(appCtx)) // Get food of restaurant
+
+				ownerRestaurant1.GET("/:id/order", ginorder.ListOrderRestaurant(appCtx))
+				ownerRestaurant1.GET("/:id/order/current", ginorder.ListCurrentOrderRestaurant(appCtx))
+				ownerRestaurant1.GET("/order/:order_id", ginorder.FindOrderOfRestaurant(appCtx))
+			}
+
+			restaurantOrder := v1.Group("/order", middleware.RequireAuthOwnerRestaurant(appCtx))
+			{
+				restaurantOrder.PUT("/:order_id", ginorder.RstConfirmPrepareDone(appCtx))
 			}
 
 			ownerFood := ownerRestaurant.Group("/food", middleware.RequireAuthOwnerRestaurant(appCtx))

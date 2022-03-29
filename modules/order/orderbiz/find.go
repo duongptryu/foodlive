@@ -69,6 +69,52 @@ func (biz *findOrderBiz) FindOrderBiz(ctx context.Context, orderId int, userId i
 	return &resp, nil
 }
 
+func (biz *findOrderBiz) FindOrderOfRestaurantBiz(ctx context.Context, orderId int, userId int, rinkebyProvider paymentprovider.CryptoPaymentProvider) (*ordermodel.OrderResponse, error) {
+	order, err := biz.orderStore.FindOrder(ctx, map[string]interface{}{"id": orderId}, "Restaurant")
+	if err != nil {
+		return nil, common.ErrCannotListEntity(ordermodel.EntityName, err)
+	}
+
+	if order.Id == 0 {
+		return nil, common.ErrDataNotFound(ordermodel.EntityName)
+	}
+
+	if order.Restaurant.OwnerId != userId {
+		return nil, common.ErrDataNotFound(ordermodel.EntityName)
+	}
+
+	if order.UserId != userId {
+		return nil, common.ErrDataNotFound(ordermodel.EntityName)
+	}
+
+	orderDetail, err := biz.orderDetail.FindOrderDetail(ctx, map[string]interface{}{"order_id": orderId})
+	if err != nil {
+		return nil, err
+	}
+
+	priceEth, err := rinkebyProvider.ParsePriceToEth(ctx, order.TotalPrice/23000)
+	if err != nil {
+		return nil, common.ErrInternal(err)
+	}
+
+	newPriceEth := fmt.Sprintf("%.18f", priceEth)
+
+	order.TotalPriceEth = newPriceEth
+
+	orderTracking, err := biz.orderTracking.FindOrderTracking(ctx, map[string]interface{}{"order_id": orderId})
+	if err != nil {
+		return nil, err
+	}
+
+	resp := ordermodel.OrderResponse{
+		Order:         order,
+		OrderDetail:   orderDetail,
+		OrderTracking: orderTracking,
+	}
+
+	return &resp, nil
+}
+
 func (biz *findOrderBiz) FindOrderCryptoBiz(ctx context.Context, orderId int, rinkebyProvider paymentprovider.CryptoPaymentProvider) (*ordermodel.OrderResponse, error) {
 	order, err := biz.orderStore.FindOrder(ctx, map[string]interface{}{"id": orderId}, "Restaurant")
 	if err != nil {

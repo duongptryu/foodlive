@@ -21,16 +21,17 @@ type Checkout struct {
 
 type Order struct {
 	common.SQLModel
-	UserId         int               `json:"user_id" gorm:"user_id"`
-	TotalPrice     float64           `json:"total_price" gorm:"total_price"`
-	ShipperId      int               `json:"shipper_id" gorm:"shipper_id"`
-	UserAddressOri string            `json:"user_address_ori" gorm:"user_address_ori"`
-	Status         bool              `json:"status" gorm:"status"`
-	TypePayment    string            `json:"type_payment" gorm:"column:type_payment"`
-	TxnHash        string            `json:"txn_hash" gorm:"column:txn_hash"`
-	TotalPriceEth  string            `json:"total_price_eth" gorm:"column:total_price_eth"`
-	RestaurantId   int               `json:"restaurant_id" gorm:"restaurant_id"`
-	Restaurant     *common.SimpleRst `json:"restaurant" gorm:"preload:false"`
+	UserId         int                `json:"user_id" gorm:"user_id"`
+	User           *common.SimpleUser `json:"user" gorm:"preload:false"`
+	TotalPrice     float64            `json:"total_price" gorm:"total_price"`
+	ShipperId      int                `json:"shipper_id" gorm:"shipper_id"`
+	UserAddressOri string             `json:"user_address_ori" gorm:"user_address_ori"`
+	Status         bool               `json:"status" gorm:"status"`
+	TypePayment    string             `json:"type_payment" gorm:"column:type_payment"`
+	TxnHash        string             `json:"txn_hash" gorm:"column:txn_hash"`
+	TotalPriceEth  string             `json:"total_price_eth" gorm:"column:total_price_eth"`
+	RestaurantId   int                `json:"restaurant_id" gorm:"restaurant_id"`
+	Restaurant     *common.SimpleRst  `json:"restaurant" gorm:"preload:false"`
 }
 
 func (Order) TableName() string {
@@ -130,3 +131,4 @@ type PaymentOrderEvent struct {
 
 var ErrPaymentFailed = common.NewFullErrorResponse(409, nil, "Cannot get payment, please try again!", "Cannot get payment, please try again!", "ErrPaymentFailed")
 var ErrCartEmpty = common.NewCustomError(nil, "Cart is empty", "ErrCartEmpty")
+var ErrOrderExpire = common.NewCustomError(nil, "Order expire", "ErrOrderExpire")

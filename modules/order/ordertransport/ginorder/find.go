@@ -39,6 +39,34 @@ func FindOrder(appCtx component.AppContext) func(c *gin.Context) {
 	}
 }
 
+func FindOrderOfRestaurant(appCtx component.AppContext) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		orderId, err := strconv.Atoi(c.Param("order_id"))
+		if err != nil {
+			panic(common.ErrParseJson(err))
+		}
+
+		userIdRaw := c.MustGet(common.KeyUserHeader)
+		if err := userIdRaw.(int); err == 0 {
+			panic(common.ErrUnAuthorization)
+		}
+		userId := userIdRaw.(int)
+
+		orderStore := orderstore.NewSqlStore(appCtx.GetDatabase())
+		orderDetail := orderdetailstore.NewSqlStore(appCtx.GetDatabase())
+		orderTracking := ordertrackingstore.NewSqlStore(appCtx.GetDatabase())
+
+		listOrderBiz := orderbiz.NewFindOrderBiz(orderStore, orderDetail, orderTracking)
+
+		result, err := listOrderBiz.FindOrderOfRestaurantBiz(c.Request.Context(), orderId, userId, appCtx.GetCryptoPaymentProvider())
+		if err != nil {
+			panic(err)
+		}
+
+		c.JSON(200, common.NewSimpleSuccessResponse(result))
+	}
+}
+
 func FindOrderCryptoInWeb(appCtx component.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		orderId, err := strconv.Atoi(c.Param("order_id"))
