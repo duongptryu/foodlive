@@ -13,6 +13,7 @@ import (
 	"foodlive/modules/restaurantlike/restaurantliketransport/ginrestaurantlike"
 	"foodlive/modules/restaurantowner/restaurantownertransport/ginrestaurantowner"
 	"foodlive/modules/restaurantrating/restaurantratingtransport/ginrestaurantrating"
+	"foodlive/modules/statistic/statistictransport/ginstatistic"
 	"foodlive/modules/upload/uploadtransport/ginupload"
 	"foodlive/modules/user/usertransport/ginuser"
 	"foodlive/modules/useraddress/useraddresstransport/ginuseraddress"
@@ -148,6 +149,11 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			adminUser := admin.Group("/user")
 			{
 				adminUser.PUT("/:id", ginuser.AdminUpdateUser(appCtx))
+			}
+
+			stats := admin.Group("/stats")
+			{
+				stats.GET("/overview", ginstatistic.GetOverview(appCtx))
 			}
 		}
 

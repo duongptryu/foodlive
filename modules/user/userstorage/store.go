@@ -4,6 +4,7 @@ import (
 	"context"
 	"foodlive/modules/user/usermodel"
 	"gorm.io/gorm"
+	"time"
 )
 
 type sqlStore struct {
@@ -18,4 +19,5 @@ func NewSQLStore(db *gorm.DB) *sqlStore {
 
 type UserStore interface {
 	UpdateUser(ctx context.Context, id int, data *usermodel.UserUpdate) error
+	CountUser(ctx context.Context, condition map[string]interface{}, conditionTime *time.Time) (int, error)
 }

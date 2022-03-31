@@ -42,3 +42,22 @@ func (s *sqlStore) ListOrder(ctx context.Context,
 	return result, nil
 }
 
+func (s *sqlStore) ListOrderWithoutPaging(ctx context.Context,
+	condition map[string]interface{},
+	moreKey ...string,
+) ([]ordermodel.Order, error) {
+	var result []ordermodel.Order
+
+	db := s.db
+
+	db = db.Table(ordermodel.Order{}.TableName()).Where(condition)
+
+	for i := range moreKey {
+		db = db.Preload(moreKey[i])
+	}
+
+	if err := db.Find(&result).Error; err != nil {
+		return nil, common.ErrDB(err)
+	}
+	return result, nil
+}

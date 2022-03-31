@@ -44,5 +44,6 @@ type PaymentProvider interface {
 
 type CryptoPaymentProvider interface {
 	ParsePriceToEth(ctx context.Context, priceDola float64) (float64, error)
+	ParseEthToVND(ctx context.Context, eth float64) (float64, error)
 	CheckStatusTxn(ctx context.Context, txnHash string) (string, error)
 }

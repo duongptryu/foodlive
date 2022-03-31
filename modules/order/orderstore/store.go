@@ -5,6 +5,7 @@ import (
 	"foodlive/common"
 	"foodlive/modules/order/ordermodel"
 	"gorm.io/gorm"
+	"time"
 )
 
 type sqlStore struct {
@@ -27,4 +28,9 @@ type OrderStore interface {
 		moreKey ...string,
 	) ([]ordermodel.Order, error)
 	UpdateOrder(ctx context.Context, id int, data *ordermodel.OrderUpdate) error
+	CountOrder(ctx context.Context, condition map[string]interface{}, conditionTime *time.Time) (int, error)
+	ListOrderWithoutPaging(ctx context.Context,
+		condition map[string]interface{},
+		moreKey ...string,
+	) ([]ordermodel.Order, error)
 }

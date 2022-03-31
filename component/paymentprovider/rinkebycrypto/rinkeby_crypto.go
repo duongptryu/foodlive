@@ -74,6 +74,41 @@ func (c *cryptoPayment) ParsePriceToEth(ctx context.Context, priceDola float64) 
 	return realPrice, nil
 }
 
+func (c *cryptoPayment) ParseEthToVND(ctx context.Context, eth float64) (float64, error) {
+	url := "https://api-rinkeby.etherscan.io/api?module=stats&action=ethprice&apikey=" + c.ApiKey
+	method := "GET"
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, url, nil)
+
+	if err != nil {
+		return 0, err
+	}
+	res, err := client.Do(req)
+	if err != nil {
+		return 0, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return 0, err
+	}
+	var result RespPrice
+	if err = json.Unmarshal(body, &result); err != nil {
+		return 0, nil
+	}
+
+	priceEth, err := strconv.ParseFloat(result.Result.EthUsd, 64)
+	if err != nil {
+		return 0, err
+	}
+
+	realPrice := (eth / priceEth) * 23000
+
+	return realPrice, nil
+}
+
 func (c *cryptoPayment) CheckStatusTxn(ctx context.Context, txnHash string) (string, error) {
 	url := fmt.Sprintf("https://api-rinkeby.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=%v&apikey=%v", txnHash, c.ApiKey)
 	method := "GET"
