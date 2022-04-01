@@ -44,6 +44,7 @@ func (s *sqlStore) ListOrder(ctx context.Context,
 
 func (s *sqlStore) ListOrderWithoutPaging(ctx context.Context,
 	condition map[string]interface{},
+	filter *ordermodel.Filter,
 	moreKey ...string,
 ) ([]ordermodel.Order, error) {
 	var result []ordermodel.Order
@@ -51,6 +52,12 @@ func (s *sqlStore) ListOrderWithoutPaging(ctx context.Context,
 	db := s.db
 
 	db = db.Table(ordermodel.Order{}.TableName()).Where(condition)
+
+	if v := filter; v != nil {
+		if v.CreatedAtGt != nil {
+			db = db.Where("created_at > ?", *v.CreatedAtGt).Order("created_at ASC")
+		}
+	}
 
 	for i := range moreKey {
 		db = db.Preload(moreKey[i])

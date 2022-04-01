@@ -154,6 +154,8 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			stats := admin.Group("/stats")
 			{
 				stats.GET("/overview", ginstatistic.GetOverview(appCtx))
+				stats.GET("/order", ginstatistic.GetStatsOrder(appCtx))
+				stats.GET("/user", ginstatistic.GetStatsUser(appCtx))
 			}
 		}
 

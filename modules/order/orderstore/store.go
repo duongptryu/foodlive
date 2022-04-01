@@ -31,6 +31,7 @@ type OrderStore interface {
 	CountOrder(ctx context.Context, condition map[string]interface{}, conditionTime *time.Time) (int, error)
 	ListOrderWithoutPaging(ctx context.Context,
 		condition map[string]interface{},
+		filter *ordermodel.Filter,
 		moreKey ...string,
 	) ([]ordermodel.Order, error)
 }

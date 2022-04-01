@@ -20,4 +20,9 @@ func NewSQLStore(db *gorm.DB) *sqlStore {
 type UserStore interface {
 	UpdateUser(ctx context.Context, id int, data *usermodel.UserUpdate) error
 	CountUser(ctx context.Context, condition map[string]interface{}, conditionTime *time.Time) (int, error)
+	ListUserWithoutPaging(ctx context.Context,
+		condition map[string]interface{},
+		filter *usermodel.Filter,
+		moreKey ...string,
+	) ([]usermodel.User, error)
 }

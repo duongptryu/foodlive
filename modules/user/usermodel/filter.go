@@ -1,4 +1,4 @@
-package ordermodel
+package usermodel
 
 import "time"
 

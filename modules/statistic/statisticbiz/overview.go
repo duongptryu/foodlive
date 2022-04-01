@@ -50,7 +50,7 @@ func (biz *overviewBiz) OverviewBiz(ctx context.Context) (*statisticmodel.Overvi
 		return nil, err
 	}
 
-	orders, err := biz.orderStore.ListOrderWithoutPaging(ctx, nil)
+	orders, err := biz.orderStore.ListOrderWithoutPaging(ctx, nil, nil)
 	if err != nil {
 		return nil, err
 	}
