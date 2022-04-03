@@ -34,4 +34,8 @@ type OrderStore interface {
 		filter *ordermodel.Filter,
 		moreKey ...string,
 	) ([]ordermodel.Order, error)
+	ListOrderGroupByUser(ctx context.Context,
+		condition map[string]interface{},
+		moreKey ...string,
+	) ([]ordermodel.OrderGroupByUser, error)
 }

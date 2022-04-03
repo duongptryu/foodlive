@@ -34,10 +34,19 @@ func (s *sqlStore) ListRestaurant(ctx context.Context,
 		}
 		if v.Distance != 0 {
 			db = db.Having("distance < ?", v.Distance).Order("distance")
+		}
+		if v.OrderBy != "" {
+			if v.OrderBy == "rating_desc" {
+				db = db.Order("rating desc")
+			}
+			if v.OrderBy == "rating_asc" {
+				db = db.Order("rating asc")
+			}
 		} else {
 			// order by start
 			db = db.Order("id desc")
 		}
+
 	}
 
 	for i := range moreKey {

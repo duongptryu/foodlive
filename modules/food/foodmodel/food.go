@@ -8,13 +8,14 @@ const (
 
 type Food struct {
 	common.SQLModel `json:",inline"`
-	RestaurantId    int           `json:"restaurant_id" gorm:"column:restaurant_id"`
-	CategoryId      int           `json:"category_id" gorm:"column:category_id"`
-	Name            string        `json:"name" gorm:"column:name"`
-	Description     string        `json:"description" gorm:"column:description"`
-	Price           float64       `json:"price" gorm:"column:price"`
-	Images          *common.Image `json:"images" gorm:"images"`
-	Status          bool          `json:"status" gorm:"status"`
+	RestaurantId    int                    `json:"restaurant_id" gorm:"column:restaurant_id"`
+	CategoryId      int                    `json:"category_id" gorm:"column:category_id"`
+	Category        *common.SimpleCategory `json:"category" gorm:"reference:CategoryId;preload:false"`
+	Name            string                 `json:"name" gorm:"column:name"`
+	Description     string                 `json:"description" gorm:"column:description"`
+	Price           float64                `json:"price" gorm:"column:price"`
+	Images          *common.Image          `json:"images" gorm:"images"`
+	Status          bool                   `json:"status" gorm:"status"`
 }
 
 func (Food) TableName() string {

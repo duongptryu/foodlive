@@ -156,6 +156,8 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 				stats.GET("/overview", ginstatistic.GetOverview(appCtx))
 				stats.GET("/order", ginstatistic.GetStatsOrder(appCtx))
 				stats.GET("/user", ginstatistic.GetStatsUser(appCtx))
+				stats.GET("/food", ginstatistic.GetStatsFood(appCtx))
+				stats.GET("/top-user-by-order", ginstatistic.GetStatsTopUserByOrder(appCtx))
 			}
 		}
 

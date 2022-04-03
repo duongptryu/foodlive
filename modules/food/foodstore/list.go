@@ -46,3 +46,33 @@ func (s *sqlStore) ListFood(ctx context.Context,
 	}
 	return result, nil
 }
+
+func (s *sqlStore) ListFoodWithoutPaging(ctx context.Context,
+	condition map[string]interface{},
+	filter *foodmodel.Filter,
+	moreKey ...string,
+) ([]foodmodel.Food, error) {
+	var result []foodmodel.Food
+
+	db := s.db
+
+	db = db.Table(foodmodel.Food{}.TableName()).Where(condition)
+
+	if v := filter; v != nil {
+		if v.CategoryId > 0 {
+			db = db.Where("category_id = ?", v.CategoryId)
+		}
+		if v.Name != "" {
+			db = db.Where("name = ?", v.Name)
+		}
+	}
+
+	for i := range moreKey {
+		db = db.Preload(moreKey[i])
+	}
+
+	if err := db.Order("id desc").Find(&result).Error; err != nil {
+		return nil, common.ErrDB(err)
+	}
+	return result, nil
+}

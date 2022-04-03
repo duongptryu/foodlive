@@ -68,3 +68,25 @@ func (s *sqlStore) ListOrderWithoutPaging(ctx context.Context,
 	}
 	return result, nil
 }
+
+func (s *sqlStore) ListOrderGroupByUser(ctx context.Context,
+	condition map[string]interface{},
+	moreKey ...string,
+) ([]ordermodel.OrderGroupByUser, error) {
+	var result []ordermodel.OrderGroupByUser
+
+	db := s.db
+
+	db = db.Table(ordermodel.Order{}.TableName()).Where(condition)
+
+	db = db.Select("user_id, Count(*) as count").Group("user_id").Limit(5)
+
+	for i := range moreKey {
+		db = db.Preload(moreKey[i])
+	}
+
+	if err := db.Find(&result).Error; err != nil {
+		return nil, common.ErrDB(err)
+	}
+	return result, nil
+}
