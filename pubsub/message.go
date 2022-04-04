@@ -16,7 +16,9 @@ func NewMessage(data interface{}) *Message {
 	now := time.Now().UTC()
 
 	return &Message{
-		id: fmt.Sprintf("%d", now.UnixNano()),
+		id:        fmt.Sprintf("%d", now.UnixNano()),
+		data:      data,
+		createdAt: now,
 	}
 }
 

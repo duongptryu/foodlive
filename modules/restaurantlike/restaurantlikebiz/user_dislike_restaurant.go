@@ -9,6 +9,7 @@ import (
 
 type UserUnLikeRestaurantStore interface {
 	Delete(ctx context.Context, userId, restaurantId int) error
+	FindUserLikeRst(ctx context.Context, condition map[string]interface{}, moreKeys ...string) (*restaurantlikemodel.Like, error)
 }
 
 type userUnLikeRestaurantBiz struct {
@@ -24,17 +25,23 @@ func NewUserUnLikeRestaurantBiz(store UserUnLikeRestaurantStore, pubSub pubsub.P
 }
 
 func (biz *userUnLikeRestaurantBiz) UnLikeRestaurant(ctx context.Context, userId, restaurantId int) error {
-	err := biz.store.Delete(ctx, userId, restaurantId)
+	exist, err := biz.store.FindUserLikeRst(ctx, map[string]interface{}{"user_id": userId, "restaurant_id": restaurantId})
+	if err != nil {
+		return err
+	}
+	if exist.UserId == 0 {
+		return restaurantlikemodel.ErrUserCannotUnLikeRestaurant(nil)
+	}
+
+	err = biz.store.Delete(ctx, userId, restaurantId)
 
 	if err != nil {
 		return restaurantlikemodel.ErrUserCannotUnLikeRestaurant(err)
 	}
 
 	biz.pubSub.Publish(ctx, common.TopicUserDisLikeRestaurant, pubsub.NewMessage(&restaurantlikemodel.Like{
-		restaurantId,
-		userId,
-		nil,
-		nil,
+		RestaurantId: restaurantId,
+		UserId:       userId,
 	}))
 
 	return nil

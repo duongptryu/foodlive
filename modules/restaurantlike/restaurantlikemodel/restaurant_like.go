@@ -44,3 +44,5 @@ func ErrUserCannotUnLikeRestaurant(err error) *common.AppError {
 		fmt.Sprint("ErrUserCannotUnLikeRestaurant"),
 	)
 }
+
+var ErrUserAlreadyLikeRestaurant = common.NewCustomError(nil, "User already like restaurant", "ErrUserAlreadyLikeRestaurant")

@@ -11,10 +11,9 @@ import (
 
 type RatingData interface {
 	GetRestaurantId() int
-	GetPoint() float64
 }
 
-func CalculateRatingRestaurantWhenUserCreate(ctx context.Context, appCtx component.AppContext) {
+func CalculateRatingRestaurant(ctx context.Context, appCtx component.AppContext) {
 	c, _ := appCtx.GetPubSubProvider().Subscribe(ctx, common.TopicUserCreateRestaurantRating)
 
 	restaurantStore := restaurantstore.NewSqlStore(appCtx.GetDatabase())
@@ -22,26 +21,20 @@ func CalculateRatingRestaurantWhenUserCreate(ctx context.Context, appCtx compone
 
 	go func() {
 		defer common.AppRecovery()
+		for {
+			msg := <-c
 
-		msg := <-c
+			ratingData := msg.Data().(RatingData)
 
-		ratingData := msg.Data().(RatingData)
+			rating, err := restaurantRatingStore.CalculateAVGPoint(ctx, map[string]interface{}{"restaurant_id": ratingData.GetRestaurantId()})
+			if err != nil {
+				log.Fatalln(err)
+			}
 
-		countRated, err := restaurantRatingStore.CountRestaurantRating(ctx, map[string]interface{}{"restaurant_id": ratingData.GetRestaurantId()})
-		if err != nil {
-			log.Error(err)
-		}
-
-		rstDb, err := restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": ratingData.GetRestaurantId()})
-		if err != nil {
-			log.Error(err)
-		}
-
-		newRateNumber := (rstDb.Rating + ratingData.GetPoint()) / float64(countRated)
-
-		err = restaurantStore.UpdateRestaurantRating(ctx, ratingData.GetRestaurantId(), newRateNumber)
-		if err != nil {
-			log.Error(err)
+			err = restaurantStore.UpdateRestaurantRating(ctx, ratingData.GetRestaurantId(), rating)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	}()
 }

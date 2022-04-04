@@ -5,6 +5,7 @@ import (
 	"foodlive/common"
 	"foodlive/modules/restaurantrating/restaurantratingmodel"
 	"foodlive/pubsub"
+	log "github.com/sirupsen/logrus"
 )
 
 type updateRestaurantRatingBiz struct {
@@ -26,7 +27,7 @@ func (biz *updateRestaurantRatingBiz) UpdateRestaurantRatingBiz(ctx context.Cont
 		return err
 	}
 
-	rstDb, err := biz.restaurantRatingStore.FindRestaurantRating(ctx, map[string]interface{}{"id": id})
+	rstDb, err := biz.restaurantRatingStore.FindRestaurantRating(ctx, map[string]interface{}{"id": id, "user_id": userId})
 	if err != nil {
 		return err
 	}
@@ -34,14 +35,16 @@ func (biz *updateRestaurantRatingBiz) UpdateRestaurantRatingBiz(ctx context.Cont
 		return common.ErrDataNotFound(restaurantratingmodel.EntityName)
 	}
 
-	if rstDb.UserId != userId {
-		return common.ErrPermissionDenied
-	}
-
 	if err := biz.restaurantRatingStore.UpdateRestaurantRating(ctx, id, data); err != nil {
 		return err
 	}
 
 	//pubsub to calculate rating of restaurant
+	err = biz.pubSub.Publish(ctx, common.TopicUserCreateRestaurantRating, pubsub.NewMessage(&restaurantratingmodel.RestaurantRatingCreate{
+		RestaurantId: rstDb.RestaurantId,
+	}))
+	if err != nil {
+		log.Error(err)
+	}
 	return nil
 }

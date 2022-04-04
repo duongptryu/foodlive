@@ -27,7 +27,7 @@ func NewFindRestaurantRepo(store FindRestaurantStore) *findRestaurantRepo {
 }
 
 func (repo *findRestaurantRepo) FindRestaurantByIdRepo(ctx context.Context, id int) (*restaurantmodel.Restaurant, error) {
-	result, err := repo.store.FindRestaurant(ctx, map[string]interface{}{"id": id, "status": true})
+	result, err := repo.store.FindRestaurant(ctx, map[string]interface{}{"id": id, "status": true}, "City")
 
 	if err != nil {
 		return nil, common.ErrCannotListEntity(restaurantmodel.EntityName, err)

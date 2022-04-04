@@ -15,14 +15,15 @@ func DecreaseLikeCountRestaurant(appCtx component.AppContext, ctx context.Contex
 
 	go func() {
 		defer common.AppRecovery()
+		for {
+			msg := <-c
 
-		msg := <-c
+			likeData := msg.Data().(CastingRestaurant)
 
-		likeData := msg.Data().(CastingRestaurant)
-
-		err := restaurantStore.DecreaseLikeCount(ctx, likeData.GetRestaurantId())
-		if err != nil {
-			log.Error(err)
+			err := restaurantStore.DecreaseLikeCount(ctx, likeData.GetRestaurantId())
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	}()
 }

@@ -28,6 +28,14 @@ func (biz *createRestaurantRatingBiz) CreateRestaurantRatingBiz(ctx context.Cont
 		return err
 	}
 
+	exist, err := biz.restaurantRatingStore.FindRestaurantRating(ctx, map[string]interface{}{"restaurant_id": data.RestaurantId, "user_id": data.UserId})
+	if err != nil {
+		return err
+	}
+	if exist.Id != 0 {
+		return restaurantratingmodel.ErrAlreadyRating
+	}
+
 	rstDb, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": data.RestaurantId})
 	if err != nil {
 		return err
@@ -43,7 +51,7 @@ func (biz *createRestaurantRatingBiz) CreateRestaurantRatingBiz(ctx context.Cont
 	//pubsub to calculate rating of restaurant
 	err = biz.pubSub.Publish(ctx, common.TopicUserCreateRestaurantRating, pubsub.NewMessage(data))
 	if err != nil {
-		log.Error(err)
+		log.Fatalln(err)
 	}
 	return nil
 }

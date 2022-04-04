@@ -19,7 +19,7 @@ type Restaurant struct {
 	LikeCount        int             `json:"like_count" gorm:"column:liked_count"`
 	Rating           float64         `json:"rating" gorm:"rating"`
 	CityId           int             `json:"city_id" gorm:"city_id"`
-	City             *citymodel.City `json:"city" gorm:"preload:false"`
+	City             *citymodel.City `json:"city" gorm:"reference:CityId;preload:false"`
 	Lat              float64         `json:"lat" gorm:"lat"`
 	Lng              float64         `json:"lng" gorm:"lng"`
 	ShippingFeePerKm float64         `json:"shipping_fee_per_km" gorm:"shipping_fee_per_km"`

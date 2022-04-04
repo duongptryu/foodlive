@@ -28,7 +28,7 @@ func (biz *listRestaurantRatingBiz) ListRestaurantRatingBiz(ctx context.Context,
 		return nil, common.ErrDataNotFound(restaurantlikemodel.EntityName)
 	}
 
-	result, err := biz.restaurantRatingStore.ListRestaurantRating(ctx, map[string]interface{}{"restaurant_id": rstId}, filter, paging)
+	result, err := biz.restaurantRatingStore.ListRestaurantRating(ctx, map[string]interface{}{"restaurant_id": rstId}, filter, paging, "User")
 	if err != nil {
 		return nil, err
 	}

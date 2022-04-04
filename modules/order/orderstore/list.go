@@ -79,7 +79,7 @@ func (s *sqlStore) ListOrderGroupByUser(ctx context.Context,
 
 	db = db.Table(ordermodel.Order{}.TableName()).Where(condition)
 
-	db = db.Select("user_id, Count(*) as count").Group("user_id").Limit(5)
+	db = db.Select("user_id, Count(*) as count").Group("user_id").Limit(5).Order("count desc")
 
 	for i := range moreKey {
 		db = db.Preload(moreKey[i])

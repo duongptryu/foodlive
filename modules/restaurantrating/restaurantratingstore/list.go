@@ -41,17 +41,18 @@ func (s *sqlStore) ListRestaurantRating(ctx context.Context,
 	return result, nil
 }
 
-func (s *sqlStore) CountRestaurantRating(ctx context.Context,
+func (s *sqlStore) CalculateAVGPoint(ctx context.Context,
 	condition map[string]interface{},
-) (int, error) {
+) (float64, error) {
 	db := s.db
 
 	db = db.Table(restaurantratingmodel.RestaurantRating{}.TableName()).Where(condition)
 
-	var result int64
-	if err := db.Count(&result).Error; err != nil {
+	var result float64
+
+	if err := db.Select("AVG(point) result").Find(&result).Error; err != nil {
 		return 0, common.ErrDB(err)
 	}
 
-	return int(result), nil
+	return result, nil
 }
