@@ -3,9 +3,10 @@ package main
 import (
 	"foodlive/config"
 	"foodlive/eventsmartcontract"
+	"log"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"log"
 )
 
 func main() {

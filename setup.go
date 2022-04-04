@@ -5,6 +5,7 @@ import (
 	"foodlive/component"
 	"foodlive/component/gosms"
 	"foodlive/component/mycache"
+	"foodlive/component/notification/fcmnoti"
 	"foodlive/component/paymentprovider/momoprovider"
 	"foodlive/component/paymentprovider/rinkebycrypto"
 	"foodlive/component/tokenprovider/jwt"
@@ -50,8 +51,11 @@ func setupAppContext(appConfig *config.AppConfig) component.AppContext {
 	//rinkeby crypto payment
 	rinkebyProvider := rinkebycrypto.NewCryptoPayment(appConfig.EtherscanAPIKey)
 
+	//init noti fcmnoti provider
+	fcmProvider := fcmnoti.NewFcmProvider(appConfig.FcmToken)
+
 	//init app context
-	appCtx := component.NewAppContext(appConfig, FDDatabase, myCache, mySms, tokenProvider, s3Provider, psLocal, momoProvider, rinkebyProvider)
+	appCtx := component.NewAppContext(appConfig, FDDatabase, myCache, mySms, tokenProvider, s3Provider, psLocal, momoProvider, rinkebyProvider, fcmProvider)
 
 	//setup subscriber
 	subscribe.SetupSubscriber(appCtx)

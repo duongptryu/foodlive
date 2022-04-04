@@ -16,6 +16,7 @@ type AppConfig struct {
 	S3AWS           S3AWS      `yaml:"s3_aws"`
 	MomoConfig      MomoConfig `yaml:"momo"`
 	EtherscanAPIKey string     `yaml:"etherscan_api_key"`
+	FcmToken        string     `yaml:"fcm_token"`
 }
 
 type Database struct {

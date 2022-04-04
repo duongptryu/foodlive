@@ -3,6 +3,7 @@ package component
 import (
 	"foodlive/component/gosms"
 	"foodlive/component/mycache"
+	"foodlive/component/notification"
 	"foodlive/component/paymentprovider"
 	"foodlive/component/tokenprovider"
 	"foodlive/component/uploadprovider"
@@ -33,9 +34,10 @@ type appCtx struct {
 	pubSubProvider        pubsub.PubSub
 	paymentProvider       paymentprovider.PaymentProvider
 	cryptoPaymentProvider paymentprovider.CryptoPaymentProvider
+	notiProvider          notification.NotiProvider
 }
 
-func NewAppContext(appConfig *config.AppConfig, database *gorm.DB, myCache mycache.Cache, mySms gosms.GoSMS, tokenProvider tokenprovider.TokenProvider, uploadProvider uploadprovider.UploadProvider, pubSubProvider pubsub.PubSub, paymentProvider paymentprovider.PaymentProvider, cryptoPaymentProvider paymentprovider.CryptoPaymentProvider) *appCtx {
+func NewAppContext(appConfig *config.AppConfig, database *gorm.DB, myCache mycache.Cache, mySms gosms.GoSMS, tokenProvider tokenprovider.TokenProvider, uploadProvider uploadprovider.UploadProvider, pubSubProvider pubsub.PubSub, paymentProvider paymentprovider.PaymentProvider, cryptoPaymentProvider paymentprovider.CryptoPaymentProvider, notiProvider notification.NotiProvider) *appCtx {
 	return &appCtx{
 		appConfig:             appConfig,
 		database:              database,
@@ -46,6 +48,7 @@ func NewAppContext(appConfig *config.AppConfig, database *gorm.DB, myCache mycac
 		pubSubProvider:        pubSubProvider,
 		paymentProvider:       paymentProvider,
 		cryptoPaymentProvider: cryptoPaymentProvider,
+		notiProvider:          notiProvider,
 	}
 }
 
@@ -83,4 +86,8 @@ func (ctx *appCtx) GetPaymentProvider() paymentprovider.PaymentProvider {
 
 func (ctx *appCtx) GetCryptoPaymentProvider() paymentprovider.CryptoPaymentProvider {
 	return ctx.cryptoPaymentProvider
+}
+
+func (ctx *appCtx) GetNotiProvider() notification.NotiProvider {
+	return ctx.notiProvider
 }
