@@ -42,7 +42,7 @@ func (OwnerRestaurantCreate) TableName() string {
 
 type OwnerRestaurantUpdate struct {
 	common.SQLModel `json:",inline"`
-	Status          bool `json:"status" gorm:"column:status"`
+	Status          *bool `json:"status" gorm:"column:status"`
 }
 
 func (OwnerRestaurantUpdate) TableName() string {

@@ -44,10 +44,10 @@ func (UserCreate) TableName() string {
 
 type UserUpdate struct {
 	common.SQLModel `json:",inline"`
-	Phone           string `json:"phone" gorm:"column:phone" binding:"required"`
-	LastName        string `json:"last_name" gorm:"column:last_name" binding:"required"`
-	FirstName       string `json:"first_name" gorm:"column:first_name" binding:"required"`
-	Status          bool   `json:"status" gorm:"column:status"`
+	Phone           string `json:"phone" gorm:"column:phone"`
+	LastName        string `json:"last_name" gorm:"column:last_name"`
+	FirstName       string `json:"first_name" gorm:"column:first_name"`
+	Status          *bool  `json:"status" gorm:"column:status"`
 }
 
 func (UserUpdate) TableName() string {

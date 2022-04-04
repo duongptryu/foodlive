@@ -7,4 +7,6 @@ type Filter struct {
 	Lng      float64 `json:"lng" form:"lng"`
 	Distance float64 `json:"distance" form:"distance"`
 	OrderBy  string  `json:"order_by" form:"order_by"`
+	Name     string  `json:"name" form:"name"`
+	Address  string  `json:"address" form:"address"`
 }

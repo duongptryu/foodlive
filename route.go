@@ -36,6 +36,8 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 		v1.POST("/reset-password", ginuser.UserResetPassword(appCtx))
 		v1.POST("/login", ginuser.UserLogin(appCtx))
 
+		v1.POST("/admin-login", ginuser.AdminLogin(appCtx))
+
 		v1.POST("/upload", ginupload.Upload(appCtx))
 		v1.POST("/ipn", ginorder.HandleWebHookPayment(appCtx))
 
@@ -115,7 +117,7 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 		}
 		//========================================================================================================
 
-		admin := v1.Group("/admin")
+		admin := v1.Group("/admin", middleware.RequireAuthAdmin(appCtx))
 		{
 			adminOwnerRst := admin.Group("/owner-rst")
 			{

@@ -27,7 +27,7 @@ func (s *sqlStore) UpdatePasswordUser(ctx context.Context, data *usermodel.UserR
 func (s *sqlStore) UpdateUser(ctx context.Context, id int, data *usermodel.UserUpdate) error {
 	db := s.db
 
-	if err := db.Table(usermodel.User{}.TableName()).Where("ud = ?", id).Updates(data).Error; err != nil {
+	if err := db.Table(usermodel.User{}.TableName()).Where("id = ?", id).Updates(data).Error; err != nil {
 		return common.ErrDB(err)
 	}
 	return nil

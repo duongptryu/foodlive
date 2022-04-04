@@ -21,6 +21,12 @@ func (s *sqlStore) ListUserWithoutPaging(ctx context.Context,
 		if v.CreatedAtGt != nil {
 			db = db.Where("created_at > ?", *v.CreatedAtGt).Order("created_at ASC")
 		}
+		if v.Phone != "" {
+			db = db.Where("phone LIKE ?", "%"+v.Phone+"%")
+		}
+		if v.LastName != "" {
+			db = db.Where("last_name LIKE ?", "%"+v.LastName+"%")
+		}
 	}
 
 	for i := range moreKey {

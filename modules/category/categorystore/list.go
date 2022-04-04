@@ -20,7 +20,7 @@ func (s *sqlStore) ListCategory(ctx context.Context,
 
 	if v := filter; v != nil {
 		if v.Name != "" {
-			db = db.Where("name = ?", v.Name)
+			db = db.Where("name LIKE ?", "%"+v.Name+"%")
 		}
 	}
 

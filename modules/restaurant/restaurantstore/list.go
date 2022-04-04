@@ -35,6 +35,12 @@ func (s *sqlStore) ListRestaurant(ctx context.Context,
 		if v.Distance != 0 {
 			db = db.Having("distance < ?", v.Distance).Order("distance")
 		}
+		if v.Name != "" {
+			db = db.Where("name LIKE ?", "%"+v.Name+"%")
+		}
+		if v.Address != "" {
+			db = db.Where("addr LIKE ?", "%"+v.Address+"%")
+		}
 		if v.OrderBy != "" {
 			if v.OrderBy == "rating_desc" {
 				db = db.Order("rating desc")

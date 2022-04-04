@@ -16,6 +16,15 @@ func (s *sqlStore) ListOwnerRestaurant(ctx context.Context, condition map[string
 		return nil, common.ErrDB(err)
 	}
 
+	if v := filter; v != nil {
+		if v.Phone != "" {
+			db = db.Where("phone LIKE ?", "%"+v.Phone+"%")
+		}
+		if v.LastName != "" {
+			db = db.Where("last_name LIKE ?", "%"+v.LastName+"%")
+		}
+	}
+
 	for i := range moreKeys {
 		db = db.Preload(moreKeys[i])
 	}
