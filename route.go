@@ -34,7 +34,11 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 		v1.POST("/resend-otp-active", ginuser.ResendOTPActive(appCtx))
 		v1.POST("/forgot-password", ginuser.UserForgotPassword(appCtx))
 		v1.POST("/reset-password", ginuser.UserResetPassword(appCtx))
+
 		v1.POST("/login", ginuser.UserLogin(appCtx))
+		v1.POST("/login/fb", ginfbsso.UserFacebookLogin(appCtx))
+		v1.POST("/login/gg", gingooglesso.UserGoogleLogin(appCtx))
+		v1.PUT("/sso/update", middleware.RequireSSOAuth(appCtx), ginuser.AccountSSOUpdate(appCtx))
 
 		v1.POST("/admin-login", ginuser.AdminLogin(appCtx))
 
@@ -42,15 +46,6 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 		v1.POST("/ipn", ginorder.HandleWebHookPayment(appCtx))
 
 		v1.GET("/order/crypto/:order_id", ginorder.FindOrderCryptoInWeb(appCtx))
-
-		sso := v1.Group("/sso")
-		{
-			sso.POST("/register-google", gingooglesso.UserGoogleLogin(appCtx))
-			sso.POST("/login-google", gingooglesso.UserGoogleLogin(appCtx))
-
-			sso.POST("/register-facebook", ginfbsso.UserFacebookRegister(appCtx))
-			sso.POST("/login-facebook", ginfbsso.UserFacebookRegister(appCtx))
-		}
 
 		restaurant := v1.Group("/restaurant", middleware.RequireAuth(appCtx))
 		{
@@ -115,6 +110,8 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			//user confirm received
 			order.PUT("/:order_id", ginorder.UserConfirmReceived(appCtx))
 		}
+
+		v1.GET("/my-profile", middleware.RequireAuth(appCtx), ginuser.GetUserProfile(appCtx))
 		//========================================================================================================
 
 		admin := v1.Group("/admin", middleware.RequireAuthAdmin(appCtx))
@@ -153,6 +150,7 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			adminUser := admin.Group("/user")
 			{
 				adminUser.PUT("/:id", ginuser.AdminUpdateUser(appCtx))
+				adminUser.GET("/:id", ginuser.AdminFindUser(appCtx))
 			}
 
 			stats := admin.Group("/stats")

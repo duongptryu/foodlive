@@ -5,6 +5,7 @@ import (
 	"foodlive/common"
 	"foodlive/component/tokenprovider"
 	"foodlive/modules/authsso/googlesso/googlessomodel"
+	"foodlive/modules/user/usermodel"
 )
 
 type loginGoogleBiz struct {
@@ -33,13 +34,32 @@ func (biz *loginGoogleBiz) LoginGoogleBiz(ctx context.Context, data *googlessomo
 	if err != nil {
 		return nil, common.ErrDB(err)
 	}
+	var payload tokenprovider.TokenPayload
 	if userDB.Id == 0 {
-		return nil, googlessomodel.ErrAccountDoesNotExist
-	}
-
-	payload := tokenprovider.TokenPayload{
-		UserId: userDB.Id,
-		Role:   userDB.Role,
+		// gg_id dose not exist
+		userCreate := usermodel.UserCreate{
+			Status:    false,
+			Role:      "user",
+			Phone:     "",
+			LastName:  result.LastName,
+			FirstName: result.FirstName,
+			Password:  "",
+			GgId:      &result.Subject,
+		}
+		if err := biz.userStore.CreateUser(ctx, &userCreate); err != nil {
+			return nil, common.ErrCannotCreateEntity(googlessomodel.EntityName, err)
+		}
+		payload = tokenprovider.TokenPayload{
+			UserId: userCreate.Id,
+			Role:   userCreate.Role,
+			Type:   common.TypeAccountSocial,
+		}
+	} else {
+		payload = tokenprovider.TokenPayload{
+			UserId: userDB.Id,
+			Role:   userDB.Role,
+			Type:   common.TypeAccountSocial,
+		}
 	}
 
 	accessToken, err := biz.tokenProvider.Generate(&payload, biz.expire)

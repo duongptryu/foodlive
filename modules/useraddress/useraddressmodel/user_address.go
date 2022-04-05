@@ -1,6 +1,9 @@
 package useraddressmodel
 
-import "foodlive/common"
+import (
+	"foodlive/common"
+	"foodlive/modules/city/citymodel"
+)
 
 const (
 	EntityName = "UserAddress"
@@ -8,12 +11,13 @@ const (
 
 type UserAddress struct {
 	common.SQLModel
-	UserId int     `json:"user_id" gorm:"user_id"`
-	CityId int     `json:"city_id" gorm:"city_id"`
-	Addr   string  `json:"addr" gorm:"addr"`
-	Lat    float64 `json:"lat" gorm:"lat"`
-	Lng    float64 `json:"lng" gorm:"lng"`
-	Status bool    `json:"status" gorm:"status"`
+	UserId int             `json:"user_id" gorm:"user_id"`
+	CityId int             `json:"city_id" gorm:"city_id"`
+	City   *citymodel.City `json:"city" gorm:"preload:false"`
+	Addr   string          `json:"addr" gorm:"addr"`
+	Lat    float64         `json:"lat" gorm:"lat"`
+	Lng    float64         `json:"lng" gorm:"lng"`
+	Status bool            `json:"status" gorm:"status"`
 }
 
 func (UserAddress) TableName() string {

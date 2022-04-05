@@ -5,6 +5,7 @@ import (
 	"foodlive/common"
 	"foodlive/component/tokenprovider"
 	"foodlive/modules/authsso/fbsso/fbssomodel"
+	"foodlive/modules/user/usermodel"
 )
 
 type loginFbBiz struct {
@@ -33,13 +34,35 @@ func (biz *loginFbBiz) LoginFbBiz(ctx context.Context, data *fbssomodel.Facebook
 	if err != nil {
 		return nil, common.ErrDB(err)
 	}
-	if userDB.Id == 0 {
-		return nil, fbssomodel.ErrAccountDoesNotExist
-	}
 
-	payload := tokenprovider.TokenPayload{
-		UserId: userDB.Id,
-		Role:   userDB.Role,
+	var payload tokenprovider.TokenPayload
+	if userDB.Id == 0 {
+		// fb_id does not exist
+		userCreate := usermodel.UserCreate{
+			Status:    false,
+			Role:      "user",
+			Phone:     "",
+			LastName:  result.Name,
+			FirstName: result.Name,
+			Password:  "",
+			FbId:      &result.ID,
+		}
+
+		if err := biz.userStore.CreateUser(ctx, &userCreate); err != nil {
+			return nil, common.ErrCannotCreateEntity(fbssomodel.EntityName, err)
+		}
+
+		payload = tokenprovider.TokenPayload{
+			UserId: userCreate.Id,
+			Role:   userCreate.Role,
+			Type:   common.TypeAccountSocial,
+		}
+	} else {
+		payload = tokenprovider.TokenPayload{
+			UserId: userDB.Id,
+			Role:   userDB.Role,
+			Type:   common.TypeAccountSocial,
+		}
 	}
 
 	accessToken, err := biz.tokenProvider.Generate(&payload, biz.expire)

@@ -20,6 +20,7 @@ type Token struct {
 type TokenPayload struct {
 	UserId int    `json:"user_id"`
 	Role   string `json:"role"`
+	Type   string `json:"type"`
 }
 
 var (

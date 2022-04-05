@@ -56,6 +56,7 @@ func (biz *loginBusiness) Login(ctx context.Context, data *usermodel.UserLogin) 
 	payload := tokenprovider.TokenPayload{
 		UserId: userDB.Id,
 		Role:   userDB.Role,
+		Type:   common.TypeAccountStandard,
 	}
 
 	accessToken, err := biz.tokenProvider.Generate(&payload, biz.expire)

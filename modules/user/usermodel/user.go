@@ -54,6 +54,14 @@ func (UserUpdate) TableName() string {
 	return User{}.TableName()
 }
 
+func (data *UserUpdate) Validate() error {
+	check := common.RePhone.Match([]byte(data.Phone))
+	if !check {
+		return ErrPhoneInvalid
+	}
+	return nil
+}
+
 func (u *UserCreate) Validate() error {
 	check := common.RePhone.Match([]byte(u.Phone))
 	if !check {

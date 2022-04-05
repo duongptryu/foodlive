@@ -1,10 +1,13 @@
 package middleware
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"foodlive/common"
 	"foodlive/component"
+	"foodlive/modules/user/usermodel"
+	"foodlive/modules/user/userstorage"
 	"github.com/gin-gonic/gin"
 	"strings"
 )
@@ -30,6 +33,7 @@ func extracTokenFromHeaderString(s string) (string, error) {
 func RequireAuth(appCtx component.AppContext) func(c *gin.Context) {
 	tokenProvider := appCtx.GetTokenProvider()
 	//myCache := appCtx.GetMyCache()
+	userStore := userstorage.NewSQLStore(appCtx.GetDatabase())
 	return func(c *gin.Context) {
 		token, err := extracTokenFromHeaderString(c.GetHeader("Authorization"))
 		if err != nil {
@@ -39,6 +43,19 @@ func RequireAuth(appCtx component.AppContext) func(c *gin.Context) {
 		payload, err := tokenProvider.Validate(token)
 		if err != nil {
 			panic(err)
+		}
+		if payload.Type == common.TypeAccountSocial {
+			//check if account set phone number
+			user, err := userStore.FindUser(context.Background(), map[string]interface{}{"id": payload.UserId})
+			if err != nil {
+				panic(err)
+			}
+			if user.Phone == "" {
+				panic(common.NewFullErrorResponse(409, nil, "Account must update phone number", "", "ErrMissingPhoneNumber"))
+			}
+			if user.Status == false {
+				panic(usermodel.ErrPhoneNumberNotActivated)
+			}
 		}
 		//
 		//userId, err := myCache.Get(common.KeyTokenCache + token)
@@ -50,6 +67,27 @@ func RequireAuth(appCtx component.AppContext) func(c *gin.Context) {
 		//	panic(ErrInvalidToken)
 		//}
 
+		c.Set(common.KeyUserHeader, payload.UserId)
+		c.Next()
+	}
+}
+
+func RequireSSOAuth(appCtx component.AppContext) func(c *gin.Context) {
+	tokenProvider := appCtx.GetTokenProvider()
+
+	return func(c *gin.Context) {
+		token, err := extracTokenFromHeaderString(c.GetHeader("Authorization"))
+		if err != nil {
+			panic(err)
+		}
+
+		payload, err := tokenProvider.Validate(token)
+		if err != nil {
+			panic(err)
+		}
+		if payload.Type != common.TypeAccountSocial {
+			panic(common.ErrDataNotFound("Page Not Found"))
+		}
 		c.Set(common.KeyUserHeader, payload.UserId)
 		c.Next()
 	}

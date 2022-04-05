@@ -25,4 +25,5 @@ type UserStore interface {
 		filter *usermodel.Filter,
 		moreKey ...string,
 	) ([]usermodel.User, error)
+	FindUser(ctx context.Context, conditions map[string]interface{}, moreKey ...string) (*usermodel.User, error)
 }
