@@ -3,10 +3,12 @@ package main
 import (
 	"foodlive/config"
 	"foodlive/eventsmartcontract"
-	"log"
-
+	pb "foodlive/gen/proto"
+	"foodlive/modules/hello/hellotransport/grpchello"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"log"
+	"net/http"
 )
 
 func main() {
@@ -38,6 +40,15 @@ func runService() {
 
 	setupRouter(r, appCtx)
 
-	r.Run(":" + appConfig.Server.Port)
+	//run grpc server
+	go func() {
+		mux := http.NewServeMux()
+		helloServerImpl := grpchello.ServerHello{}
+		helloHandle := pb.NewHelloServer(&helloServerImpl)
+		mux.Handle(helloHandle.PathPrefix(), helloHandle)
 
+		http.ListenAndServe(":8081", mux)
+	}()
+
+	r.Run(":" + appConfig.Server.Port)
 }

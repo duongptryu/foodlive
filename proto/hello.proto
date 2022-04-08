@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package twirp.hello;
+option go_package = "gen/proto";
+
+message WayRequest {
+  int32 id = 1;
+}
+
+message WayResponse {
+  string name = 1;
+}
+
+service Hello {
+  rpc Way(WayRequest) returns (WayResponse);
+}
