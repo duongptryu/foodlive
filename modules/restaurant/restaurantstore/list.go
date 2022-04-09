@@ -30,7 +30,10 @@ func (s *sqlStore) ListRestaurant(ctx context.Context,
 			db = db.Where("owner_id = ?", v.OwnerId)
 		}
 		if v.Lng != 0 && v.Lat != 0 {
-			db = db.Select("*, (6371 * acos(cos(radians(?)) * cos(radians(lat)) * cos(radians(lng) - radians(?)) + sin(radians(?)) * sin(radians(lat)))) AS distance", v.Lat, v.Lng, v.Lat)
+			db = db.Select("*, (6371 * acos(cos(radians(?)) * cos(radians(lat)) * cos(radians(lng) - radians(?)) + sin(radians(?)) * sin(radians(lat)))) AS distance", v.Lat, v.Lng, v.Lat).Order("distance")
+		}
+		if v.CategoryId != 0 {
+			db = db.Joins("JOIN restaurant_category ON restaurant_category.restaurant_id = restaurants.id AND restaurant_category.category_id = ?", v.CategoryId)
 		}
 		if v.Distance != 0 {
 			db = db.Having("distance < ?", v.Distance).Order("distance")
@@ -49,8 +52,7 @@ func (s *sqlStore) ListRestaurant(ctx context.Context,
 				db = db.Order("rating asc")
 			}
 		} else {
-			// order by start
-			db = db.Order("id desc")
+			db = db.Order("rating desc")
 		}
 
 	}

@@ -68,6 +68,8 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			restaurant.PUT("/rating/:id_rating", ginrestaurantrating.UpdateRestaurantRating(appCtx))
 		}
 
+		//list restaurant by category
+
 		v1.GET("/my-rating", middleware.RequireAuth(appCtx), ginrestaurantrating.ListMyRating(appCtx))
 
 		category := v1.Group("/category", middleware.RequireAuth(appCtx))

@@ -85,6 +85,7 @@ type RestaurantCreate struct {
 	CityId           int           `json:"city_id" gorm:"city_id" binding:"required"`
 	ShippingFeePerKm float64       `json:"shipping_fee_per_km" gorm:"shipping_fee_per_km" binding:"required"`
 	Status           bool          `json:"-" gorm:"status"`
+	CategoryIds      []int         `json:"category_ids" gorm:"-"`
 }
 
 func (RestaurantCreate) TableName() string {
@@ -100,6 +101,10 @@ func (res *RestaurantCreate) Validate() error {
 	if res.Logo.Url == "" {
 		return ErrLogoCannotBeEmpty
 	}
+
+	if len(res.CategoryIds) == 0 {
+		return ErrCategoryIsRequire
+	}
 	return nil
 }
 
@@ -110,4 +115,6 @@ var (
 	ErrStatusAlreadySet   = common.NewCustomError(nil, "Status restaurant already set", "ErrStatusAlreadySet")
 	ErrRestaurantNotFound = common.NewFullErrorResponse(404, nil, "Restaurant not found", "Restaurant not found", "ErrRestaurantNotFound")
 	ErrLatLngInvalid      = common.NewCustomError(nil, "Lat and long required", "ErrLatLngInvalid")
+	ErrCategoryIsRequire  = common.NewCustomError(nil, "Category is required", "ErrCategoryIsRequire")
+	ErrInvalidCategory    = common.NewCustomError(nil, "Invalid category", "ErrInvalidCategory")
 )

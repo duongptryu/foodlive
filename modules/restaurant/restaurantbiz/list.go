@@ -23,9 +23,9 @@ func NewListRestaurantBiz(repo ListRestaurantRepo) *listRestaurantBiz {
 func (biz *listRestaurantBiz) ListRestaurant(ctx context.Context, filter *restaurantmodel.Filter,
 	paging *common.Paging) ([]restaurantmodel.Restaurant, error) {
 
-	if filter == nil || (filter.Lng == 0 && filter.Lat == 0) {
-		return nil, restaurantmodel.ErrLatLngInvalid
-	}
+	//if filter == nil || (filter.Lng == 0 && filter.Lat == 0) {
+	//	return nil, restaurantmodel.ErrLatLngInvalid
+	//}
 
 	result, err := biz.repo.ListRestaurantRepo(ctx, filter, paging)
 	if err != nil {
