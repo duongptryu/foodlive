@@ -71,11 +71,12 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			restaurant.PUT("/rating/:id_rating", ginrestaurantrating.UpdateRestaurantRating(appCtx))
 		}
 
-		food := v1.Group("/food")
+		food := v1.Group("/food", middleware.RequireAuth(appCtx))
 		{
 			food.POST("/like", ginfoodlike.UserLikeFood(appCtx))
 			food.DELETE("/unlike", ginfoodlike.UserUnLikeFood(appCtx))
 			food.GET("/:food_id/like", ginfoodlike.ListUserLikeFood(appCtx))
+			food.GET("/all", ginfood.ListAllFood(appCtx))
 
 			food.GET("/:food_id/rating", ginfoodrating.ListUserRatingFood(appCtx))
 

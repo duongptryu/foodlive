@@ -2,6 +2,7 @@ package foodstore
 
 import (
 	"context"
+	"foodlive/common"
 	"foodlive/modules/food/foodmodel"
 	"gorm.io/gorm"
 )
@@ -25,5 +26,12 @@ type FoodStore interface {
 	IncreaseLikeCount(ctx context.Context, id int) error
 	DecreaseLikeCount(ctx context.Context, id int) error
 	UpdateRating(ctx context.Context, foodId int, rating float64) error
-	FindFood(ctx context.Context, conditions map[string]interface{}, moreKeys ...string) (*foodmodel.Food, error) 
+	FindFood(ctx context.Context, conditions map[string]interface{}, moreKeys ...string) (*foodmodel.Food, error)
+	ListFood(ctx context.Context,
+		condition map[string]interface{},
+		filter *foodmodel.Filter,
+		paging *common.Paging,
+		moreKey ...string,
+	) ([]foodmodel.Food, error)
+	UpdateFood(ctx context.Context, id int, data *foodmodel.FoodUpdate) error
 }

@@ -5,16 +5,17 @@ import (
 	"foodlive/common"
 	"foodlive/modules/category/categorymodel"
 	"foodlive/modules/food/foodmodel"
+	"foodlive/modules/food/foodstore"
 	"foodlive/modules/restaurant/restaurantmodel"
 )
 
 type updateFoodBiz struct {
-	foodStore       FoodStore
+	foodStore       foodstore.FoodStore
 	restaurantStore RestaurantStore
 	categoryStore   CategoryStore
 }
 
-func NewUpdateFoodBiz(foodStore FoodStore, restaurantStore RestaurantStore, categoryStore CategoryStore) *updateFoodBiz {
+func NewUpdateFoodBiz(foodStore foodstore.FoodStore, restaurantStore RestaurantStore, categoryStore CategoryStore) *updateFoodBiz {
 	return &updateFoodBiz{
 		foodStore:       foodStore,
 		restaurantStore: restaurantStore,

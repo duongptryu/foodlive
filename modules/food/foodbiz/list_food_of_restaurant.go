@@ -4,15 +4,16 @@ import (
 	"context"
 	"foodlive/common"
 	"foodlive/modules/food/foodmodel"
+	"foodlive/modules/food/foodstore"
 	"foodlive/modules/restaurant/restaurantmodel"
 )
 
 type listFoodOfRestaurantBiz struct {
-	foodStore       FoodStore
+	foodStore       foodstore.FoodStore
 	restaurantStore RestaurantStore
 }
 
-func NewListFoodOfRestaurantBiz(foodStore FoodStore, restaurantStore RestaurantStore) *listFoodOfRestaurantBiz {
+func NewListFoodOfRestaurantBiz(foodStore foodstore.FoodStore, restaurantStore RestaurantStore) *listFoodOfRestaurantBiz {
 	return &listFoodOfRestaurantBiz{
 		foodStore:       foodStore,
 		restaurantStore: restaurantStore,
@@ -50,6 +51,15 @@ func (biz *listFoodOfRestaurantBiz) UserListFoodOfRestaurantBiz(ctx context.Cont
 	}
 
 	result, err := biz.foodStore.ListFood(ctx, map[string]interface{}{"restaurant_id": restaurantId, "status": true}, filter, paging)
+	if err != nil {
+		return nil, common.ErrCannotListEntity(foodmodel.EntityName, err)
+	}
+
+	return result, nil
+}
+
+func (biz *listFoodOfRestaurantBiz) ListAllFood(ctx context.Context, paging *common.Paging, filter *foodmodel.Filter) ([]foodmodel.Food, error) {
+	result, err := biz.foodStore.ListFood(ctx, map[string]interface{}{"status": true}, filter, paging)
 	if err != nil {
 		return nil, common.ErrCannotListEntity(foodmodel.EntityName, err)
 	}

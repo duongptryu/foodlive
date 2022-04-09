@@ -25,6 +25,20 @@ func (s *sqlStore) ListFood(ctx context.Context,
 		if v.Name != "" {
 			db = db.Where("name = ?", v.Name)
 		}
+		if v.OrderBy != "" {
+			if v.OrderBy == "rating_desc" {
+				db = db.Order("rating desc")
+			}
+			if v.OrderBy == "rating_asc" {
+				db = db.Order("rating asc")
+			}
+			if v.OrderBy == "like_desc" {
+				db = db.Order("like desc")
+			}
+			if v.OrderBy == "like_asc" {
+				db = db.Order("like asc")
+			}
+		}
 	}
 
 	if err := db.Count(&paging.Total).Error; err != nil {
