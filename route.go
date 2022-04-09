@@ -8,6 +8,8 @@ import (
 	"foodlive/modules/cart/carttransport/gincart"
 	"foodlive/modules/category/categorytransport/gincategory"
 	"foodlive/modules/food/foodtransport/ginfood"
+	"foodlive/modules/foodlike/foodliketransport/ginfoodlike"
+	"foodlive/modules/foodrating/foodratingtransport/ginfoodrating"
 	"foodlive/modules/order/ordertransport/ginorder"
 	"foodlive/modules/restaurant/restauranttransport/ginrestaurant"
 	"foodlive/modules/restaurantlike/restaurantliketransport/ginrestaurantlike"
@@ -18,6 +20,7 @@ import (
 	"foodlive/modules/user/usertransport/ginuser"
 	"foodlive/modules/useraddress/useraddresstransport/ginuseraddress"
 	"foodlive/modules/userdevicetoken/userdevicetokentransport/ginuserdevicetoken"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -68,9 +71,25 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			restaurant.PUT("/rating/:id_rating", ginrestaurantrating.UpdateRestaurantRating(appCtx))
 		}
 
+		food := v1.Group("/food")
+		{
+			food.POST("/like", ginfoodlike.UserLikeFood(appCtx))
+			food.DELETE("/unlike", ginfoodlike.UserUnLikeFood(appCtx))
+			food.GET("/:food_id/like", ginfoodlike.ListUserLikeFood(appCtx))
+
+			food.GET("/:food_id/rating", ginfoodrating.ListUserRatingFood(appCtx))
+
+			rating := food.Group("/rating")
+			{
+				rating.POST("", ginfoodrating.UserRatingFood(appCtx))
+				rating.PUT("/:id_rating", ginfoodrating.UpdateFoodRating(appCtx))
+			}
+		}
+
 		//list restaurant by category
 
-		v1.GET("/my-rating", middleware.RequireAuth(appCtx), ginrestaurantrating.ListMyRating(appCtx))
+		v1.GET("/restaurant/my-rating", middleware.RequireAuth(appCtx), ginrestaurantrating.ListMyRating(appCtx))
+		v1.GET("/food/my-rating", middleware.RequireAuth(appCtx), ginfoodrating.ListMyRatingFood(appCtx))
 
 		category := v1.Group("/category", middleware.RequireAuth(appCtx))
 		{

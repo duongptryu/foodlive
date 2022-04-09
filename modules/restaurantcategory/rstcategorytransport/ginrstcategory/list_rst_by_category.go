@@ -6,8 +6,9 @@ import (
 	"foodlive/modules/restaurantcategory/rstcategorybiz"
 	"foodlive/modules/restaurantcategory/rstcategorymodel"
 	"foodlive/modules/restaurantcategory/rstcategorystore"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func ListRestaurantByCategory(appCtx component.AppContext) gin.HandlerFunc {
@@ -32,12 +33,6 @@ func ListRestaurantByCategory(appCtx component.AppContext) gin.HandlerFunc {
 		result, err := biz.ListRestaurantByCategory(c.Request.Context(), &filter, &paging)
 		if err != nil {
 			panic(err)
-		}
-
-		for i := range result {
-			if i == len(result)-1 {
-				paging.NextCursor = result[i].Id
-			}
 		}
 
 		c.JSON(http.StatusOK, common.NewSuccessResponse(result, paging, filter))

@@ -22,4 +22,8 @@ type FoodStore interface {
 		filter *foodmodel.Filter,
 		moreKey ...string,
 	) ([]foodmodel.Food, error)
+	IncreaseLikeCount(ctx context.Context, id int) error
+	DecreaseLikeCount(ctx context.Context, id int) error
+	UpdateRating(ctx context.Context, foodId int, rating float64) error
+	FindFood(ctx context.Context, conditions map[string]interface{}, moreKeys ...string) (*foodmodel.Food, error) 
 }

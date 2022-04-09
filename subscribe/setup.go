@@ -10,4 +10,8 @@ func SetupSubscriber(appCtx component.AppContext) {
 	IncreaseLikeCountRestaurant(appCtx, ctx)
 	DecreaseLikeCountRestaurant(appCtx, ctx)
 	CalculateRatingRestaurant(ctx, appCtx)
+
+	UserLikeFood(appCtx, ctx)
+	DecreaseLikeCountFood(appCtx, ctx)
+	CalculateRatingFood(ctx, appCtx)
 }

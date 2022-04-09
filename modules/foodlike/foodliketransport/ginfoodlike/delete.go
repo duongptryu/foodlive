@@ -7,11 +7,12 @@ import (
 	"foodlive/modules/foodlike/foodlikemodel"
 	"foodlive/modules/foodlike/foodlikestore"
 	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
 
-func UserLikeFood(appCtx component.AppContext) gin.HandlerFunc {
+func UserUnLikeFood(appCtx component.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var data foodlikemodel.FoodLikeCreate
 		if err := c.ShouldBind(&data); err != nil {
@@ -22,9 +23,9 @@ func UserLikeFood(appCtx component.AppContext) gin.HandlerFunc {
 		data.UserId = userId
 
 		store := foodlikestore.NewSQLStore(appCtx.GetDatabase())
-		biz := foodlikebiz.NewUserLikeFoodBiz(store, appCtx.GetPubSubProvider())
+		biz := foodlikebiz.NewUserUnlikeFoodBiz(store, appCtx.GetPubSubProvider())
 
-		err := biz.UserLikeFoodBiz(c.Request.Context(), &data)
+		err := biz.UserUnlikeFood(c.Request.Context(), userId, data.FoodId)
 		if err != nil {
 			panic(err)
 		}

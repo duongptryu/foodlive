@@ -1,11 +1,15 @@
 package foodlikemodel
 
-import "time"
+import (
+	"foodlive/common"
+	"time"
+)
 
 type FoodLike struct {
-	FoodId    int       `json:"food_id" gorm:"food_id"`
-	UserId    int       `json:"user_id" gorm:"user_id"`
-	CreatedAt time.Time `json:"created_at" gorm:"created_at"`
+	FoodId    int                `json:"food_id" gorm:"food_id"`
+	UserId    int                `json:"user_id" gorm:"user_id"`
+	User      *common.SimpleUser `json:"user" gorm:"preload:false"`
+	CreatedAt time.Time          `json:"created_at" gorm:"created_at"`
 }
 
 func (FoodLike) TableName() string {
@@ -14,10 +18,13 @@ func (FoodLike) TableName() string {
 
 type FoodLikeCreate struct {
 	FoodId    int        `json:"food_id" gorm:"food_id"`
-	UserId    int        `json:"user_id" gorm:"user_id"`
+	UserId    int        `json:"-" gorm:"user_id"`
 	CreatedAt *time.Time `json:"created_at" gorm:"created_at"`
 }
 
 func (FoodLikeCreate) TableName() string {
 	return FoodLike{}.TableName()
 }
+
+var ErrUserAlreadyLikeFood = common.NewCustomError(nil, "User already like food", "ErrUserAlreadyLikeFood")
+var ErrUserNotLikeFoodYet = common.NewCustomError(nil, "User not like food yet", "ErrUserNotLikeFoodYet")
