@@ -60,3 +60,33 @@ func (s sqlStore) GetUsersLikeRestaurant(ctx context.Context, conditions map[str
 
 	return users, nil
 }
+
+func (s *sqlStore) ListMyLikeRestaurant(ctx context.Context,
+	condition map[string]interface{},
+	filter *restaurantlikemodel.Filter,
+	paging *common.Paging,
+	moreKey ...string,
+) ([]restaurantlikemodel.MyRstLike, error) {
+	var result []restaurantlikemodel.MyRstLike
+
+	db := s.db
+
+	db = db.Table(restaurantlikemodel.Like{}.TableName()).Where(condition)
+
+	if err := db.Count(&paging.Total).Error; err != nil {
+		return nil, common.ErrDB(err)
+	}
+
+	if v := filter; v != nil {
+
+	}
+
+	for i := range moreKey {
+		db = db.Preload(moreKey[i])
+	}
+
+	if err := db.Order("created_at desc").Offset((paging.Page - 1) * paging.Limit).Limit(paging.Limit).Find(&result).Error; err != nil {
+		return nil, common.ErrDB(err)
+	}
+	return result, nil
+}

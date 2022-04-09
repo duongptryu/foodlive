@@ -50,6 +50,12 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 
 		v1.GET("/order/crypto/:order_id", ginorder.FindOrderCryptoInWeb(appCtx))
 
+		favorite := v1.GET("/favorite", middleware.RequireAuth(appCtx))
+		{
+			favorite.GET("/rst", ginrestaurantlike.ListMyLikeRestaurant(appCtx))
+			favorite.GET("/food", ginfoodlike.ListMyLikeFood(appCtx))
+		}
+
 		restaurant := v1.Group("/restaurant", middleware.RequireAuth(appCtx))
 		{
 			restaurant.GET("", ginrestaurant.ListRestaurant(appCtx))

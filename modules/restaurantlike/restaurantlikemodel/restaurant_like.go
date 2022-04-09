@@ -3,6 +3,7 @@ package restaurantlikemodel
 import (
 	"fmt"
 	"foodlive/common"
+	"foodlive/modules/restaurant/restaurantmodel"
 	"time"
 )
 
@@ -15,6 +16,13 @@ type Like struct {
 	UserId       int                `json:"user_id" gorm:"user_id"`
 	CreatedAt    *time.Time         `json:"created_at" gorm:"created_at"`
 	User         *common.SimpleUser `json:"user" gorm:"preload:false"`
+}
+
+type MyRstLike struct {
+	RestaurantId int                         `json:"restaurant_id" gorm:"restaurant_id"`
+	Restaurant   *restaurantmodel.Restaurant `json:"restaurant" gorm:"preload:false"`
+	UserId       int                         `json:"user_id" gorm:"user_id"`
+	CreatedAt    *time.Time                  `json:"created_at" gorm:"created_at"`
 }
 
 func (l Like) TableName() string {

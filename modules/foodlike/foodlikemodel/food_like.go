@@ -2,11 +2,13 @@ package foodlikemodel
 
 import (
 	"foodlive/common"
+	"foodlive/modules/food/foodmodel"
 	"time"
 )
 
 type FoodLike struct {
 	FoodId    int                `json:"food_id" gorm:"food_id"`
+	Food      *foodmodel.Food    `json:"food" gorm:"preload:false"`
 	UserId    int                `json:"user_id" gorm:"user_id"`
 	User      *common.SimpleUser `json:"user" gorm:"preload:false"`
 	CreatedAt time.Time          `json:"created_at" gorm:"created_at"`
