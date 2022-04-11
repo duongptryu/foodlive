@@ -85,6 +85,7 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			food.POST("/like", ginfoodlike.UserLikeFood(appCtx))
 			food.DELETE("/unlike", ginfoodlike.UserUnLikeFood(appCtx))
 			food.GET("/:food_id/like", ginfoodlike.ListUserLikeFood(appCtx))
+			food.GET("/:food_id", ginfood.FindFood(appCtx))
 			food.GET("/all", ginfood.ListAllFood(appCtx))
 
 			food.GET("/:food_id/rating", ginfoodrating.ListUserRatingFood(appCtx))
