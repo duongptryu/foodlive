@@ -13,7 +13,7 @@ import (
 
 func FindFood(appCtx component.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		fId, err := strconv.Atoi(c.Param("id"))
+		fId, err := strconv.Atoi(c.Param("food_id"))
 		if err != nil {
 			panic(common.ErrParseJson(err))
 		}
