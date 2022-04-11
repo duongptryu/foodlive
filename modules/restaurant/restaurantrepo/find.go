@@ -9,7 +9,7 @@ import (
 )
 
 type FindRestaurantStore interface {
-	FindRestaurant(ctx context.Context, condition map[string]interface{}, moreKeys ...string) (*restaurantmodel.Restaurant, error)
+	FindRestaurant(ctx context.Context, condition map[string]interface{}, filter *restaurantmodel.Filter, moreKeys ...string) (*restaurantmodel.Restaurant, error)
 }
 
 //
@@ -29,8 +29,8 @@ func NewFindRestaurantRepo(store FindRestaurantStore, likeStore LikeStore) *find
 	}
 }
 
-func (repo *findRestaurantRepo) FindRestaurantByIdRepo(ctx context.Context, id int, userId int) (*restaurantmodel.Restaurant, error) {
-	result, err := repo.store.FindRestaurant(ctx, map[string]interface{}{"id": id, "status": true}, "City")
+func (repo *findRestaurantRepo) FindRestaurantByIdRepo(ctx context.Context, id int, userId int, filter *restaurantmodel.Filter) (*restaurantmodel.Restaurant, error) {
+	result, err := repo.store.FindRestaurant(ctx, map[string]interface{}{"id": id, "status": true}, filter, "City")
 
 	if err != nil {
 		return nil, common.ErrCannotListEntity(restaurantmodel.EntityName, err)
@@ -57,7 +57,7 @@ func (repo *findRestaurantRepo) FindRestaurantByIdRepo(ctx context.Context, id i
 }
 
 func (repo *findRestaurantRepo) FindRestaurantByIdRepoWithoutStatus(ctx context.Context, id int) (*restaurantmodel.Restaurant, error) {
-	result, err := repo.store.FindRestaurant(ctx, map[string]interface{}{"id": id})
+	result, err := repo.store.FindRestaurant(ctx, map[string]interface{}{"id": id}, nil)
 
 	if err != nil {
 		return nil, common.ErrCannotListEntity(restaurantmodel.EntityName, err)

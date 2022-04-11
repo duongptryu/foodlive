@@ -44,7 +44,7 @@ func (biz *previewOrderBiz) PreviewOrderBiz(ctx context.Context, userId int, dat
 	}
 
 	//get lat lng of rst
-	rst, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": listCart[0].RestaurantId})
+	rst, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": listCart[0].RestaurantId}, nil)
 	if err != nil {
 		return nil, err
 	}

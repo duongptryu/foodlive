@@ -59,7 +59,7 @@ func (biz *createOrderBiz) CreateOrderMomoBiz(ctx context.Context, userId int, d
 	}
 
 	//get lat lng of rst
-	rst, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": listCart[0].RestaurantId})
+	rst, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": listCart[0].RestaurantId}, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -172,7 +172,7 @@ func (biz *createOrderBiz) CreateOrderCryptoBiz(ctx context.Context, userId int,
 	}
 
 	//get lat lng of rst
-	rst, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": listCart[0].RestaurantId})
+	rst, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": listCart[0].RestaurantId}, nil)
 	if err != nil {
 		return nil, err
 	}

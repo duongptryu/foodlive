@@ -39,7 +39,7 @@ func (biz *updateFoodBiz) UpdateFoodBiz(ctx context.Context, id int, userId int,
 	}
 
 	//check if restaurant exist
-	rDb, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": foodDb.RestaurantId})
+	rDb, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": foodDb.RestaurantId}, nil)
 	if err != nil {
 		return err
 	}

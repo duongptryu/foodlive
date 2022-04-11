@@ -8,7 +8,7 @@ import (
 )
 
 type UpdateRestaurantStore interface {
-	FindRestaurant(ctx context.Context, condition map[string]interface{}, moreKeys ...string) (*restaurantmodel.Restaurant, error)
+	FindRestaurant(ctx context.Context, condition map[string]interface{}, filter *restaurantmodel.Filter, moreKeys ...string) (*restaurantmodel.Restaurant, error)
 	UpdateRestaurant(ctx context.Context, id int, data *restaurantmodel.RestaurantUpdate) error
 	UpdateRestaurantStatus(ctx context.Context, id int, data *restaurantmodel.RestaurantUpdateStatus) error
 }
@@ -27,7 +27,7 @@ func (biz *updateRestaurantBiz) UpdateRestaurantBiz(ctx context.Context, id int,
 		return err
 	}
 
-	oldData, err := biz.Store.FindRestaurant(ctx, map[string]interface{}{"id": id})
+	oldData, err := biz.Store.FindRestaurant(ctx, map[string]interface{}{"id": id}, nil)
 	if err != nil {
 		return err
 	}
@@ -57,7 +57,7 @@ func (biz *updateRestaurantBiz) UpdateRestaurantStatusBiz(ctx context.Context, i
 		return err
 	}
 
-	oldData, err := biz.Store.FindRestaurant(ctx, map[string]interface{}{"id": id})
+	oldData, err := biz.Store.FindRestaurant(ctx, map[string]interface{}{"id": id}, nil)
 	if err != nil {
 		return err
 	}

@@ -6,7 +6,7 @@ import (
 )
 
 type DeleteRestaurantStore interface {
-	FindRestaurant(ctx context.Context, condition map[string]interface{}, moreKeys ...string) (*restaurantmodel.Restaurant, error)
+	FindRestaurant(ctx context.Context, condition map[string]interface{}, filter *restaurantmodel.Filter, moreKeys ...string) (*restaurantmodel.Restaurant, error)
 	DeleteRestaurant(ctx context.Context, id int) error
 }
 
@@ -19,7 +19,7 @@ func NewDeleteRestaurantBiz(store DeleteRestaurantStore) *deleteRestaurant {
 }
 
 func (biz *deleteRestaurant) DeleteRestaurantBiz(ctx context.Context, id int) error {
-	oldData, err := biz.Store.FindRestaurant(ctx, map[string]interface{}{"id": id, "status": true})
+	oldData, err := biz.Store.FindRestaurant(ctx, map[string]interface{}{"id": id, "status": true}, nil)
 	if err != nil {
 		return err
 	}

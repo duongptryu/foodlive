@@ -28,7 +28,7 @@ func (biz *createFoodBiz) CreateFoodBiz(ctx context.Context, data *foodmodel.Foo
 	}
 
 	//check if restaurant exist
-	result, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": data.RestaurantId})
+	result, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": data.RestaurantId}, nil)
 	if err != nil {
 		return err
 	}

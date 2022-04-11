@@ -36,7 +36,7 @@ func (biz *createRestaurantRatingBiz) CreateRestaurantRatingBiz(ctx context.Cont
 		return restaurantratingmodel.ErrAlreadyRating
 	}
 
-	rstDb, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": data.RestaurantId})
+	rstDb, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": data.RestaurantId}, nil)
 	if err != nil {
 		return err
 	}

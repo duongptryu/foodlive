@@ -18,7 +18,7 @@ func NewSqlStore(db *gorm.DB) *sqlStore {
 }
 
 type RestaurantStore interface {
-	FindRestaurant(ctx context.Context, condition map[string]interface{}, moreKeys ...string) (*restaurantmodel.Restaurant, error)
+	FindRestaurant(ctx context.Context, condition map[string]interface{}, filter *restaurantmodel.Filter, moreKeys ...string) (*restaurantmodel.Restaurant, error)
 	CountRst(ctx context.Context, condition map[string]interface{}, conditionTime *time.Time) (int, error)
 	IncreaseRatingCount(ctx context.Context, id int) error
 }

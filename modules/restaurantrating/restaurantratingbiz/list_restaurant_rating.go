@@ -20,7 +20,7 @@ func NewListRestaurantRatingBiz(restaurantStore RestaurantStore, restaurantRatin
 }
 
 func (biz *listRestaurantRatingBiz) ListRestaurantRatingBiz(ctx context.Context, rstId int, paging *common.Paging, filter *restaurantratingmodel.Filter) ([]restaurantratingmodel.RestaurantRating, error) {
-	rstDb, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": rstId})
+	rstDb, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": rstId}, nil)
 	if err != nil {
 		return nil, err
 	}

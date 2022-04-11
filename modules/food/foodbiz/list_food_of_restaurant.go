@@ -26,7 +26,7 @@ func NewListFoodOfRestaurantBiz(foodStore foodstore.FoodStore, restaurantStore R
 
 func (biz *listFoodOfRestaurantBiz) ListFoodOfRestaurantBiz(ctx context.Context, restaurantId int, paging *common.Paging, filter *foodmodel.Filter) ([]foodmodel.Food, error) {
 	//check if restaurant exist
-	rst, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": restaurantId})
+	rst, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": restaurantId}, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (biz *listFoodOfRestaurantBiz) ListFoodOfRestaurantBiz(ctx context.Context,
 
 func (biz *listFoodOfRestaurantBiz) UserListFoodOfRestaurantBiz(ctx context.Context, restaurantId int, userId int, paging *common.Paging, filter *foodmodel.Filter) ([]foodmodel.Food, error) {
 	//check if restaurant exist
-	rst, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": restaurantId})
+	rst, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": restaurantId}, nil)
 	if err != nil {
 		return nil, err
 	}

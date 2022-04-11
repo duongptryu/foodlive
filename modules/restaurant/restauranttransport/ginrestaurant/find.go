@@ -4,6 +4,7 @@ import (
 	"foodlive/common"
 	"foodlive/component"
 	"foodlive/modules/restaurant/restaurantbiz"
+	"foodlive/modules/restaurant/restaurantmodel"
 	"foodlive/modules/restaurant/restaurantrepo"
 	"foodlive/modules/restaurant/restaurantstore"
 	"foodlive/modules/restaurantlike/restaurantlikestore"
@@ -19,6 +20,12 @@ func FindRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 			panic(common.ErrParseJson(err))
 		}
 
+		var filter restaurantmodel.Filter
+
+		if err := c.ShouldBind(&filter); err != nil {
+			panic(common.ErrParseJson(err))
+		}
+
 		store := restaurantstore.NewSqlStore(appCtx.GetDatabase())
 		likeStore := restaurantlikestore.NewSQLStore(appCtx.GetDatabase())
 		repo := restaurantrepo.NewFindRestaurantRepo(store, likeStore)
@@ -26,7 +33,7 @@ func FindRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 
 		userId := c.MustGet(common.KeyUserHeader).(int)
 
-		result, err := biz.FindRestaurantById(c.Request.Context(), id, userId)
+		result, err := biz.FindRestaurantById(c.Request.Context(), id, userId, &filter)
 		if err != nil {
 			panic(err)
 		}

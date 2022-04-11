@@ -22,7 +22,7 @@ func NewListOrderRestaurantBiz(orderStore orderstore.OrderStore, restaurantStore
 }
 
 func (biz *listOrderRestaurantBiz) ListOrderRestaurantBiz(ctx context.Context, ownerId int, rstId int, paging *common.Paging, filter *ordermodel.Filter) ([]ordermodel.Order, error) {
-	rst, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"owner_id": ownerId, "id": rstId})
+	rst, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"owner_id": ownerId, "id": rstId}, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func (biz *listOrderRestaurantBiz) ListOrderRestaurantBiz(ctx context.Context, o
 }
 
 func (biz *listOrderRestaurantBiz) ListCurrentOrderRestaurantBiz(ctx context.Context, ownerId int, rstId int, paging *common.Paging, filter *ordermodel.Filter) ([]ordermodel.Order, error) {
-	rst, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"owner_id": ownerId, "id": rstId})
+	rst, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"owner_id": ownerId, "id": rstId}, nil)
 	if err != nil {
 		return nil, err
 	}
