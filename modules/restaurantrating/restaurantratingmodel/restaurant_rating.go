@@ -1,6 +1,9 @@
 package restaurantratingmodel
 
-import "foodlive/common"
+import (
+	"foodlive/common"
+	"foodlive/modules/restaurant/restaurantmodel"
+)
 
 const (
 	EntityName = "RestaurantRating"
@@ -8,12 +11,13 @@ const (
 
 type RestaurantRating struct {
 	common.SQLModel
-	UserId       int                `json:"user_id" gorm:"user_id"`
-	User         *common.SimpleUser `json:"user" gorm:"preload:false"`
-	RestaurantId int                `json:"restaurant_id" gorm:"restaurant_id"`
-	Point        float64            `json:"point" gorm:"point"`
-	Comment      string             `json:"comment" gorm:"comment"`
-	Status       bool               `json:"status" gorm:"status"`
+	UserId       int                         `json:"user_id" gorm:"user_id"`
+	User         *common.SimpleUser          `json:"user" gorm:"preload:false"`
+	RestaurantId int                         `json:"restaurant_id" gorm:"restaurant_id"`
+	Restaurant   *restaurantmodel.Restaurant `json:"restaurant" gorm:"preload:false"`
+	Point        float64                     `json:"point" gorm:"point"`
+	Comment      string                      `json:"comment" gorm:"comment"`
+	Status       bool                        `json:"status" gorm:"status"`
 }
 
 func (RestaurantRating) TableName() string {

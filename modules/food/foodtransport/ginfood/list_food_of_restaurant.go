@@ -6,6 +6,7 @@ import (
 	"foodlive/modules/food/foodbiz"
 	"foodlive/modules/food/foodmodel"
 	"foodlive/modules/food/foodstore"
+	"foodlive/modules/foodlike/foodlikestore"
 	"foodlive/modules/restaurant/restaurantstore"
 	"github.com/gin-gonic/gin"
 	"strconv"
@@ -31,7 +32,8 @@ func ListFoodOfRestaurant(appCtx component.AppContext) func(c *gin.Context) {
 
 		foodStore := foodstore.NewSqlStore(appCtx.GetDatabase())
 		restaurantStore := restaurantstore.NewSqlStore(appCtx.GetDatabase())
-		listFoodBiz := foodbiz.NewListFoodOfRestaurantBiz(foodStore, restaurantStore)
+		foodLikeStore := foodlikestore.NewSQLStore(appCtx.GetDatabase())
+		listFoodBiz := foodbiz.NewListFoodOfRestaurantBiz(foodStore, restaurantStore, foodLikeStore)
 
 		result, err := listFoodBiz.ListFoodOfRestaurantBiz(c.Request.Context(), rId, &paging, &filter)
 		if err != nil {
@@ -62,9 +64,12 @@ func UserListFoodOfRestaurant(appCtx component.AppContext) func(c *gin.Context) 
 
 		foodStore := foodstore.NewSqlStore(appCtx.GetDatabase())
 		restaurantStore := restaurantstore.NewSqlStore(appCtx.GetDatabase())
-		listFoodBiz := foodbiz.NewListFoodOfRestaurantBiz(foodStore, restaurantStore)
+		foodLikeStore := foodlikestore.NewSQLStore(appCtx.GetDatabase())
+		listFoodBiz := foodbiz.NewListFoodOfRestaurantBiz(foodStore, restaurantStore, foodLikeStore)
 
-		result, err := listFoodBiz.UserListFoodOfRestaurantBiz(c.Request.Context(), rId, &paging, &filter)
+		userId := c.MustGet(common.KeyUserHeader).(int)
+
+		result, err := listFoodBiz.UserListFoodOfRestaurantBiz(c.Request.Context(), rId, userId, &paging, &filter)
 		if err != nil {
 			panic(err)
 		}
@@ -88,9 +93,12 @@ func ListAllFood(appCtx component.AppContext) func(c *gin.Context) {
 
 		foodStore := foodstore.NewSqlStore(appCtx.GetDatabase())
 		restaurantStore := restaurantstore.NewSqlStore(appCtx.GetDatabase())
-		listFoodBiz := foodbiz.NewListFoodOfRestaurantBiz(foodStore, restaurantStore)
+		foodLikeStore := foodlikestore.NewSQLStore(appCtx.GetDatabase())
+		listFoodBiz := foodbiz.NewListFoodOfRestaurantBiz(foodStore, restaurantStore, foodLikeStore)
 
-		result, err := listFoodBiz.ListAllFood(c.Request.Context(), &paging, &filter)
+		userId := c.MustGet(common.KeyUserHeader).(int)
+
+		result, err := listFoodBiz.ListAllFood(c.Request.Context(), userId, &paging, &filter)
 		if err != nil {
 			panic(err)
 		}

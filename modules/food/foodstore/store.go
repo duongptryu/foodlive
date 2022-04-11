@@ -34,4 +34,5 @@ type FoodStore interface {
 		moreKey ...string,
 	) ([]foodmodel.Food, error)
 	UpdateFood(ctx context.Context, id int, data *foodmodel.FoodUpdate) error
+	IncreaseRatingCount(ctx context.Context, id int) error 
 }

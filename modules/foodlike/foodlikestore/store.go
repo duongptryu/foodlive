@@ -20,4 +20,5 @@ type FoodLikeStore interface {
 	DeleteFoodLike(ctx context.Context, condition map[string]interface{}) error
 	FindUserLikeFood(ctx context.Context, condition map[string]interface{}, moreKeys ...string) (*foodlikemodel.FoodLike, error)
 	ListUsersLikFood(ctx context.Context, conditions map[string]interface{}, filter *foodlikemodel.Filter, paging *common.Paging, moreKeys ...string) ([]foodlikemodel.FoodLike, error)
+	GetFoodLiked(ctx context.Context, ids []int, userId int) (map[int]bool, error)
 }

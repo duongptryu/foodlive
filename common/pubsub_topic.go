@@ -11,4 +11,5 @@ const (
 	TopicUserLikeFood   pubsub.Topic = "TopicUserLikeFood"
 	TopicUserUnlikeFood pubsub.Topic = "TopicUserUnlikeFood"
 	TopicUserRatingFood pubsub.Topic = "TopicUserRatingFood"
+	TopicUserUpdateRatingFood pubsub.Topic = "TopicUserUpdateRatingFood"
 )

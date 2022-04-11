@@ -27,6 +27,26 @@ func (s sqlStore) GetRestaurantLike(ctx context.Context, ids []int) (map[int]int
 	return result, nil
 }
 
+func (s sqlStore) GetRestaurantLiked(ctx context.Context, ids []int, userId int) (map[int]bool, error) {
+	result := make(map[int]bool)
+
+	type sqlData struct {
+		RestaurantId int `gorm:"column:restaurant_id"`
+	}
+
+	var listLike []sqlData
+
+	if err := s.db.Table(restaurantlikemodel.Like{}.TableName()).Select("restaurant_id").Where(map[string]interface{}{"restaurant_id": ids, "user_id": userId}).Find(&listLike).Error; err != nil {
+		return nil, common.ErrDB(err)
+	}
+
+	for _, item := range listLike {
+		result[item.RestaurantId] = true
+	}
+
+	return result, nil
+}
+
 func (s sqlStore) GetUsersLikeRestaurant(ctx context.Context, conditions map[string]interface{}, filter *restaurantlikemodel.Filter, paging *common.Paging, moreKeys ...string) ([]common.SimpleUser, error) {
 	var result []restaurantlikemodel.Like
 

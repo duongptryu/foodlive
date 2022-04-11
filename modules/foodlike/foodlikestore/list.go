@@ -21,12 +21,32 @@ func (s sqlStore) ListUsersLikFood(ctx context.Context, conditions map[string]in
 		return nil, common.ErrDB(err)
 	}
 
-	for i, _ := range moreKeys {
+	for i := range moreKeys {
 		db = db.Preload(moreKeys[i])
 	}
 
-	if err := db.Order("id desc").Find(&result).Error; err != nil {
+	if err := db.Order("created_at desc").Find(&result).Error; err != nil {
 		return nil, common.ErrDB(err)
+	}
+
+	return result, nil
+}
+
+func (s sqlStore) GetFoodLiked(ctx context.Context, ids []int, userId int) (map[int]bool, error) {
+	result := make(map[int]bool)
+
+	type sqlData struct {
+		FoodId int `gorm:"column:food_id"`
+	}
+
+	var listLike []sqlData
+
+	if err := s.db.Table(foodlikemodel.FoodLike{}.TableName()).Select("food_id").Where(map[string]interface{}{"food_id": ids, "user_id": userId}).Find(&listLike).Error; err != nil {
+		return nil, common.ErrDB(err)
+	}
+
+	for _, item := range listLike {
+		result[item.FoodId] = true
 	}
 
 	return result, nil

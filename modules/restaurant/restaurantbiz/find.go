@@ -6,7 +6,7 @@ import (
 )
 
 type FindRestaurantRepo interface {
-	FindRestaurantByIdRepo(ctx context.Context, id int) (*restaurantmodel.Restaurant, error)
+	FindRestaurantByIdRepo(ctx context.Context, id int, userId int) (*restaurantmodel.Restaurant, error)
 	FindRestaurantByIdRepoWithoutStatus(ctx context.Context, id int) (*restaurantmodel.Restaurant, error)
 }
 
@@ -18,8 +18,8 @@ func NewFindRestaurantBiz(repo FindRestaurantRepo) *findRestaurantBiz {
 	return &findRestaurantBiz{repo: repo}
 }
 
-func (biz *findRestaurantBiz) FindRestaurantById(ctx context.Context, id int) (*restaurantmodel.Restaurant, error) {
-	result, err := biz.repo.FindRestaurantByIdRepo(ctx, id)
+func (biz *findRestaurantBiz) FindRestaurantById(ctx context.Context, id int, userId int) (*restaurantmodel.Restaurant, error) {
+	result, err := biz.repo.FindRestaurantByIdRepo(ctx, id, userId)
 	if err != nil {
 		return nil, err
 	}

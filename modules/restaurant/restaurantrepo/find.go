@@ -4,6 +4,7 @@ import (
 	"context"
 	"foodlive/common"
 	"foodlive/modules/restaurant/restaurantmodel"
+	log "github.com/sirupsen/logrus"
 )
 
 type FindRestaurantStore interface {
@@ -16,17 +17,18 @@ type FindRestaurantStore interface {
 //}
 
 type findRestaurantRepo struct {
-	store FindRestaurantStore
-	//likeStore LikeStore
+	store     FindRestaurantStore
+	likeStore LikeStore
 }
 
-func NewFindRestaurantRepo(store FindRestaurantStore) *findRestaurantRepo {
+func NewFindRestaurantRepo(store FindRestaurantStore, likeStore LikeStore) *findRestaurantRepo {
 	return &findRestaurantRepo{
-		store: store,
+		store:     store,
+		likeStore: likeStore,
 	}
 }
 
-func (repo *findRestaurantRepo) FindRestaurantByIdRepo(ctx context.Context, id int) (*restaurantmodel.Restaurant, error) {
+func (repo *findRestaurantRepo) FindRestaurantByIdRepo(ctx context.Context, id int, userId int) (*restaurantmodel.Restaurant, error) {
 	result, err := repo.store.FindRestaurant(ctx, map[string]interface{}{"id": id, "status": true}, "City")
 
 	if err != nil {
@@ -37,22 +39,14 @@ func (repo *findRestaurantRepo) FindRestaurantByIdRepo(ctx context.Context, id i
 		return nil, restaurantmodel.ErrRestaurantNotFound
 	}
 
-	//ids := make([]int, len(result))
+	mapResLike, err := repo.likeStore.GetRestaurantLiked(ctx, []int{result.Id}, userId)
+	if err != nil {
+		log.Println("Cannot get restaurant likes: ", err)
+	}
 
-	//for i := range result {
-	//	ids[i] = result[i].Id
-	//}
-
-	//mapResLike, err := repo.likeStore.GetRestaurantLike(ctx, ids)
-	//if err != nil {
-	//	log.Println("Cannot get restaurant likes: ", err)
-	//}
-	//
-	//if v := mapResLike; v != nil {
-	//	for i, item := range result {
-	//		result[i].LikeCount = mapResLike[item.Id]
-	//	}
-	//}
+	if v := mapResLike; v != nil {
+		result.IsLike = mapResLike[result.Id]
+	}
 
 	return result, nil
 }

@@ -6,25 +6,17 @@ import (
 	"foodlive/modules/restaurantcategory/rstcategorybiz"
 	"foodlive/modules/restaurantcategory/rstcategorymodel"
 	"foodlive/modules/restaurantcategory/rstcategorystore"
-	"net/http"
-	"strconv"
-
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
-func ListRestaurantByCategory(appCtx component.AppContext) gin.HandlerFunc {
+func ListCategoryInRst(appCtx component.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		idRst, err := strconv.Atoi(c.Param("id"))
-		if err != nil {
-			panic(common.ErrParseJson(err))
-		}
-
 		var filter rstcategorymodel.Filter
+
 		if err := c.ShouldBind(&filter); err != nil {
 			panic(common.ErrParseJson(err))
 		}
-
-		filter.RestaurantId = idRst
 
 		var paging common.Paging
 
@@ -35,9 +27,9 @@ func ListRestaurantByCategory(appCtx component.AppContext) gin.HandlerFunc {
 		paging.Fulfill()
 
 		store := rstcategorystore.NewSqlStore(appCtx.GetDatabase())
-		biz := rstcategorybiz.NewListRestaurantBiz(store)
+		biz := rstcategorybiz.NewListCategoryInRstBiz(store)
 
-		result, err := biz.ListRestaurantByCategory(c.Request.Context(), &filter, &paging)
+		result, err := biz.ListCategoryInRstBiz(c.Request.Context(), &filter, &paging)
 		if err != nil {
 			panic(err)
 		}

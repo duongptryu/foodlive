@@ -10,8 +10,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func CalculateRatingFood(ctx context.Context, appCtx component.AppContext) {
-	c, _ := appCtx.GetPubSubProvider().Subscribe(ctx, common.TopicUserRatingFood)
+func UpdateCalculateRatingFood(ctx context.Context, appCtx component.AppContext) {
+	c, _ := appCtx.GetPubSubProvider().Subscribe(ctx, common.TopicUserUpdateRatingFood)
 
 	foodstore := foodstore.NewSqlStore(appCtx.GetDatabase())
 	foodRatingStore := foodratingstore.NewSQLStore(appCtx.GetDatabase())
@@ -29,11 +29,6 @@ func CalculateRatingFood(ctx context.Context, appCtx component.AppContext) {
 			}
 
 			err = foodstore.UpdateRating(ctx, ratingData.GetFoodId(), rating)
-			if err != nil {
-				log.Fatalln(err)
-			}
-
-			err = foodstore.IncreaseRatingCount(ctx, ratingData.GetFoodId())
 			if err != nil {
 				log.Fatalln(err)
 			}

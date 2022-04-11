@@ -35,9 +35,8 @@ func (biz *userUnlikeFoodBiz) UserUnlikeFood(ctx context.Context, userId, foodId
 		return err
 	}
 
-	biz.pubSub.Publish(ctx, common.TopicUserUnlikeFood, pubsub.NewMessage(&foodlikemodel.FoodLike{
+	biz.pubSub.Publish(ctx, common.TopicUserUnlikeFood, pubsub.NewMessage(&foodlikemodel.FoodLikeCreate{
 		FoodId: foodId,
-		UserId:       userId,
 	}))
 
 	return nil

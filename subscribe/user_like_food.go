@@ -11,7 +11,6 @@ import (
 
 type CastingFood interface {
 	GetFoodId() int
-	GetuserId() int
 }
 
 func UserLikeFood(appCtx component.AppContext, ctx context.Context) {

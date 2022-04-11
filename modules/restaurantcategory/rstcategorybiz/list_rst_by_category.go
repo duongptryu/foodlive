@@ -20,7 +20,7 @@ func NewListRestaurantBiz(store rstcategorystore.RstCategoryStore) *listRstCateg
 func (biz *listRstCategoryBiz) ListRestaurantByCategory(ctx context.Context, filter *rstcategorymodel.Filter,
 	paging *common.Paging) ([]rstcategorymodel.RstCategory, error) {
 
-	result, err := biz.store.ListRestaurantByCategory(ctx, map[string]interface{}{"category_id": filter.CategoryId}, filter, paging, "Restaurant")
+	result, err := biz.store.ListRestaurantByCategory(ctx, map[string]interface{}{"restaurant_id": filter.RestaurantId}, filter, paging, "Category")
 	if err != nil {
 		return nil, err
 	}

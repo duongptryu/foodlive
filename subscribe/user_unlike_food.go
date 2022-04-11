@@ -9,9 +9,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-
 func DecreaseLikeCountFood(appCtx component.AppContext, ctx context.Context) {
-	c, _ := appCtx.GetPubSubProvider().Subscribe(ctx, common.TopicUserDisLikeRestaurant)
+	c, _ := appCtx.GetPubSubProvider().Subscribe(ctx, common.TopicUserUnlikeFood)
 
 	foodStore := foodstore.NewSqlStore(appCtx.GetDatabase())
 

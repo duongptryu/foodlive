@@ -1,3 +1,5 @@
 package foodratingmodel
 
-type Filter struct{}
+type Filter struct {
+	FoodId int `json:"food_id" form:"food_id"`
+}

@@ -7,7 +7,7 @@ import (
 )
 
 type ListRestaurantRepo interface {
-	ListRestaurantRepo(ctx context.Context, filter *restaurantmodel.Filter, paging *common.Paging) ([]restaurantmodel.Restaurant, error)
+	ListRestaurantRepo(ctx context.Context, userId int, filter *restaurantmodel.Filter, paging *common.Paging) ([]restaurantmodel.Restaurant, error)
 	ListRestaurantOwnerRepo(ctx context.Context, userId int, filter *restaurantmodel.Filter, paging *common.Paging) ([]restaurantmodel.Restaurant, error)
 	ListRestaurantForAdmin(ctx context.Context, filter *restaurantmodel.Filter, paging *common.Paging) ([]restaurantmodel.Restaurant, error)
 }
@@ -20,14 +20,14 @@ func NewListRestaurantBiz(repo ListRestaurantRepo) *listRestaurantBiz {
 	return &listRestaurantBiz{repo: repo}
 }
 
-func (biz *listRestaurantBiz) ListRestaurant(ctx context.Context, filter *restaurantmodel.Filter,
+func (biz *listRestaurantBiz) ListRestaurant(ctx context.Context, userId int, filter *restaurantmodel.Filter,
 	paging *common.Paging) ([]restaurantmodel.Restaurant, error) {
 
 	//if filter == nil || (filter.Lng == 0 && filter.Lat == 0) {
 	//	return nil, restaurantmodel.ErrLatLngInvalid
 	//}
 
-	result, err := biz.repo.ListRestaurantRepo(ctx, filter, paging)
+	result, err := biz.repo.ListRestaurantRepo(ctx, userId, filter, paging)
 	if err != nil {
 		return nil, err
 	}

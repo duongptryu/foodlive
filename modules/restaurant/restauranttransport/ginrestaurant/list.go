@@ -7,6 +7,7 @@ import (
 	"foodlive/modules/restaurant/restaurantmodel"
 	"foodlive/modules/restaurant/restaurantrepo"
 	"foodlive/modules/restaurant/restaurantstore"
+	"foodlive/modules/restaurantlike/restaurantlikestore"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -28,11 +29,13 @@ func ListRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 		paging.Fulfill()
 
 		store := restaurantstore.NewSqlStore(appCtx.GetDatabase())
-		//likeStore := restaurantlikestorage.NewSQLStore(appCtx.GetUploadProvider())
-		repo := restaurantrepo.NewListRestaurantRepo(store)
+		likeStore := restaurantlikestore.NewSQLStore(appCtx.GetDatabase())
+		repo := restaurantrepo.NewListRestaurantRepo(store, likeStore)
 		biz := restaurantbiz.NewListRestaurantBiz(repo)
 
-		result, err := biz.ListRestaurant(c.Request.Context(), &filter, &paging)
+		userId := c.MustGet(common.KeyUserHeader).(int)
+
+		result, err := biz.ListRestaurant(c.Request.Context(), userId, &filter, &paging)
 		if err != nil {
 			panic(err)
 		}
@@ -64,8 +67,8 @@ func ListRestaurantOwner(appCtx component.AppContext) gin.HandlerFunc {
 		userId := c.MustGet(common.KeyUserHeader).(int)
 
 		store := restaurantstore.NewSqlStore(appCtx.GetDatabase())
-		//likeStore := restaurantlikestorage.NewSQLStore(appCtx.GetUploadProvider())
-		repo := restaurantrepo.NewListRestaurantRepo(store)
+		likeStore := restaurantlikestore.NewSQLStore(appCtx.GetDatabase())
+		repo := restaurantrepo.NewListRestaurantRepo(store, likeStore)
 		biz := restaurantbiz.NewListRestaurantBiz(repo)
 
 		result, err := biz.ListRestaurantOwner(c.Request.Context(), userId, &filter, &paging)
@@ -100,8 +103,8 @@ func ListRestaurantForAdmin(appCtx component.AppContext) gin.HandlerFunc {
 		paging.Fulfill()
 
 		store := restaurantstore.NewSqlStore(appCtx.GetDatabase())
-		//likeStore := restaurantlikestorage.NewSQLStore(appCtx.GetUploadProvider())
-		repo := restaurantrepo.NewListRestaurantRepo(store)
+		likeStore := restaurantlikestore.NewSQLStore(appCtx.GetDatabase())
+		repo := restaurantrepo.NewListRestaurantRepo(store, likeStore)
 		biz := restaurantbiz.NewListRestaurantBiz(repo)
 
 		result, err := biz.ListRestaurantForAdmin(c.Request.Context(), &filter, &paging)

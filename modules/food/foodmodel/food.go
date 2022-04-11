@@ -16,8 +16,10 @@ type Food struct {
 	Price           float64                `json:"price" gorm:"column:price"`
 	Images          *common.Image          `json:"images" gorm:"images"`
 	Status          bool                   `json:"status" gorm:"status"`
-	LikeCount       int                    `json:"like_count" gorm:"like_count"`
+	LikeCount       int                    `json:"liked_count" gorm:"column:liked_count"`
 	Rating          float64                `json:"rating" gorm:"rating"`
+	RatingCount     int                    `json:"rating_count" gorm:"column:rating_count"`
+	IsLike          bool                   `json:"is_like" gorm:"-"`
 }
 
 func (Food) TableName() string {

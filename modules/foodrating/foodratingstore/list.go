@@ -18,8 +18,11 @@ func (s *sqlStore) ListFoodRating(ctx context.Context,
 
 	db = db.Table(foodratingmodel.FoodRating{}.TableName()).Where(condition)
 
-	//if v := filter; v != nil {
-	//}
+	if v := filter; v != nil {
+		if v.FoodId != 0 {
+			db = db.Where("food_id = ?", v.FoodId)
+		}
+	}
 
 	if err := db.Count(&paging.Total).Error; err != nil {
 		return nil, common.ErrDB(err)

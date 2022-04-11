@@ -15,7 +15,11 @@ type FoodLike struct {
 }
 
 func (FoodLike) TableName() string {
-	return "food_like"
+	return "food_likes"
+}
+
+func (data *FoodLike) GetFoodId() int {
+	return data.FoodId
 }
 
 type FoodLikeCreate struct {
@@ -26,6 +30,10 @@ type FoodLikeCreate struct {
 
 func (FoodLikeCreate) TableName() string {
 	return FoodLike{}.TableName()
+}
+
+func (data *FoodLikeCreate) GetFoodId() int {
+	return data.FoodId
 }
 
 var ErrUserAlreadyLikeFood = common.NewCustomError(nil, "User already like food", "ErrUserAlreadyLikeFood")

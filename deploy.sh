@@ -8,7 +8,7 @@ echo "Compiling"
 CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app
 
 echo "Docker build ..."
-docker build -t ${APP_NAME} -f ./Dockerfile .
+docker build --platform linux/amd64 -t ${APP_NAME} -f ./Dockerfile .
 
 echo "Docker saving..."
 docker save -o ${APP_NAME}.tar ${APP_NAME}

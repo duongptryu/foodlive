@@ -12,6 +12,7 @@ import (
 	"foodlive/modules/foodrating/foodratingtransport/ginfoodrating"
 	"foodlive/modules/order/ordertransport/ginorder"
 	"foodlive/modules/restaurant/restauranttransport/ginrestaurant"
+	"foodlive/modules/restaurantcategory/rstcategorytransport/ginrstcategory"
 	"foodlive/modules/restaurantlike/restaurantliketransport/ginrestaurantlike"
 	"foodlive/modules/restaurantowner/restaurantownertransport/ginrestaurantowner"
 	"foodlive/modules/restaurantrating/restaurantratingtransport/ginrestaurantrating"
@@ -50,7 +51,7 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 
 		v1.GET("/order/crypto/:order_id", ginorder.FindOrderCryptoInWeb(appCtx))
 
-		favorite := v1.GET("/favorite", middleware.RequireAuth(appCtx))
+		favorite := v1.Group("/favorite", middleware.RequireAuth(appCtx))
 		{
 			favorite.GET("/rst", ginrestaurantlike.ListMyLikeRestaurant(appCtx))
 			favorite.GET("/food", ginfoodlike.ListMyLikeFood(appCtx))
@@ -58,6 +59,8 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 
 		restaurant := v1.Group("/restaurant", middleware.RequireAuth(appCtx))
 		{
+			restaurant.GET("/:id/category", ginrstcategory.ListRestaurantByCategory(appCtx))
+
 			restaurant.GET("", ginrestaurant.ListRestaurant(appCtx))
 			restaurant.GET("/:id", ginrestaurant.FindRestaurant(appCtx))
 

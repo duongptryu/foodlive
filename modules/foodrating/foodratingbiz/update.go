@@ -43,7 +43,7 @@ func (biz *userUpdateRatingFoodBiz) UpdateRestaurantRatingBiz(ctx context.Contex
 	}
 
 	//pubsub to calculate rating of restaurant
-	err = biz.pubSub.Publish(ctx, common.TopicUserCreateRestaurantRating, pubsub.NewMessage(&foodratingmodel.FoodRatingCreate{
+	err = biz.pubSub.Publish(ctx, common.TopicUserUpdateRatingFood, pubsub.NewMessage(&foodratingmodel.FoodRatingCreate{
 		FoodId: rstDb.FoodId,
 	}))
 	if err != nil {

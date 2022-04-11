@@ -47,3 +47,13 @@ func (s *sqlStore) UpdateRating(ctx context.Context, foodId int, rating float64)
 
 	return nil
 }
+
+func (s *sqlStore) IncreaseRatingCount(ctx context.Context, id int) error {
+	db := s.db
+
+	if err := db.Table(foodmodel.Food{}.TableName()).Where("id = ?", id).Update("rating_count", gorm.Expr("rating_count + ?", 1)).Error; err != nil {
+		return common.ErrDB(err)
+	}
+
+	return nil
+}

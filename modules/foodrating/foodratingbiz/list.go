@@ -26,8 +26,8 @@ func (biz *listUserRatingFood) ListRatingFoodBiz(ctx context.Context, foodId int
 	return result, nil
 }
 
-func (biz *listUserRatingFood) LisMytRatingFoodBiz(ctx context.Context, foodId int, userId int, filter *foodratingmodel.Filter, paging *common.Paging) ([]foodratingmodel.FoodRating, error) {
-	result, err := biz.foodRatingStore.ListFoodRating(ctx, map[string]interface{}{"food_id": foodId, "user_id": userId}, filter, paging, "User")
+func (biz *listUserRatingFood) LisMytRatingFoodBiz(ctx context.Context, userId int, filter *foodratingmodel.Filter, paging *common.Paging) ([]foodratingmodel.FoodRating, error) {
+	result, err := biz.foodRatingStore.ListFoodRating(ctx, map[string]interface{}{"user_id": userId}, filter, paging, "User", "Food")
 	if err != nil {
 		return nil, err
 	}

@@ -6,6 +6,7 @@ import (
 	"foodlive/modules/restaurant/restaurantbiz"
 	"foodlive/modules/restaurant/restaurantrepo"
 	"foodlive/modules/restaurant/restaurantstore"
+	"foodlive/modules/restaurantlike/restaurantlikestore"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -19,11 +20,13 @@ func FindRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 		}
 
 		store := restaurantstore.NewSqlStore(appCtx.GetDatabase())
-		//likeStore := restaurantlikestorage.NewSQLStore(appCtx.GetUploadProvider())
-		repo := restaurantrepo.NewFindRestaurantRepo(store)
+		likeStore := restaurantlikestore.NewSQLStore(appCtx.GetDatabase())
+		repo := restaurantrepo.NewFindRestaurantRepo(store, likeStore)
 		biz := restaurantbiz.NewFindRestaurantBiz(repo)
 
-		result, err := biz.FindRestaurantById(c.Request.Context(), id)
+		userId := c.MustGet(common.KeyUserHeader).(int)
+
+		result, err := biz.FindRestaurantById(c.Request.Context(), id, userId)
 		if err != nil {
 			panic(err)
 		}
@@ -40,8 +43,8 @@ func FindRestaurantWithoutStatus(appCtx component.AppContext) gin.HandlerFunc {
 		}
 
 		store := restaurantstore.NewSqlStore(appCtx.GetDatabase())
-		//likeStore := restaurantlikestorage.NewSQLStore(appCtx.GetUploadProvider())
-		repo := restaurantrepo.NewFindRestaurantRepo(store)
+		likeStore := restaurantlikestore.NewSQLStore(appCtx.GetDatabase())
+		repo := restaurantrepo.NewFindRestaurantRepo(store, likeStore)
 		biz := restaurantbiz.NewFindRestaurantBiz(repo)
 
 		result, err := biz.FindRestaurantByIdWithoutStatus(c.Request.Context(), id)

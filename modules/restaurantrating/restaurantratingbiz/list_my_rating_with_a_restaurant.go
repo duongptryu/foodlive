@@ -27,7 +27,7 @@ func (biz *listRestaurantRatingBiz) ListMyRatingBiz(ctx context.Context, paging 
 			return nil, err
 		}
 	} else {
-		result, err = biz.restaurantRatingStore.ListRestaurantRating(ctx, map[string]interface{}{"user_id": filter.UserId}, filter, paging, "User")
+		result, err = biz.restaurantRatingStore.ListRestaurantRating(ctx, map[string]interface{}{"user_id": filter.UserId}, filter, paging, "User", "Restaurant")
 		if err != nil {
 			return nil, err
 		}

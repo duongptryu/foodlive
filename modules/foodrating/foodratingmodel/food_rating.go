@@ -1,6 +1,9 @@
 package foodratingmodel
 
-import "foodlive/common"
+import (
+	"foodlive/common"
+	"foodlive/modules/food/foodmodel"
+)
 
 const (
 	EntityName = "FoodRating"
@@ -11,13 +14,14 @@ type FoodRating struct {
 	UserId  int                `json:"user_id" gorm:"user_id"`
 	User    *common.SimpleUser `json:"user" gorm:"preload:false"`
 	FoodId  int                `json:"food_id" gorm:"food_id"`
+	Food    *foodmodel.Food    `json:"food" gorm:"preload:false"`
 	Point   float64            `json:"point" gorm:"point"`
 	Comment string             `json:"comment" gorm:"comment"`
 	Status  bool               `json:"status" gorm:"status"`
 }
 
 func (FoodRating) TableName() string {
-	return "food_rating"
+	return "food_ratings"
 }
 
 type FoodRatingCreate struct {
