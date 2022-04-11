@@ -2,6 +2,7 @@ package restaurantrepo
 
 import (
 	"context"
+	"fmt"
 	"foodlive/common"
 	"foodlive/modules/restaurant/restaurantmodel"
 	log "github.com/sirupsen/logrus"
@@ -46,6 +47,10 @@ func (repo *findRestaurantRepo) FindRestaurantByIdRepo(ctx context.Context, id i
 
 	if v := mapResLike; v != nil {
 		result.IsLike = mapResLike[result.Id]
+		//calculate time_shipping
+		if result.Distance != 0 {
+			result.TimeShipping = fmt.Sprintf("%v - %v", int(result.Distance*3), int(result.Distance*5))
+		}
 	}
 
 	return result, nil

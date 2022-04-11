@@ -9,6 +9,7 @@ import (
 	"foodlive/modules/order/orderstore"
 	"foodlive/modules/orderdetail/orderdetailstore"
 	"foodlive/modules/ordertracking/ordertrackingstore"
+	"foodlive/modules/restaurant/restaurantstore"
 	"foodlive/modules/useraddress/useraddressstore"
 	"github.com/gin-gonic/gin"
 )
@@ -31,8 +32,9 @@ func CreateOrderMomo(appCtx component.AppContext) func(c *gin.Context) {
 		orderDetail := orderdetailstore.NewSqlStore(appCtx.GetDatabase())
 		orderTracking := ordertrackingstore.NewSqlStore(appCtx.GetDatabase())
 		userAddressStore := useraddressstore.NewSQLStore(appCtx.GetDatabase())
+		restaurantStore := restaurantstore.NewSqlStore(appCtx.GetDatabase())
 
-		orderBiz := orderbiz.NewCreateOrderBiz(orderStore, orderDetail, orderTracking, userAddressStore, cartStore, appCtx.GetPaymentProvider())
+		orderBiz := orderbiz.NewCreateOrderBiz(orderStore, orderDetail, orderTracking, userAddressStore, cartStore, appCtx.GetPaymentProvider(), restaurantStore)
 
 		resp, err := orderBiz.CreateOrderMomoBiz(c.Request.Context(), userIdInt, &checkOut)
 		if err != nil {
@@ -61,8 +63,9 @@ func CreateOrderCrypto(appCtx component.AppContext) func(c *gin.Context) {
 		orderDetail := orderdetailstore.NewSqlStore(appCtx.GetDatabase())
 		orderTracking := ordertrackingstore.NewSqlStore(appCtx.GetDatabase())
 		userAddressStore := useraddressstore.NewSQLStore(appCtx.GetDatabase())
+		restaurantStore := restaurantstore.NewSqlStore(appCtx.GetDatabase())
 
-		orderBiz := orderbiz.NewCreateOrderBiz(orderStore, orderDetail, orderTracking, userAddressStore, cartStore, appCtx.GetPaymentProvider())
+		orderBiz := orderbiz.NewCreateOrderBiz(orderStore, orderDetail, orderTracking, userAddressStore, cartStore, appCtx.GetPaymentProvider(), restaurantStore)
 
 		resp, err := orderBiz.CreateOrderCryptoBiz(c.Request.Context(), userIdInt, &checkOut)
 		if err != nil {

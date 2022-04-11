@@ -13,6 +13,7 @@ import (
 	"foodlive/modules/orderdetail/orderdetailstore"
 	"foodlive/modules/ordertracking/ordertrackingmodel"
 	"foodlive/modules/ordertracking/ordertrackingstore"
+	"foodlive/modules/restaurant/restaurantstore"
 	"foodlive/modules/useraddress/useraddressstore"
 	log "github.com/sirupsen/logrus"
 	"time"
@@ -21,6 +22,7 @@ import (
 type createOrderBiz struct {
 	orderStore       orderstore.OrderStore
 	cartStore        cartstore.CartStore
+	restaurantStore  restaurantstore.RestaurantStore
 	orderDetailStore orderdetailstore.OrderDetailStore
 	orderTracking    ordertrackingstore.OrderTrackingStore
 	userAddressStore useraddressstore.UserAddressStore
@@ -28,7 +30,7 @@ type createOrderBiz struct {
 }
 
 func NewCreateOrderBiz(orderStore orderstore.OrderStore, orderDetailStore orderdetailstore.OrderDetailStore,
-	orderTracking ordertrackingstore.OrderTrackingStore, userAddressStore useraddressstore.UserAddressStore, cartStore cartstore.CartStore, paymentProvider paymentprovider.PaymentProvider) *createOrderBiz {
+	orderTracking ordertrackingstore.OrderTrackingStore, userAddressStore useraddressstore.UserAddressStore, cartStore cartstore.CartStore, paymentProvider paymentprovider.PaymentProvider, restaurantStore restaurantstore.RestaurantStore) *createOrderBiz {
 	return &createOrderBiz{
 		orderStore:       orderStore,
 		orderTracking:    orderTracking,
@@ -36,6 +38,7 @@ func NewCreateOrderBiz(orderStore orderstore.OrderStore, orderDetailStore orderd
 		cartStore:        cartStore,
 		userAddressStore: userAddressStore,
 		paymentProvider:  paymentProvider,
+		restaurantStore:  restaurantStore,
 	}
 }
 
@@ -55,15 +58,24 @@ func (biz *createOrderBiz) CreateOrderMomoBiz(ctx context.Context, userId int, d
 		return nil, ordermodel.ErrCartEmpty
 	}
 
+	//get lat lng of rst
+	rst, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": listCart[0].RestaurantId})
+	if err != nil {
+		return nil, err
+	}
+
+	//calculate distance
+	distance := common.Distance(addressDb.Lat, addressDb.Lng, rst.Lat, rst.Lng, "K")
+
 	//generate order
 	var totalPrice float64
 	for i, _ := range listCart {
 		totalPrice += listCart[i].Food.Price * float64(listCart[i].Quantity)
 	}
 
-	shipFee := float64(10000)
+	shipFee := int(rst.ShippingFeePerKm * distance)
 
-	totalPrice += shipFee
+	totalPrice += float64(shipFee)
 
 	var order = ordermodel.OrderCreate{
 		UserId:         userId,
@@ -159,15 +171,24 @@ func (biz *createOrderBiz) CreateOrderCryptoBiz(ctx context.Context, userId int,
 		return nil, ordermodel.ErrCartEmpty
 	}
 
+	//get lat lng of rst
+	rst, err := biz.restaurantStore.FindRestaurant(ctx, map[string]interface{}{"id": listCart[0].RestaurantId})
+	if err != nil {
+		return nil, err
+	}
+
+	//calculate distance
+	distance := common.Distance(addressDb.Lat, addressDb.Lng, rst.Lat, rst.Lng, "K")
+
 	//generate order
 	var totalPrice float64
 	for i, _ := range listCart {
 		totalPrice += listCart[i].Food.Price * float64(listCart[i].Quantity)
 	}
 
-	shipFee := float64(10000)
+	shipFee := int(rst.ShippingFeePerKm * distance)
 
-	totalPrice += shipFee
+	totalPrice += float64(shipFee)
 
 	var order = ordermodel.OrderCreate{
 		UserId:         userId,

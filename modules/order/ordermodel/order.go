@@ -111,7 +111,8 @@ type FoodQuantity struct {
 
 type PreviewOrder struct {
 	Foods         []FoodQuantity `json:"foods"`
-	ShipFee       float64        `json:"ship_fee"`
+	ShipFee       int            `json:"ship_fee"`
+	Distance      float64        `json:"distance"`
 	TotalPrice    float64        `json:"total_price"`
 	TotalPriceEth string         `json:"total_price_eth"`
 }
