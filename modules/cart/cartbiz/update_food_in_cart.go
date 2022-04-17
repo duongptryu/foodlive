@@ -28,6 +28,13 @@ func (biz *updateFoodInCartBiz) UpdateFoodInCartBiz(ctx context.Context, data *c
 		return cartmodel.ErrItemDoesNotExist
 	}
 
+	if data.Quantity == 0 {
+		if err := biz.cartStore.DeleteCartItem(ctx, map[string]interface{}{"user_id": data.UserId, "food_id": data.FoodId}); err != nil {
+			return err
+		}
+		return nil
+	}
+
 	if err := biz.cartStore.UpdateCartItem(ctx, data); err != nil {
 		return err
 	}

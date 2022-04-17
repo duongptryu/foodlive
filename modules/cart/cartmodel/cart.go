@@ -54,7 +54,7 @@ func (CartItemUpdate) TableName() string {
 }
 
 func (data *CartItemUpdate) Validate() error {
-	if data.Quantity < 1 {
+	if data.Quantity < 0 {
 		return ErrInvalidQuantity
 	}
 	return nil

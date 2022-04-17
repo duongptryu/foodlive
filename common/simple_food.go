@@ -13,7 +13,8 @@ type SimpleFood struct {
 	CategoryId   int     `json:"category_id" gorm:"column:category_id"`
 	Name         string  `json:"name" gorm:"column:name"`
 	Price        float64 `json:"price" gorm:"column:price"`
-	Images       *Image `json:"images" gorm:"images"`
+	Description  string  `json:"description" gorm:"column:description"`
+	Images       *Image  `json:"images" gorm:"images"`
 }
 
 func (SimpleFood) TableName() string {
@@ -21,12 +22,11 @@ func (SimpleFood) TableName() string {
 }
 
 type FoodOrigin struct {
-	Id           int     `json:"id"`
-	Name         string  `json:"name"`
-	Price        float64 `json:"price"`
-	Images       *Image `json:"images"`
+	Id     int     `json:"id"`
+	Name   string  `json:"name"`
+	Price  float64 `json:"price"`
+	Images *Image  `json:"images"`
 }
-
 
 func (j *FoodOrigin) Scan(value interface{}) error {
 	bytes, ok := value.([]byte)

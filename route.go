@@ -119,7 +119,7 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 		{
 			cart.POST("", gincart.CreateItemInCart(appCtx))
 			cart.PUT("", gincart.UpdateItemInCart(appCtx))
-			cart.DELETE("/:food_id", gincart.DeleteAItemInCart(appCtx))
+			cart.DELETE("/food/:food_id", gincart.DeleteAItemInCart(appCtx))
 			cart.DELETE("", gincart.DeleteAllItemInCart(appCtx))
 			cart.GET("", gincart.ListItemInCart(appCtx))
 		}
