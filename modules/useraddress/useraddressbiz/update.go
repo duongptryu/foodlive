@@ -33,6 +33,16 @@ func (biz *updateUserAddressBiz) UpdateUserAddressBiz(ctx context.Context, id in
 		return common.ErrDataNotFound(useraddressmodel.EntityName)
 	}
 
+	if *data.IsDefault {
+		exist, err := biz.userAddressStore.FindUserAddressById(ctx, map[string]interface{}{"is_default": true, "user_id": addrDb.UserId})
+		if err != nil {
+			return err
+		}
+		if exist.Id != 0 {
+			return useraddressmodel.ErrAlreadyHasDefaultAddress
+		}
+	}
+
 	if addrDb.CityId != data.CityId && data.CityId != 0 {
 		cityDb, err := biz.cityStore.FindCity(ctx, map[string]interface{}{"id": data.CityId})
 		if err != nil {

@@ -8,8 +8,8 @@ const (
 
 type City struct {
 	common.SQLModel
-	Title  string `json:"title" gorm:"title"`
-	Status bool   `json:"status" gorm:"status"`
+	Title  string `json:"title" gorm:"column:title"`
+	Status bool   `json:"status" gorm:"column:status"`
 }
 
 func (City) TableName() string {

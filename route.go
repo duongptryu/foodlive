@@ -7,6 +7,7 @@ import (
 	"foodlive/modules/authsso/googlesso/googlessotransport/gingooglesso"
 	"foodlive/modules/cart/carttransport/gincart"
 	"foodlive/modules/category/categorytransport/gincategory"
+	"foodlive/modules/city/citytransport/gincity"
 	"foodlive/modules/food/foodtransport/ginfood"
 	"foodlive/modules/foodlike/foodliketransport/ginfoodlike"
 	"foodlive/modules/foodrating/foodratingtransport/ginfoodrating"
@@ -50,6 +51,8 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 		v1.POST("/ipn", ginorder.HandleWebHookPayment(appCtx))
 
 		v1.GET("/order/crypto/:order_id", ginorder.FindOrderCryptoInWeb(appCtx))
+
+		v1.GET("/city", gincity.ListCity(appCtx))
 
 		favorite := v1.Group("/favorite", middleware.RequireAuth(appCtx))
 		{
@@ -113,6 +116,7 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 			userAddress.PUT("/:id", ginuseraddress.UpdateUserAddress(appCtx))
 			userAddress.DELETE("/:id", ginuseraddress.DeleteUserAddress(appCtx))
 			userAddress.GET("", ginuseraddress.ListUserAddress(appCtx))
+			userAddress.GET("/default", ginuseraddress.FindDefaultUserAddress(appCtx))
 		}
 
 		cart := v1.Group("/cart", middleware.RequireAuth(appCtx))

@@ -11,13 +11,14 @@ const (
 
 type UserAddress struct {
 	common.SQLModel
-	UserId int             `json:"user_id" gorm:"user_id"`
-	CityId int             `json:"city_id" gorm:"city_id"`
-	City   *citymodel.City `json:"city" gorm:"preload:false"`
-	Addr   string          `json:"addr" gorm:"addr"`
-	Lat    float64         `json:"lat" gorm:"lat"`
-	Lng    float64         `json:"lng" gorm:"lng"`
-	Status bool            `json:"status" gorm:"status"`
+	UserId    int             `json:"user_id" gorm:"user_id"`
+	CityId    int             `json:"city_id" gorm:"city_id"`
+	City      *citymodel.City `json:"city" gorm:"preload:false"`
+	Addr      string          `json:"addr" gorm:"addr"`
+	Lat       float64         `json:"lat" gorm:"lat"`
+	Lng       float64         `json:"lng" gorm:"lng"`
+	Status    bool            `json:"status" gorm:"status"`
+	IsDefault bool            `json:"is_default" gorm:"column:is_default"`
 }
 
 func (UserAddress) TableName() string {
@@ -26,12 +27,13 @@ func (UserAddress) TableName() string {
 
 type UserAddressCreate struct {
 	common.SQLModelCreate
-	UserId int     `json:"-" gorm:"user_id"`
-	CityId int     `json:"city_id" gorm:"city_id"`
-	Addr   string  `json:"addr" gorm:"addr"`
-	Lat    float64 `json:"lat" gorm:"lat"`
-	Lng    float64 `json:"lng" gorm:"lng"`
-	Status bool    `json:"-" gorm:"status"`
+	UserId    int     `json:"-" gorm:"user_id"`
+	CityId    int     `json:"city_id" gorm:"city_id"`
+	Addr      string  `json:"addr" gorm:"addr"`
+	Lat       float64 `json:"lat" gorm:"lat"`
+	Lng       float64 `json:"lng" gorm:"lng"`
+	Status    bool    `json:"-" gorm:"status"`
+	IsDefault bool    `json:"is_default" gorm:"column:is_default"`
 }
 
 func (UserAddressCreate) TableName() string {
@@ -45,10 +47,11 @@ func (data *UserAddressCreate) Validate() error {
 
 type UserAddressUpdate struct {
 	common.SQLModelUpdate
-	CityId int     `json:"city_id" gorm:"city_id"`
-	Addr   string  `json:"addr" gorm:"addr"`
-	Lat    float64 `json:"lat" gorm:"lat"`
-	Lng    float64 `json:"lng" gorm:"lng"`
+	CityId    int     `json:"city_id" gorm:"city_id"`
+	Addr      string  `json:"addr" gorm:"addr"`
+	Lat       float64 `json:"lat" gorm:"lat"`
+	IsDefault *bool   `json:"is_default" gorm:"column:is_default"`
+	Lng       float64 `json:"lng" gorm:"lng"`
 }
 
 func (UserAddressUpdate) TableName() string {
@@ -58,3 +61,8 @@ func (UserAddressUpdate) TableName() string {
 func (data *UserAddressUpdate) Validate() error {
 	return nil
 }
+
+var (
+	ErrAlreadyHasDefaultAddress      = common.NewCustomError(nil, "user already has default address", "ErrAlreadyHasDefaultAddress")
+	ErrUserDoseNotHaveDefaultAddress = common.NewCustomError(nil, "User does not have default address", "ErrUserDoseNotHaveDefaultAddress")
+)

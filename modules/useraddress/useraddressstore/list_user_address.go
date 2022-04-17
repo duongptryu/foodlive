@@ -16,6 +16,8 @@ func (s *sqlStore) ListUserAddressByUserId(ctx context.Context, conditions map[s
 		db = db.Preload(moreKey[i])
 	}
 
+	db = db.Order("is_default desc")
+
 	if err := db.Find(&result).Error; err != nil {
 		return nil, common.ErrDB(err)
 	}

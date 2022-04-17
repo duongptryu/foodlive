@@ -24,6 +24,16 @@ func (biz *createUserAddressBiz) CreateUserAddressBiz(ctx context.Context, data 
 		return err
 	}
 
+	if data.IsDefault {
+		exist, err := biz.userAddressStore.FindUserAddressById(ctx, map[string]interface{}{"is_default": true, "user_id": data.UserId})
+		if err != nil {
+			return err
+		}
+		if exist.Id != 0 {
+			return useraddressmodel.ErrAlreadyHasDefaultAddress
+		}
+	}
+
 	cityDb, err := biz.cityStore.FindCity(ctx, map[string]interface{}{"id": data.CityId})
 	if err != nil {
 		return err

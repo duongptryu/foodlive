@@ -13,7 +13,7 @@ type SimpleFood struct {
 	CategoryId   int     `json:"category_id" gorm:"column:category_id"`
 	Name         string  `json:"name" gorm:"column:name"`
 	Price        float64 `json:"price" gorm:"column:price"`
-	Description  string  `json:"description" gorm:"column:description"`
+	Description  string  `json:"description" gorm:"column:description......"`
 	Images       *Image  `json:"images" gorm:"images"`
 }
 

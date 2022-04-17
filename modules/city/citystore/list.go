@@ -4,7 +4,6 @@ import (
 	"context"
 	"foodlive/common"
 	"foodlive/modules/city/citymodel"
-	"foodlive/modules/food/foodmodel"
 )
 
 func (s *sqlStore) ListCity(ctx context.Context,
@@ -15,7 +14,7 @@ func (s *sqlStore) ListCity(ctx context.Context,
 
 	db := s.db
 
-	db = db.Table(foodmodel.Food{}.TableName()).Where(condition)
+	db = db.Table(citymodel.City{}.TableName()).Where(condition)
 
 	for i := range moreKey {
 		db = db.Preload(moreKey[i])
