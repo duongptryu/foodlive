@@ -14,12 +14,13 @@ const (
 
 type User struct {
 	common.SQLModel `json:",inline"`
-	Phone           string `json:"phone" gorm:"column:phone"`
-	Password        string `json:"-" gorm:"column:password"`
-	LastName        string `json:"last_name" gorm:"column:last_name"`
-	FirstName       string `json:"first_name" gorm:"column:last_name"`
-	Status          bool   `json:"status" gorm:"column:status"`
-	Role            string `json:"role" gorm:"column:role"`
+	Phone           string        `json:"phone" gorm:"column:phone"`
+	Password        string        `json:"-" gorm:"column:password"`
+	LastName        string        `json:"last_name" gorm:"column:last_name"`
+	FirstName       string        `json:"first_name" gorm:"column:last_name"`
+	Status          bool          `json:"status" gorm:"column:status"`
+	Role            string        `json:"role" gorm:"column:role"`
+	Avatar          *common.Image `json:"avatar" gorm:"column:avatar"`
 }
 
 func (User) TableName() string {
@@ -28,14 +29,15 @@ func (User) TableName() string {
 
 type UserCreate struct {
 	common.SQLModel `json:",inline"`
-	Phone           string  `json:"phone" gorm:"column:phone" binding:"required"`
-	Password        string  `json:"password" gorm:"column:password" binding:"required"`
-	LastName        string  `json:"last_name" gorm:"column:last_name" binding:"required"`
-	FirstName       string  `json:"first_name" gorm:"column:first_name" binding:"required"`
-	Status          bool    `json:"-" gorm:"column:status"`
-	Role            string  `json:"-" gorm:"column:role"`
-	GgId            *string `json:"-" gorm:"gg_id"`
-	FbId            *string `json:"-" gorm:"fb_id"`
+	Phone           string        `json:"phone" gorm:"column:phone" binding:"required"`
+	Password        string        `json:"password" gorm:"column:password" binding:"required"`
+	LastName        string        `json:"last_name" gorm:"column:last_name" binding:"required"`
+	FirstName       string        `json:"first_name" gorm:"column:first_name" binding:"required"`
+	Status          bool          `json:"-" gorm:"column:status"`
+	Role            string        `json:"-" gorm:"column:role"`
+	GgId            *string       `json:"-" gorm:"gg_id"`
+	FbId            *string       `json:"-" gorm:"fb_id"`
+	Avatar          *common.Image `json:"avatar" gorm:"column:avatar"`
 }
 
 func (UserCreate) TableName() string {
@@ -44,10 +46,11 @@ func (UserCreate) TableName() string {
 
 type UserUpdate struct {
 	common.SQLModel `json:",inline"`
-	Phone           string `json:"phone" gorm:"column:phone"`
-	LastName        string `json:"last_name" gorm:"column:last_name"`
-	FirstName       string `json:"first_name" gorm:"column:first_name"`
-	Status          *bool  `json:"status" gorm:"column:status"`
+	Phone           string        `json:"phone" gorm:"column:phone"`
+	LastName        string        `json:"last_name" gorm:"column:last_name"`
+	FirstName       string        `json:"first_name" gorm:"column:first_name"`
+	Status          *bool         `json:"status" gorm:"column:status"`
+	Avatar          *common.Image `json:"avatar" gorm:"column:avatar"`
 }
 
 func (UserUpdate) TableName() string {

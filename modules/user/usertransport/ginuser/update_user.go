@@ -34,6 +34,26 @@ func AdminUpdateUser(appCtx component.AppContext) func(c *gin.Context) {
 	}
 }
 
+func UpdateMyProfile(appCtx component.AppContext) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		var data usermodel.UserUpdate
+		if err := c.ShouldBindJSON(&data); err != nil {
+			panic(common.ErrParseJson(err))
+		}
+
+		userId := c.MustGet(common.KeyUserHeader).(int)
+
+		userStore := userstorage.NewSQLStore(appCtx.GetDatabase())
+		biz := userbiz.NewUpdateUserBiz(userStore)
+
+		if err := biz.AdminUpdateUserBiz(c.Request.Context(), userId, &data); err != nil {
+			panic(err)
+		}
+
+		c.JSON(200, common.NewSimpleSuccessResponse(true))
+	}
+}
+
 func AccountSSOUpdate(appCtx component.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var data usermodel.UserUpdate

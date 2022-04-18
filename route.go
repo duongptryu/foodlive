@@ -148,6 +148,7 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 		}
 
 		v1.GET("/my-profile", middleware.RequireAuth(appCtx), ginuser.GetUserProfile(appCtx))
+		v1.PUT("/my-profile", middleware.RequireAuth(appCtx), ginuser.UpdateMyProfile(appCtx))
 		//========================================================================================================
 
 		admin := v1.Group("/admin", middleware.RequireAuthAdmin(appCtx))

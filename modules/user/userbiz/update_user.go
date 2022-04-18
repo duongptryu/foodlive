@@ -27,6 +27,13 @@ func (biz *updateUserBiz) AdminUpdateUserBiz(ctx context.Context, id int, data *
 	return nil
 }
 
+func (biz *updateUserBiz) UpdateMyProfule(ctx context.Context, id int, data *usermodel.UserUpdate) error {
+	if err := biz.store.UpdateUser(ctx, id, data); err != nil {
+		return common.ErrCannotUpdateEntity(usermodel.EntityName, err)
+	}
+	return nil
+}
+
 func (biz *updateUserBiz) UpdateUserBiz(ctx context.Context, id int, data *usermodel.UserUpdate, myCache mycache.Cache, mySms gosms.GoSMS) error {
 	if err := data.Validate(); err != nil {
 		return err
