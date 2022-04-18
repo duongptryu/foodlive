@@ -39,7 +39,10 @@ func (biz *updateUserAddressBiz) UpdateUserAddressBiz(ctx context.Context, id in
 			return err
 		}
 		if exist.Id != 0 {
-			return useraddressmodel.ErrAlreadyHasDefaultAddress
+			var f = false
+			if err := biz.userAddressStore.UpdateUserAddress(ctx, exist.Id, &useraddressmodel.UserAddressUpdate{IsDefault: &f}); err != nil {
+				return err
+			}
 		}
 	}
 
