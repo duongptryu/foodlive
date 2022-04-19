@@ -8,15 +8,20 @@ import (
 	"foodlive/modules/order/ordermodel"
 	"foodlive/modules/restaurant/restaurantstore"
 	"foodlive/modules/useraddress/useraddressstore"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 )
 
 func PreviewOrder(appCtx component.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		var data ordermodel.OrderPreviewReq
-		if err := c.BindJSON(&data); err != nil {
-			panic(common.ErrParseJson(err))
+		address_id, err := strconv.Atoi(c.Query("address_id"))
+		if err != nil {
+			panic(common.ErrParseJson(common.NewCustomError(nil, "Cannot parse address_id", "ErrParseAddressId")))
 		}
+
+		var data ordermodel.OrderPreviewReq
+		data.AddressId = address_id
 
 		userIdRaw := c.MustGet(common.KeyUserHeader)
 		if err := userIdRaw.(int); err == 0 {
