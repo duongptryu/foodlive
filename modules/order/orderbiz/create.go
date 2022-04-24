@@ -77,6 +77,10 @@ func (biz *createOrderBiz) CreateOrderMomoBiz(ctx context.Context, userId int, d
 
 	totalPrice += float64(shipFee)
 
+	if totalPrice > float64(50000) {
+		return nil, ordermodel.ErrMoneyTooBig
+	}
+
 	var order = ordermodel.OrderCreate{
 		UserId:         userId,
 		RestaurantId:   listCart[0].RestaurantId,

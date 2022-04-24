@@ -139,3 +139,4 @@ type PaymentOrderEvent struct {
 var ErrPaymentFailed = common.NewFullErrorResponse(409, nil, "Cannot get payment, please try again!", "Cannot get payment, please try again!", "ErrPaymentFailed")
 var ErrCartEmpty = common.NewCustomError(nil, "Cart is empty", "ErrCartEmpty")
 var ErrOrderExpire = common.NewCustomError(nil, "Order expire", "ErrOrderExpire")
+var ErrMoneyTooBig = common.NewCustomError(nil, "Number of money too big, please choose another type payment", "ErrMoneyTooBig")
