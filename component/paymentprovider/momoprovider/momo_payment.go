@@ -14,6 +14,7 @@ import (
 	guuid "github.com/google/uuid"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type momoProvider struct {
@@ -53,8 +54,7 @@ func (m *momoProvider) SendRequestPayment(ctx context.Context, data paymentprovi
 	var orderInfo = dataExtra
 	var returnUrl = m.BaseReturnUrl + orderId
 	var notifyUrl = m.NotifyUrl
-	//var amount = strconv.Itoa(int(data.GetPrice()))
-	var amount = "50000000"
+	var amount = strconv.Itoa(int(data.GetPrice()))
 	var requestType = m.RequestType
 	var extraData = dataExtra
 
