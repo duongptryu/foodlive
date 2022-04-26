@@ -27,7 +27,7 @@ func (biz *listOrderBiz) ListOrderBiz(ctx context.Context, userId int, paging *c
 }
 
 func (biz *listOrderBiz) ListMyCurrentOrderBiz(ctx context.Context, userId int, paging *common.Paging, filter *ordermodel.Filter) ([]ordermodel.Order, error) {
-	result, err := biz.orderStore.ListOrder(ctx, map[string]interface{}{"user_id": userId, "status": true}, filter, paging, "Restaurant")
+	result, err := biz.orderStore.ListOrder(ctx, map[string]interface{}{"user_id": userId, "status": true}, filter, paging, "Restaurant", "OrderTracking")
 	if err != nil {
 		return nil, common.ErrCannotListEntity(ordermodel.EntityName, err)
 	}
