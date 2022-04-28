@@ -25,7 +25,7 @@ func (s sqlStore) ListUsersLikFood(ctx context.Context, conditions map[string]in
 		db = db.Preload(moreKeys[i])
 	}
 
-	if err := db.Order("created_at desc").Find(&result).Error; err != nil {
+	if err := db.Find(&result).Order("id").Error; err != nil {
 		return nil, common.ErrDB(err)
 	}
 

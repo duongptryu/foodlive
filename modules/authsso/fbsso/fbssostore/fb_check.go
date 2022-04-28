@@ -10,7 +10,11 @@ import (
 )
 
 func (*authSsoStore) ValidateFbJwt(ctx context.Context, tokenString string) (*fbssomodel.FacebookUser, error) {
-	facebookSsoRequest, err := http.NewRequest("GET", "https://graph.facebook.com/me?fields=id,name&access_token="+tokenString, nil)
+	facebookSsoRequest, err := http.NewRequest(
+		"GET",
+		"https://graph.facebook.com/me?fields=id,name&access_token="+tokenString,
+		nil,
+	)
 	if err != nil {
 		return nil, common.ErrInternal(err)
 	}

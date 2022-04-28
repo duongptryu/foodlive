@@ -34,6 +34,8 @@ func setupAppContext(appConfig *config.AppConfig) component.AppContext {
 
 	//init cache
 	myCache := mycache.NewMyCache()
+
+	//init goSms
 	mySms := gosms.NewGoSms(appConfig.Sms.AccountSid, appConfig.Sms.AuthToken, appConfig.Sms.MyPhoneNumber)
 
 	//init token provider

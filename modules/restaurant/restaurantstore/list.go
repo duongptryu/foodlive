@@ -6,12 +6,7 @@ import (
 	"foodlive/modules/restaurant/restaurantmodel"
 )
 
-func (s *sqlStore) ListRestaurant(ctx context.Context,
-	condition map[string]interface{},
-	filter *restaurantmodel.Filter,
-	paging *common.Paging,
-	moreKey ...string,
-) ([]restaurantmodel.Restaurant, error) {
+func (s *sqlStore) ListRestaurant(ctx context.Context, condition map[string]interface{}, filter *restaurantmodel.Filter, paging *common.Paging, moreKey ...string) ([]restaurantmodel.Restaurant, error) {
 	var result []restaurantmodel.Restaurant
 
 	db := s.db
@@ -54,7 +49,6 @@ func (s *sqlStore) ListRestaurant(ctx context.Context,
 		} else {
 			db = db.Order("rating desc")
 		}
-
 	}
 
 	for i := range moreKey {

@@ -29,7 +29,7 @@ func (biz *listUserLikeFood) ListUserLikeFood(ctx context.Context, filter *foodl
 
 func (biz *listUserLikeFood) ListMyLikeFood(ctx context.Context, userId int, filter *foodlikemodel.Filter,
 	paging *common.Paging) ([]foodlikemodel.FoodLike, error) {
-	result, err := biz.store.ListUsersLikFood(ctx, map[string]interface{}{"user_id": userId}, filter, paging, "Food", "Category")
+	result, err := biz.store.ListUsersLikFood(ctx, map[string]interface{}{"user_id": userId}, filter, paging, "Food")
 	if err != nil {
 		return nil, err
 	}

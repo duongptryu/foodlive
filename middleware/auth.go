@@ -57,15 +57,6 @@ func RequireAuth(appCtx component.AppContext) func(c *gin.Context) {
 				panic(usermodel.ErrPhoneNumberNotActivated)
 			}
 		}
-		//
-		//userId, err := myCache.Get(common.KeyTokenCache + token)
-		//if err != nil {
-		//	panic(ErrNotFound)
-		//}
-		//
-		//if payload.UserId != userId.(int) {
-		//	panic(ErrInvalidToken)
-		//}
 
 		c.Set(common.KeyUserHeader, payload.UserId)
 		c.Next()
@@ -142,15 +133,6 @@ func RequireAuthOwnerRestaurant(appCtx component.AppContext) func(c *gin.Context
 		if payload.Role != "owner_restaurant" {
 			panic(ErrInvalidToken)
 		}
-
-		//userId, err := myCache.Get(common.KeyTokenCache + token)
-		//if err != nil {
-		//	panic(ErrNotFound)
-		//}
-
-		//if payload.UserId != userId.(int) {
-		//	panic(ErrInvalidToken)
-		//}
 
 		c.Set(common.KeyUserHeader, payload.UserId)
 		c.Next()
