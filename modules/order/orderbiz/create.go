@@ -15,8 +15,9 @@ import (
 	"foodlive/modules/ordertracking/ordertrackingstore"
 	"foodlive/modules/restaurant/restaurantstore"
 	"foodlive/modules/useraddress/useraddressstore"
-	log "github.com/sirupsen/logrus"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type createOrderBiz struct {
@@ -69,7 +70,7 @@ func (biz *createOrderBiz) CreateOrderMomoBiz(ctx context.Context, userId int, d
 
 	//generate order
 	var totalPrice float64
-	for i, _ := range listCart {
+	for i := range listCart {
 		totalPrice += listCart[i].Food.Price * float64(listCart[i].Quantity)
 	}
 
@@ -77,7 +78,7 @@ func (biz *createOrderBiz) CreateOrderMomoBiz(ctx context.Context, userId int, d
 
 	totalPrice += float64(shipFee)
 
-	if totalPrice > float64(50000) {
+	if totalPrice > float64(500000) {
 		return nil, ordermodel.ErrMoneyTooBig
 	}
 
@@ -186,7 +187,7 @@ func (biz *createOrderBiz) CreateOrderCryptoBiz(ctx context.Context, userId int,
 
 	//generate order
 	var totalPrice float64
-	for i, _ := range listCart {
+	for i := range listCart {
 		totalPrice += listCart[i].Food.Price * float64(listCart[i].Quantity)
 	}
 
