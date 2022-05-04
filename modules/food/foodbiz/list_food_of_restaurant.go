@@ -7,6 +7,7 @@ import (
 	"foodlive/modules/food/foodstore"
 	"foodlive/modules/foodlike/foodlikestore"
 	"foodlive/modules/restaurant/restaurantmodel"
+
 	log "github.com/sirupsen/logrus"
 )
 
@@ -54,7 +55,7 @@ func (biz *listFoodOfRestaurantBiz) UserListFoodOfRestaurantBiz(ctx context.Cont
 		return nil, restaurantmodel.ErrRestaurantNotFound
 	}
 
-	result, err := biz.foodStore.ListFood(ctx, map[string]interface{}{"restaurant_id": restaurantId, "status": true}, filter, paging)
+	result, err := biz.foodStore.ListFood(ctx, map[string]interface{}{"restaurant_id": restaurantId, "status": true}, filter, paging, "Category")
 	if err != nil {
 		return nil, common.ErrCannotListEntity(foodmodel.EntityName, err)
 	}
@@ -82,7 +83,7 @@ func (biz *listFoodOfRestaurantBiz) UserListFoodOfRestaurantBiz(ctx context.Cont
 }
 
 func (biz *listFoodOfRestaurantBiz) ListAllFood(ctx context.Context, userId int, paging *common.Paging, filter *foodmodel.Filter) ([]foodmodel.Food, error) {
-	result, err := biz.foodStore.ListFood(ctx, map[string]interface{}{"status": true}, filter, paging)
+	result, err := biz.foodStore.ListFood(ctx, map[string]interface{}{"status": true}, filter, paging, "Category")
 	if err != nil {
 		return nil, common.ErrCannotListEntity(foodmodel.EntityName, err)
 	}
