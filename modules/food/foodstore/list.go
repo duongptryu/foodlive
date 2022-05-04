@@ -23,7 +23,7 @@ func (s *sqlStore) ListFood(ctx context.Context,
 			db = db.Where("category_id = ?", v.CategoryId)
 		}
 		if v.Name != "" {
-			db = db.Where("name = ?", v.Name)
+			db = db.Where("name LIKE ?", "%"+v.Name+"%")
 		}
 		if v.OrderBy != "" {
 			if v.OrderBy == "rating_desc" {

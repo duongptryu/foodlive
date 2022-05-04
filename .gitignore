@@ -4,3 +4,7 @@ config_stg.yaml
 food-hub.log
 go.sum
 app
+.DS_Store
+modules/foodrating/.DS_Store
+modules/foodrating/foodratingbiz/.DS_Store
+main.py
