@@ -16,6 +16,7 @@ docker build --platform linux/amd64 -t ${APP_NAME} -f ./Dockerfile .
 echo "Deploying..."
 # scp -o StrictHostKeyChecking=no ./${APP_NAME}.tar ${DEPLOY_CONNECT}:~
 # ssh -o StrictHostKeyChecking=no ${DEPLOY_CONNECT} 'bash -s' < ./deploy/stg.sh
+docker rm -f foodlive
 docker run -d --name foodlive \
   -e VIRTUAL_HOST="foodlive.tech" \
   -e LETSENCRYPT_HOST="foodlive.tech" \
