@@ -1,5 +1,5 @@
-# APP_NAME=foodlive
-# DEPLOY_CONNECT=ryu@139.59.241.255
+APP_NAME=foodlive
+DEPLOY_CONNECT=ryu@139.59.241.255
 
 echo "Downloading packages ...."
 go mod tidy

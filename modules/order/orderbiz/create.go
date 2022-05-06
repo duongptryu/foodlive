@@ -15,6 +15,7 @@ import (
 	"foodlive/modules/ordertracking/ordertrackingstore"
 	"foodlive/modules/restaurant/restaurantstore"
 	"foodlive/modules/useraddress/useraddressstore"
+	"math"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -74,7 +75,7 @@ func (biz *createOrderBiz) CreateOrderMomoBiz(ctx context.Context, userId int, d
 		totalPrice += listCart[i].Food.Price * float64(listCart[i].Quantity)
 	}
 
-	shipFee := int(rst.ShippingFeePerKm * distance)
+	shipFee := int(rst.ShippingFeePerKm * math.Round(distance))
 
 	totalPrice += float64(shipFee)
 
@@ -191,7 +192,7 @@ func (biz *createOrderBiz) CreateOrderCryptoBiz(ctx context.Context, userId int,
 		totalPrice += listCart[i].Food.Price * float64(listCart[i].Quantity)
 	}
 
-	shipFee := int(rst.ShippingFeePerKm * distance)
+	shipFee := int(rst.ShippingFeePerKm * math.Round(distance))
 
 	totalPrice += float64(shipFee)
 

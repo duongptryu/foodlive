@@ -10,6 +10,7 @@ import (
 	"foodlive/modules/order/ordermodel"
 	"foodlive/modules/restaurant/restaurantstore"
 	"foodlive/modules/useraddress/useraddressstore"
+	"math"
 )
 
 type previewOrderBiz struct {
@@ -55,7 +56,7 @@ func (biz *previewOrderBiz) PreviewOrderBiz(ctx context.Context, userId int, dat
 	//generate order
 	var totalPrice float64
 	var foods []ordermodel.FoodQuantity
-	for i, _ := range listCart {
+	for i := range listCart {
 		foods = append(foods, ordermodel.FoodQuantity{
 			listCart[i].Food,
 			listCart[i].Quantity,
@@ -63,12 +64,14 @@ func (biz *previewOrderBiz) PreviewOrderBiz(ctx context.Context, userId int, dat
 		totalPrice += listCart[i].Food.Price * float64(listCart[i].Quantity)
 	}
 
-	shipFee := int(rst.ShippingFeePerKm * distance)
+	shipFee := int(rst.ShippingFeePerKm * math.Round(distance))
 
 	totalPrice += float64(shipFee)
 
 	priceEth, err := rinkebyProvider.ParsePriceToEth(ctx, totalPrice/23000)
-
+	if err != nil {
+		return nil, err
+	}
 	newPriceEth := fmt.Sprintf("%.18f", priceEth)
 
 	result := ordermodel.PreviewOrder{
