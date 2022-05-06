@@ -145,6 +145,8 @@ func v1Route(r *gin.Engine, appCtx component.AppContext) {
 
 			//user confirm received
 			order.PUT("/:order_id", ginorder.UserConfirmReceived(appCtx))
+			//user cancel order
+			order.PUT("/:order_id/cancel", ginorder.CancelOrder(appCtx))
 		}
 
 		v1.GET("/my-profile", middleware.RequireAuth(appCtx), ginuser.GetUserProfile(appCtx))

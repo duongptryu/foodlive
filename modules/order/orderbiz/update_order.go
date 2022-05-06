@@ -98,3 +98,47 @@ func (biz *updateOrderBiz) UserConfirmReceived(ctx context.Context, orderId, use
 
 	return nil
 }
+
+func (biz *updateOrderBiz) UserCancelOrder(ctx context.Context, orderId, userId int) error {
+	order, err := biz.orderStore.FindOrder(ctx, map[string]interface{}{"id": orderId, "user_id": userId})
+	if err != nil {
+		return common.ErrCannotListEntity(ordermodel.EntityName, err)
+	}
+	if order.Id == 0 {
+		return common.ErrCannotListEntity(ordermodel.EntityName, err)
+	}
+	if !order.Status {
+		return ordermodel.ErrOrderExpire
+	}
+	if order.UserId != userId {
+		return common.ErrPermissionDenied
+	}
+
+	orderTracking, err := biz.orderTrackingStore.FindOrderTracking(ctx, map[string]interface{}{"order_id": orderId})
+	if err != nil {
+		return common.ErrCannotListEntity(ordermodel.EntityName, err)
+	}
+	if orderTracking.Id == 0 {
+		return common.ErrCannotListEntity(ordermodel.EntityName, err)
+	}
+	if orderTracking.State != ordertrackingmodel.StateWaitingPayment {
+		return ordermodel.ErrOrderAlreadyPrepare
+	}
+
+	orderTrackingUpdate := ordertrackingmodel.OrderTrackingUpdate{
+		State: ordertrackingmodel.StateCancel,
+	}
+	if err := biz.orderTrackingStore.UpdateOrderTracking(ctx, orderId, &orderTrackingUpdate); err != nil {
+		return err
+	}
+
+	status := false
+	orderUpdate := ordermodel.OrderUpdate{
+		Status: &status,
+	}
+	if err := biz.orderStore.UpdateOrder(ctx, orderId, &orderUpdate); err != nil {
+		return err
+	}
+
+	return nil
+}
