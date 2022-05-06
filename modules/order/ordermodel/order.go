@@ -34,7 +34,7 @@ type Order struct {
 	TotalPriceEth  string                            `json:"total_price_eth" gorm:"column:total_price_eth"`
 	RestaurantId   int                               `json:"restaurant_id" gorm:"restaurant_id"`
 	Restaurant     *common.SimpleRst                 `json:"restaurant" gorm:"preload:false"`
-	OrderTracking  *ordertrackingmodel.OrderTracking `json:"order_tracking" gorm:"references:Id;preload:false"`
+	OrderTracking  *ordertrackingmodel.OrderTracking `json:"order_tracking" gorm:"references:OrderId;foreignKey:Id;preload:false"`
 }
 
 func (Order) TableName() string {
