@@ -17,7 +17,7 @@ type User struct {
 	Phone           string        `json:"phone" gorm:"column:phone"`
 	Password        string        `json:"-" gorm:"column:password"`
 	LastName        string        `json:"last_name" gorm:"column:last_name"`
-	FirstName       string        `json:"first_name" gorm:"column:last_name"`
+	FirstName       string        `json:"first_name" gorm:"column:first_name"`
 	Status          bool          `json:"status" gorm:"column:status"`
 	Role            string        `json:"role" gorm:"column:role"`
 	Avatar          *common.Image `json:"avatar" gorm:"column:avatar"`
@@ -48,7 +48,7 @@ type UserUpdate struct {
 	common.SQLModel `json:",inline"`
 	Phone           string        `json:"phone" gorm:"column:phone"`
 	LastName        string        `json:"last_name" gorm:"column:last_name"`
-	FirstName       string        `json:"first_name" gorm:"column:first_name"`
+	FirstName       string        `json:"first_name" gorm:"colum:first_name"`
 	Status          *bool         `json:"status" gorm:"column:status"`
 	Avatar          *common.Image `json:"avatar" gorm:"column:avatar"`
 }

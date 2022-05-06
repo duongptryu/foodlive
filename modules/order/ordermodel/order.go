@@ -26,6 +26,8 @@ type Order struct {
 	TotalPrice     float64                           `json:"total_price" gorm:"total_price"`
 	ShipperId      int                               `json:"shipper_id" gorm:"shipper_id"`
 	UserAddressOri string                            `json:"user_address_ori" gorm:"user_address_ori"`
+	UserAddressId  int                               `json:"user_address_id" gorm:"user_address_id"`
+	UrlPayment     string                            `json:"url_payment" gorm:"url_payment"`
 	Status         bool                              `json:"status" gorm:"status"`
 	TypePayment    string                            `json:"type_payment" gorm:"column:type_payment"`
 	TxnHash        string                            `json:"txn_hash" gorm:"column:txn_hash"`
@@ -48,6 +50,8 @@ type OrderCreate struct {
 	UserAddressOri string  `json:"user_address_ori" gorm:"user_address_ori"`
 	Status         bool    `json:"-" gorm:"status"`
 	TypePayment    string  `json:"-" gorm:"column:type_payment"`
+	UserAddressId  int     `json:"user_address_id" gorm:"user_address_id"`
+	UrlPayment     string  `json:"url_payment" gorm:"url_payment"`
 }
 
 func (OrderCreate) TableName() string {
@@ -70,6 +74,7 @@ type OrderUpdate struct {
 	common.SQLModelUpdate
 	Status        *bool  `json:"-" gorm:"status"`
 	TxnHash       string `json:"-" gorm:"column:txn_hash"`
+	UrlPayment    string `json:"-" gorm:"url_payment"`
 	TotalPriceEth string `json:"-" gorm:"column:total_price_eth"`
 }
 

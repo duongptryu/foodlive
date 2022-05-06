@@ -90,6 +90,7 @@ func (biz *createOrderBiz) CreateOrderMomoBiz(ctx context.Context, userId int, d
 		ShipperId:      1,
 		Status:         true,
 		UserAddressOri: addressDb.Addr,
+		UserAddressId:  addressDb.Id,
 		TypePayment:    ordermodel.TypeMomo,
 	}
 
@@ -156,6 +157,7 @@ func (biz *createOrderBiz) CreateOrderMomoBiz(ctx context.Context, userId int, d
 	orderTrackingRevert.Commit()
 	createOrderDetailRevert.Commit()
 
+	go biz.orderStore.UpdateOrder(ctx, order.Id, &ordermodel.OrderUpdate{UrlPayment: checkoutResp.PayUrl})
 	go biz.cancelOrder(ctx, order.Id, 10)
 
 	return checkoutResp, nil
@@ -262,6 +264,7 @@ func (biz *createOrderBiz) CreateOrderCryptoBiz(ctx context.Context, userId int,
 		App:     fmt.Sprintf("https://metamask.app.link/dapp/foodlive.tech/order/%v", order.Id),
 	}
 
+	go biz.orderStore.UpdateOrder(ctx, order.Id, &ordermodel.OrderUpdate{UrlPayment: result.Web})
 	go biz.cancelOrder(ctx, order.Id, 5)
 
 	return &result, nil
