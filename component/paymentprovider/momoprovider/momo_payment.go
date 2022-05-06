@@ -11,10 +11,11 @@ import (
 	"foodlive/common"
 	"foodlive/component/paymentprovider"
 	"foodlive/config"
-	guuid "github.com/google/uuid"
 	"log"
 	"net/http"
 	"strconv"
+
+	guuid "github.com/google/uuid"
 )
 
 type momoProvider struct {
@@ -52,7 +53,7 @@ func (m *momoProvider) SendRequestPayment(ctx context.Context, data paymentprovi
 	var accessKey = m.AccessKey
 	var secretKey = m.SecretKey
 	var orderInfo = dataExtra
-	var returnUrl = m.BaseReturnUrl + orderId
+	var returnUrl = m.BaseReturnUrl
 	var notifyUrl = m.NotifyUrl
 	var amount = strconv.Itoa(int(data.GetPrice()))
 	var requestType = m.RequestType
