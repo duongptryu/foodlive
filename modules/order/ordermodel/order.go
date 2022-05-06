@@ -32,7 +32,7 @@ type Order struct {
 	TypePayment    string                            `json:"type_payment" gorm:"column:type_payment"`
 	TxnHash        string                            `json:"txn_hash" gorm:"column:txn_hash"`
 	TotalPriceEth  string                            `json:"total_price_eth" gorm:"column:total_price_eth"`
-	ShipFee        float64                           `json:"ship_fee" gorm:"column:total_price_eth"`
+	ShipFee        float64                           `json:"ship_fee" gorm:"column:ship_fee"`
 	RestaurantId   int                               `json:"restaurant_id" gorm:"restaurant_id"`
 	Restaurant     *common.SimpleRst                 `json:"restaurant" gorm:"preload:false"`
 	OrderTracking  *ordertrackingmodel.OrderTracking `json:"order_tracking" gorm:"references:OrderId;foreignKey:Id;preload:false"`
