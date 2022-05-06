@@ -53,7 +53,7 @@ type OrderCreate struct {
 	TypePayment    string  `json:"-" gorm:"column:type_payment"`
 	UserAddressId  int     `json:"user_address_id" gorm:"user_address_id"`
 	UrlPayment     string  `json:"url_payment" gorm:"url_payment"`
-	ShipFee        float64 `json:"ship_fee" gorm:"column:total_price_eth"`
+	ShipFee        float64 `json:"ship_fee" gorm:"column:ship_fee"`
 }
 
 func (OrderCreate) TableName() string {
