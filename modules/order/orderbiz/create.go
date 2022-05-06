@@ -92,6 +92,7 @@ func (biz *createOrderBiz) CreateOrderMomoBiz(ctx context.Context, userId int, d
 		UserAddressOri: addressDb.Addr,
 		UserAddressId:  addressDb.Id,
 		TypePayment:    ordermodel.TypeMomo,
+		ShipFee:        float64(shipFee),
 	}
 
 	orderCreateRevert, err := biz.orderStore.CreateOrder(ctx, &order)
@@ -205,7 +206,9 @@ func (biz *createOrderBiz) CreateOrderCryptoBiz(ctx context.Context, userId int,
 		ShipperId:      1,
 		Status:         true,
 		UserAddressOri: addressDb.Addr,
+		UserAddressId:  addressDb.Id,
 		TypePayment:    ordermodel.TypeCrypto,
+		ShipFee:        float64(shipFee),
 	}
 
 	orderCreateRevert, err := biz.orderStore.CreateOrder(ctx, &order)
